@@ -19,6 +19,8 @@
         "./agents/spring-boot-backend.md",
         "./agents/database-expert.md",
         "./agents/frontend-engineer.md",
+        "./agents/mobile-app-developer.md",
+        "./agents/desktop-app-developer.md",
         "./agents/git-committer.md",
         "./agents/markdown-document-writer.md",
         "./agents/test-automation-engineer.md"

@@ -29,6 +29,8 @@ cd claude-config
 | `spring-boot-backend` | Spring Boot, Java, Spring Security | orange |
 | `database-expert` | PostgreSQL/MySQL schema design, query optimization | - |
 | `frontend-engineer` | React/Next.js, component architecture, state management | blue |
+| `mobile-app-developer` | React Native, Flutter, Swift, Kotlin for iOS/Android | cyan |
+| `desktop-app-developer` | Electron, Tauri for cross-platform desktop apps | yellow |
 | `git-committer` | Git commit and push automation | - |
 | `markdown-document-writer` | Documentation writing in markdown format | - |
 | `test-automation-engineer` | Jest/Vitest, React Testing Library, Playwright | - |
@@ -42,6 +44,8 @@ Claude와 대화할 때 에이전트 이름을 언급하면 자동으로 활성�
 "backend-api-architect, RESTful API를 설계해줘"
 "nodejs-backend, Express 미들웨어를 구현해줘"
 "spring-boot-backend, Spring Security 설정해줘"
+"mobile-app-developer, React Native 앱을 만들어줘"
+"desktop-app-developer, Electron 앱을 구성해줘"
 ```
 
 ### Priority
