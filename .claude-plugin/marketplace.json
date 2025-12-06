@@ -22,6 +22,9 @@
         "./agents/mobile-app-developer.md",
         "./agents/desktop-app-developer.md",
         "./agents/devops-engineer.md",
+        "./agents/data-engineer.md",
+        "./agents/ml-engineer.md",
+        "./agents/data-analyst.md",
         "./agents/git-committer.md",
         "./agents/markdown-document-writer.md",
         "./agents/test-automation-engineer.md"
