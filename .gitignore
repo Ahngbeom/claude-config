@@ -1,0 +1,24 @@
+# 로컬 설정
+settings.json
+settings.local.json
+.credentials.json
+
+# 플러그인 (외부 의존성)
+plugins/marketplaces/
+plugins/installed_plugins.json
+plugins/known_marketplaces.json
+
+# 캐시 및 히스토리
+debug/
+file-history/
+history.jsonl
+shell-snapshots/
+statsig/
+todos/
+
+# 프로젝트별 설정
+projects/
+
+# 임시 파일
+plans/
+*.log

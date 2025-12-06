@@ -1,0 +1,28 @@
+{
+  "name": "ahngbeom-claude-config",
+  "owner": {
+    "name": "ahngbeom"
+  },
+  "metadata": {
+    "description": "Custom Claude Code agents for backend/frontend development",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "dev-agents",
+      "description": "Development agents for API design, Node.js, Spring Boot, database, frontend, and testing",
+      "source": "./",
+      "strict": false,
+      "agents": [
+        "./agents/backend-api-architect.md",
+        "./agents/nodejs-backend.md",
+        "./agents/spring-boot-backend.md",
+        "./agents/database-expert.md",
+        "./agents/frontend-engineer.md",
+        "./agents/git-committer.md",
+        "./agents/markdown-document-writer.md",
+        "./agents/test-automation-engineer.md"
+      ]
+    }
+  ]
+}
