@@ -31,6 +31,7 @@ cd claude-config
 | `frontend-engineer` | React/Next.js, component architecture, state management | blue |
 | `mobile-app-developer` | React Native, Flutter, Swift, Kotlin for iOS/Android | cyan |
 | `desktop-app-developer` | Electron, Tauri for cross-platform desktop apps | yellow |
+| `devops-engineer` | ELK Stack, Kubernetes, CI/CD, Terraform, cloud infrastructure | red |
 | `git-committer` | Git commit and push automation | - |
 | `markdown-document-writer` | Documentation writing in markdown format | - |
 | `test-automation-engineer` | Jest/Vitest, React Testing Library, Playwright | - |
@@ -46,6 +47,7 @@ Claude와 대화할 때 에이전트 이름을 언급하면 자동으로 활성�
 "spring-boot-backend, Spring Security 설정해줘"
 "mobile-app-developer, React Native 앱을 만들어줘"
 "desktop-app-developer, Electron 앱을 구성해줘"
+"devops-engineer, Kubernetes 배포 설정해줘"
 ```
 
 ### Priority
