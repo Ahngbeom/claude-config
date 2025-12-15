@@ -21,4 +21,17 @@ projects/
 
 # 임시 파일
 plans/
+temp/
+downloads/
 *.log
+
+# IDE 설정 (머신별로 다름)
+ide/
+
+# 세션 데이터
+session-env/
+
+# 플러그인 캐시 및 로컬 상태 (머신별 경로 포함)
+plugins/cache/
+plugins/installed_plugins.json
+plugins/installed_plugins_v2.json
