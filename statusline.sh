@@ -140,6 +140,8 @@ fi
 
 # ---- context window calculation ----
 context_pct=""
+context_used_tokens=""
+context_max_tokens=""
 context_color() { if [ "$use_color" -eq 1 ]; then printf '\033[1;37m'; fi; }  # default white
 
 # Determine max context based on model
@@ -176,9 +178,11 @@ if [ -n "$session_id" ] && command -v jq >/dev/null 2>&1; then
     latest_tokens=$(tail -20 "$session_file" | jq -r 'select(.message.usage) | .message.usage | ((.input_tokens // 0) + (.cache_read_input_tokens // 0))' 2>/dev/null | tail -1)
     
     if [ -n "$latest_tokens" ] && [ "$latest_tokens" -gt 0 ]; then
+      context_used_tokens="$latest_tokens"
+      context_max_tokens="$MAX_CONTEXT"
       context_used_pct=$(( latest_tokens * 100 / MAX_CONTEXT ))
       context_remaining_pct=$(( 100 - context_used_pct ))
-      
+
       # Set color based on remaining percentage
       if [ "$context_remaining_pct" -le 20 ]; then
         context_color() { if [ "$use_color" -eq 1 ]; then printf '\033[38;5;203m'; fi; }  # coral red
@@ -187,7 +191,7 @@ if [ -n "$session_id" ] && command -v jq >/dev/null 2>&1; then
       else
         context_color() { if [ "$use_color" -eq 1 ]; then printf '\033[38;5;158m'; fi; }  # mint green
       fi
-      
+
       context_pct="${context_remaining_pct}%"
     fi
   fi
@@ -304,58 +308,106 @@ if [ -n "$output_style" ] && [ "$output_style" != "null" ]; then
   printf '  🎨 %s%s%s' "$(style_color)" "$output_style" "$(rst)"
 fi
 
-# Line 2: Context and session time
+# Line 2: Context only
 line2=""
-if [ -n "$context_pct" ]; then
+if [ -n "$context_pct" ] && [ -n "$context_used_tokens" ]; then
   context_bar=$(progress_bar "$context_remaining_pct" 10)
-  line2="🧠 $(context_color)Context Remaining: ${context_pct} [${context_bar}]$(rst)"
+  used_formatted=$(format_tokens "$context_used_tokens")
+  max_formatted=$(format_tokens "$context_max_tokens")
+  line2="🧠 $(context_color)Context: ${used_formatted} / ${max_formatted} (${context_remaining_pct}%) [${context_bar}]$(rst)"
 fi
-if [ -n "$session_txt" ]; then
-  if [ -n "$line2" ]; then
-    line2="$line2  ⌛ $(session_color)${session_txt}$(rst) $(session_color)[${session_bar}]$(rst)"
-  else
-    line2="⌛ $(session_color)${session_txt}$(rst) $(session_color)[${session_bar}]$(rst)"
-  fi
-fi
-if [ -z "$line2" ] && [ -z "$context_pct" ]; then
-  line2="🧠 $(context_color)Context Remaining: TBD$(rst)"
+if [ -z "$line2" ]; then
+  line2="🧠 $(context_color)Context: TBD$(rst)"
 fi
 
-# Function to add commas to numbers
-add_commas() {
-  local num="$1"
-  if [[ "$num" =~ ^[0-9]+$ ]]; then
-    printf "%'d" "$num" 2>/dev/null || echo "$num"
-  else
-    echo "$num"
-  fi
-}
-
-# Line 3: Cost and usage analytics
+# Line 3: Session info (primary + secondary in parentheses)
 line3=""
-if [ -n "$cost_usd" ] && [[ "$cost_usd" =~ ^[0-9.]+$ ]]; then
-  if [ -n "$cost_per_hour" ] && [[ "$cost_per_hour" =~ ^[0-9.]+$ ]]; then
-    cost_per_hour_formatted=$(printf '%.2f' "$cost_per_hour")
-    line3="💰 $(cost_color)\$$(printf '%.2f' \"$cost_usd\")$(rst) ($(burn_color)\$${cost_per_hour_formatted}/h$(rst))"
+primary_parts=()
+secondary_parts=()
+
+# Primary: Tokens (no label)
+if [ -n "$tot_tokens" ] && [[ "$tot_tokens" =~ ^[0-9]+$ ]]; then
+  primary_parts+=("$(format_tokens "$tot_tokens")")
+fi
+
+# Primary: Time remaining with gauge (no label)
+if [ -n "$rh" ] || [ -n "$rm" ]; then
+  session_bar=$(progress_bar "$session_pct" 10)
+  primary_parts+=("${rh}h ${rm}m [${session_bar}]")
+fi
+
+# Secondary: Cache
+cache_color() { if [ "$use_color" -eq 1 ]; then printf '\033[38;5;120m'; fi; }  # light green
+if [ -n "$cache_hit_rate" ] && [[ "$cache_hit_rate" =~ ^[0-9]+$ ]]; then
+  secondary_parts+=("Cache: ${cache_hit_rate}%")
+fi
+
+# Secondary: Speed
+if [ -n "$tpm" ] && [[ "$tpm" =~ ^[0-9.]+$ ]]; then
+  tpm_formatted=$(format_tokens "$(printf '%.0f' "$tpm")")
+  secondary_parts+=("Speed: ${tpm_formatted}/min")
+fi
+
+# Build line3
+if [ ${#primary_parts[@]} -gt 0 ]; then
+  line3="⏱️ $(usage_color) Session: $(IFS=' | '; echo "${primary_parts[*]}")"
+  if [ ${#secondary_parts[@]} -gt 0 ]; then
+    line3="$line3 ($(IFS=', '; echo "${secondary_parts[*]}"))"
+  fi
+  line3="$line3$(rst)"
+fi
+
+# Line 4: Daily, Weekly, Monthly usage
+line4=""
+today_color() { if [ "$use_color" -eq 1 ]; then printf '\033[38;5;153m'; fi; }  # light blue
+week_color() { if [ "$use_color" -eq 1 ]; then printf '\033[38;5;183m'; fi; }   # light pink
+month_color() { if [ "$use_color" -eq 1 ]; then printf '\033[38;5;216m'; fi; }  # light coral
+
+# Today's usage
+if [ -n "$today_tokens" ] && [[ "$today_tokens" =~ ^[0-9]+$ ]]; then
+  today_tokens_formatted=$(format_tokens "$today_tokens")
+  if [ -n "$today_cost" ] && [[ "$today_cost" =~ ^[0-9.]+$ ]]; then
+    today_cost_formatted=$(printf '%.2f' "$today_cost")
+    line4="📅 $(today_color)Today: ${today_tokens_formatted} (\$${today_cost_formatted})$(rst)"
   else
-    line3="💰 $(cost_color)\$$(printf '%.2f' \"$cost_usd\")$(rst)"
+    line4="📅 $(today_color)Today: ${today_tokens_formatted}$(rst)"
   fi
 fi
-if [ -n "$tot_tokens" ] && [[ "$tot_tokens" =~ ^[0-9]+$ ]]; then
-  tot_tokens_formatted=$(add_commas "$tot_tokens")
-  if [ -n "$tpm" ] && [[ "$tpm" =~ ^[0-9.]+$ ]]; then
-    tpm_int=$(printf '%.0f' "$tpm")
-    tpm_formatted=$(add_commas "$tpm_int")
-    if [ -n "$line3" ]; then
-      line3="$line3  📊 $(usage_color)${tot_tokens_formatted} tokens (${tpm_formatted} tokens/min)$(rst)"
+
+# Weekly usage
+if [ -n "$week_tokens" ] && [[ "$week_tokens" =~ ^[0-9]+$ ]]; then
+  week_tokens_formatted=$(format_tokens "$week_tokens")
+  if [ -n "$week_cost" ] && [[ "$week_cost" =~ ^[0-9.]+$ ]]; then
+    week_cost_formatted=$(printf '%.2f' "$week_cost")
+    if [ -n "$line4" ]; then
+      line4="$line4  📆 $(week_color)Week: ${week_tokens_formatted} (\$${week_cost_formatted})$(rst)"
     else
-      line3="📊 $(usage_color)${tot_tokens_formatted} tokens (${tpm_formatted} tokens/min)$(rst)"
+      line4="📆 $(week_color)Week: ${week_tokens_formatted} (\$${week_cost_formatted})$(rst)"
     fi
   else
-    if [ -n "$line3" ]; then
-      line3="$line3  📊 $(usage_color)${tot_tokens_formatted} tokens$(rst)"
+    if [ -n "$line4" ]; then
+      line4="$line4  📆 $(week_color)Week: ${week_tokens_formatted}$(rst)"
     else
-      line3="📊 $(usage_color)${tot_tokens_formatted} tokens$(rst)"
+      line4="📆 $(week_color)Week: ${week_tokens_formatted}$(rst)"
+    fi
+  fi
+fi
+
+# Monthly usage
+if [ -n "$month_tokens" ] && [[ "$month_tokens" =~ ^[0-9]+$ ]]; then
+  month_tokens_formatted=$(format_tokens "$month_tokens")
+  if [ -n "$month_cost" ] && [[ "$month_cost" =~ ^[0-9.]+$ ]]; then
+    month_cost_formatted=$(printf '%.2f' "$month_cost")
+    if [ -n "$line4" ]; then
+      line4="$line4  🗓️ $(month_color)Month: ${month_tokens_formatted} (\$${month_cost_formatted})$(rst)"
+    else
+      line4="🗓️ $(month_color)Month: ${month_tokens_formatted} (\$${month_cost_formatted})$(rst)"
+    fi
+  else
+    if [ -n "$line4" ]; then
+      line4="$line4  🗓️ $(month_color)Month: ${month_tokens_formatted}$(rst)"
+    else
+      line4="🗓️ $(month_color)Month: ${month_tokens_formatted}$(rst)"
     fi
   fi
 fi
@@ -366,5 +418,8 @@ if [ -n "$line2" ]; then
 fi
 if [ -n "$line3" ]; then
   printf '\n%s' "$line3"
+fi
+if [ -n "$line4" ]; then
+  printf '\n%s' "$line4"
 fi
 printf '\n'
