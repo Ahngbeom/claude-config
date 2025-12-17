@@ -15,6 +15,7 @@ history.jsonl
 shell-snapshots/
 statsig/
 todos/
+stats-cache.json
 
 # 프로젝트별 설정
 projects/

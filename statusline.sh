@@ -48,6 +48,70 @@ progress_bar() {
 # git utilities
 num_or_zero() { v="$1"; [[ "$v" =~ ^[0-9]+$ ]] && echo "$v" || echo 0; }
 
+# Function to add commas to numbers
+add_commas() {
+  local num="$1"
+  if [[ "$num" =~ ^[0-9]+$ ]]; then
+    printf "%'d" "$num" 2>/dev/null || echo "$num"
+  else
+    echo "$num"
+  fi
+}
+
+# Function to format tokens with K/M units
+format_tokens() {
+  local num="$1"
+  if [[ "$num" =~ ^[0-9]+$ ]]; then
+    if [ "$num" -ge 1000000 ]; then
+      awk "BEGIN {printf \"%.2fM\", $num / 1000000}"
+    elif [ "$num" -ge 1000 ]; then
+      awk "BEGIN {printf \"%.1fK\", $num / 1000}"
+    else
+      echo "$num"
+    fi
+  else
+    echo "$num"
+  fi
+}
+
+# ---- cache helpers for ccusage data ----
+CACHE_FILE="$HOME/.claude/stats-cache.json"
+CACHE_TTL=60  # 60 seconds
+
+read_cache() {
+  if [ -f "$CACHE_FILE" ]; then
+    cache_ts=$(jq -r '.timestamp // 0' "$CACHE_FILE" 2>/dev/null)
+    now_ts=$(date +%s)
+    if [ $((now_ts - cache_ts)) -lt $CACHE_TTL ]; then
+      cat "$CACHE_FILE"
+      return 0
+    fi
+  fi
+  return 1
+}
+
+update_cache_background() {
+  (
+    today_date=$(date +%Y%m%d)
+    blocks=$(npx ccusage@latest blocks --json 2>/dev/null || ccusage blocks --json 2>/dev/null)
+    daily=$(npx ccusage@latest daily --json --since "$today_date" 2>/dev/null || ccusage daily --json --since "$today_date" 2>/dev/null)
+    weekly=$(npx ccusage@latest weekly --json 2>/dev/null || ccusage weekly --json 2>/dev/null)
+    monthly=$(npx ccusage@latest monthly --json 2>/dev/null || ccusage monthly --json 2>/dev/null)
+
+    # Only write if we got valid data
+    if [ -n "$blocks" ]; then
+      jq -n \
+        --argjson ts "$(date +%s)" \
+        --argjson blocks "$blocks" \
+        --argjson daily "${daily:-null}" \
+        --argjson weekly "${weekly:-null}" \
+        --argjson monthly "${monthly:-null}" \
+        '{timestamp: $ts, blocks: $blocks, daily: $daily, weekly: $weekly, monthly: $monthly}' \
+        > "$CACHE_FILE" 2>/dev/null
+    fi
+  ) &
+}
+
 # ---- basics ----
 if command -v jq >/dev/null 2>&1; then
   current_dir=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // "unknown"' 2>/dev/null | sed "s|^$HOME|~|g")
@@ -144,21 +208,52 @@ session_color() {
 # ---- ccusage integration ----
 session_txt=""; session_pct=0; session_bar=""
 cost_usd=""; cost_per_hour=""; tpm=""; tot_tokens=""
+today_tokens=""; today_cost=""
+week_tokens=""; week_cost=""
+month_tokens=""; month_cost=""
+cache_hit_rate=""
 
 if command -v jq >/dev/null 2>&1; then
-  blocks_output=$(npx ccusage@latest blocks --json 2>/dev/null || ccusage blocks --json 2>/dev/null)
-  if [ -n "$blocks_output" ]; then
+  # Try to read from cache first
+  cached_data=""
+  if cached_data=$(read_cache); then
+    # Cache hit - use cached data
+    blocks_output=$(echo "$cached_data" | jq '.blocks' 2>/dev/null)
+    daily_output=$(echo "$cached_data" | jq '.daily' 2>/dev/null)
+    weekly_output=$(echo "$cached_data" | jq '.weekly' 2>/dev/null)
+    monthly_output=$(echo "$cached_data" | jq '.monthly' 2>/dev/null)
+  else
+    # Cache miss - fetch blocks synchronously (essential data)
+    blocks_output=$(npx ccusage@latest blocks --json 2>/dev/null || ccusage blocks --json 2>/dev/null)
+    daily_output=""
+    weekly_output=""
+    monthly_output=""
+    # Update cache in background for next time
+    update_cache_background
+  fi
+
+  if [ -n "$blocks_output" ] && [ "$blocks_output" != "null" ]; then
     active_block=$(echo "$blocks_output" | jq -c '.blocks[] | select(.isActive == true)' 2>/dev/null | head -n1)
     if [ -n "$active_block" ]; then
       cost_usd=$(echo "$active_block" | jq -r '.costUSD // empty')
       cost_per_hour=$(echo "$active_block" | jq -r '.burnRate.costPerHour // empty')
       tot_tokens=$(echo "$active_block" | jq -r '.totalTokens // empty')
       tpm=$(echo "$active_block" | jq -r '.burnRate.tokensPerMinute // empty')
-      
+
+      # Cache hit rate calculation
+      cache_read=$(echo "$active_block" | jq -r '.tokenCounts.cacheReadInputTokens // 0' 2>/dev/null)
+      cache_creation=$(echo "$active_block" | jq -r '.tokenCounts.cacheCreationInputTokens // 0' 2>/dev/null)
+      cache_read=$(num_or_zero "$cache_read")
+      cache_creation=$(num_or_zero "$cache_creation")
+      total_cache=$((cache_read + cache_creation))
+      if [ "$total_cache" -gt 0 ]; then
+        cache_hit_rate=$((cache_read * 100 / total_cache))
+      fi
+
       # Session time calculation
       reset_time_str=$(echo "$active_block" | jq -r '.usageLimitResetTime // .endTime // empty')
       start_time_str=$(echo "$active_block" | jq -r '.startTime // empty')
-      
+
       if [ -n "$reset_time_str" ] && [ -n "$start_time_str" ]; then
         start_sec=$(to_epoch "$start_time_str"); end_sec=$(to_epoch "$reset_time_str"); now_sec=$(date +%s)
         total=$(( end_sec - start_sec )); (( total<1 )) && total=1
@@ -171,6 +266,24 @@ if command -v jq >/dev/null 2>&1; then
         session_bar=$(progress_bar "$session_pct" 10)
       fi
     fi
+  fi
+
+  # Today's daily usage (first element = today)
+  if [ -n "$daily_output" ] && [ "$daily_output" != "null" ]; then
+    today_tokens=$(echo "$daily_output" | jq -r '.daily[0].totalTokens // empty' 2>/dev/null)
+    today_cost=$(echo "$daily_output" | jq -r '.daily[0].totalCost // empty' 2>/dev/null)
+  fi
+
+  # Weekly usage (last element = current week)
+  if [ -n "$weekly_output" ] && [ "$weekly_output" != "null" ]; then
+    week_tokens=$(echo "$weekly_output" | jq -r '.weekly[-1].totalTokens // empty' 2>/dev/null)
+    week_cost=$(echo "$weekly_output" | jq -r '.weekly[-1].totalCost // empty' 2>/dev/null)
+  fi
+
+  # Monthly usage (last element = current month)
+  if [ -n "$monthly_output" ] && [ "$monthly_output" != "null" ]; then
+    month_tokens=$(echo "$monthly_output" | jq -r '.monthly[-1].totalTokens // empty' 2>/dev/null)
+    month_cost=$(echo "$monthly_output" | jq -r '.monthly[-1].totalCost // empty' 2>/dev/null)
   fi
 fi
 
