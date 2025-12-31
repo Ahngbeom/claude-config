@@ -18,6 +18,29 @@ cd claude-config
 ./install.sh
 ```
 
+### Method 3: Sparse Checkout (agents/ 제외)
+
+플러그인으로 에이전트를 사용하면서 `~/.claude`를 이 레포로 관리할 때, `agents/` 중복을 방지하려면:
+
+```bash
+# 1. Clone
+git clone https://github.com/ahngbeom/claude-config ~/.claude
+cd ~/.claude
+
+# 2. Sparse checkout 설정
+git sparse-checkout init
+echo -e '/*\n!/agents/' > .git/info/sparse-checkout
+git read-tree -mu HEAD
+
+# 3. 확인
+git status  # "sparse checkout with X% of tracked files present"
+```
+
+이 설정으로:
+- `agents/` 디렉토리가 로컬에 체크아웃되지 않음
+- 에이전트는 플러그인(`dev-agents:*`)으로 사용
+- 원격 레포의 `agents/`는 그대로 유지됨
+
 ---
 
 ## Agents

@@ -308,53 +308,67 @@ if [ -n "$output_style" ] && [ "$output_style" != "null" ]; then
   printf '  🎨 %s%s%s' "$(style_color)" "$output_style" "$(rst)"
 fi
 
-# Line 2: Context only
+# Line 2: Context with Cache and Speed info
 line2=""
+context_extra=""
+
+# Build extra info (Cache, Speed)
+if [ -n "$cache_hit_rate" ] && [[ "$cache_hit_rate" =~ ^[0-9]+$ ]]; then
+  context_extra="Cache: ${cache_hit_rate}%"
+fi
+if [ -n "$tpm" ] && [[ "$tpm" =~ ^[0-9.]+$ ]]; then
+  tpm_formatted=$(format_tokens "$(printf '%.0f' "$tpm")")
+  if [ -n "$context_extra" ]; then
+    context_extra="${context_extra}, Speed: ${tpm_formatted}/min"
+  else
+    context_extra="Speed: ${tpm_formatted}/min"
+  fi
+fi
+
 if [ -n "$context_pct" ] && [ -n "$context_used_tokens" ]; then
   context_bar=$(progress_bar "$context_remaining_pct" 10)
   used_formatted=$(format_tokens "$context_used_tokens")
   max_formatted=$(format_tokens "$context_max_tokens")
-  line2="🧠 $(context_color)Context: ${used_formatted} / ${max_formatted} (${context_remaining_pct}%) [${context_bar}]$(rst)"
+  if [ -n "$context_extra" ]; then
+    line2="🧠 $(context_color)Context: ${used_formatted} / ${max_formatted} (${context_remaining_pct}%) [${context_bar}] (${context_extra})$(rst)"
+  else
+    line2="🧠 $(context_color)Context: ${used_formatted} / ${max_formatted} (${context_remaining_pct}%) [${context_bar}]$(rst)"
+  fi
 fi
 if [ -z "$line2" ]; then
-  line2="🧠 $(context_color)Context: TBD$(rst)"
+  if [ -n "$context_extra" ]; then
+    line2="🧠 $(context_color)Context: TBD (${context_extra})$(rst)"
+  else
+    line2="🧠 $(context_color)Context: TBD$(rst)"
+  fi
 fi
 
-# Line 3: Session info (primary + secondary in parentheses)
+# Line 3: Session info
 line3=""
 primary_parts=()
-secondary_parts=()
 
-# Primary: Tokens (no label)
+# Tokens
 if [ -n "$tot_tokens" ] && [[ "$tot_tokens" =~ ^[0-9]+$ ]]; then
-  primary_parts+=("$(format_tokens "$tot_tokens")")
+  primary_parts+=("$(format_tokens "$tot_tokens") tokens")
 fi
 
-# Primary: Time remaining with gauge (no label)
+# Time remaining with gauge
 if [ -n "$rh" ] || [ -n "$rm" ]; then
   session_bar=$(progress_bar "$session_pct" 10)
-  primary_parts+=("${rh}h ${rm}m [${session_bar}]")
-fi
-
-# Secondary: Cache
-cache_color() { if [ "$use_color" -eq 1 ]; then printf '\033[38;5;120m'; fi; }  # light green
-if [ -n "$cache_hit_rate" ] && [[ "$cache_hit_rate" =~ ^[0-9]+$ ]]; then
-  secondary_parts+=("Cache: ${cache_hit_rate}%")
-fi
-
-# Secondary: Speed
-if [ -n "$tpm" ] && [[ "$tpm" =~ ^[0-9.]+$ ]]; then
-  tpm_formatted=$(format_tokens "$(printf '%.0f' "$tpm")")
-  secondary_parts+=("Speed: ${tpm_formatted}/min")
+  primary_parts+=("Reset: ${rh}h ${rm}m [${session_bar}]")
 fi
 
 # Build line3
 if [ ${#primary_parts[@]} -gt 0 ]; then
-  line3="⏱️ $(usage_color) Session: $(IFS=' | '; echo "${primary_parts[*]}")"
-  if [ ${#secondary_parts[@]} -gt 0 ]; then
-    line3="$line3 ($(IFS=', '; echo "${secondary_parts[*]}"))"
-  fi
-  line3="$line3$(rst)"
+  # Join with ' | ' separator
+  session_content=""
+  for i in "${!primary_parts[@]}"; do
+    if [ "$i" -gt 0 ]; then
+      session_content="${session_content} | "
+    fi
+    session_content="${session_content}${primary_parts[$i]}"
+  done
+  line3="⏱️ $(usage_color)Session: ${session_content}$(rst)"
 fi
 
 # Line 4: Daily, Weekly, Monthly usage

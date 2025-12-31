@@ -36,3 +36,10 @@ session-env/
 plugins/cache/
 plugins/installed_plugins.json
 plugins/installed_plugins_v2.json
+plugins/install-counts-cache.json
+
+# 텔레메트리 (민감 정보 포함)
+telemetry/
+
+# 브라우저 확장
+chrome/
