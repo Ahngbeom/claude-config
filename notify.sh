@@ -1,9 +1,16 @@
 #!/bin/bash
 # Claude Code Cross-Platform Notification Script
-# Usage: notify.sh "title" "message"
+# Usage: notify.sh "title" "message" ["summary"]
 
 TITLE="${1:-Claude Code}"
 MESSAGE="${2:-알림}"
+SUMMARY="${3:-}"
+
+# 요약이 있으면 메시지에 줄바꿈으로 추가
+if [ -n "$SUMMARY" ]; then
+    MESSAGE="$MESSAGE
+$SUMMARY"
+fi
 
 case "$(uname -s)" in
     Darwin)
