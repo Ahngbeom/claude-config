@@ -9,7 +9,7 @@
   },
   "plugins": [
     {
-      "name": "dev-agents",
+      "name": "ahngbeom-dev-agents",
       "description": "Development agents for API design, Node.js, Spring Boot, database, frontend, and testing",
       "source": "./",
       "strict": false,
