@@ -1,7 +1,7 @@
 ---
 name: git-committer
 description: Use this agent when the user has made code changes and wants to commit and push them to the repository. This includes scenarios like:\n\n<example>\nContext: User has just finished implementing a new feature\nuser: "I've finished adding the new authentication system. Can you commit and push these changes?"\nassistant: "I'll use the git-committer agent to commit and push your authentication changes."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User has completed bug fixes\nuser: "변경사항을 git commit, push 수행"\nassistant: "I'll use the git-committer agent to commit and push your changes."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User has updated documentation\nuser: "README updated, please commit this"\nassistant: "I'll use the git-committer agent to commit and push the README changes."\n<tool>Agent</tool>\n</example>\n\nNote: This agent should be used proactively after completing logical chunks of work, especially after:\n- API implementation completion\n- Test code writing\n- Documentation updates (README.md, CLAUDE.md)\n- Bug fixes\n- Feature implementations
-model: sonnet
+model: haiku
 color: green
 ---
 
