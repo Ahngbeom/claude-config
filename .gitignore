@@ -25,6 +25,7 @@ plans/
 temp/
 downloads/
 *.log
+image-cache/
 
 # IDE 설정 (머신별로 다름)
 ide/
