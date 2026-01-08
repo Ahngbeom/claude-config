@@ -27,7 +27,13 @@
         "./agents/data-analyst.md",
         "./agents/git-committer.md",
         "./agents/markdown-document-writer.md",
-        "./agents/test-automation-engineer.md"
+        "./agents/test-automation-engineer.md",
+        "./agents/github-expert.md",
+        "./agents/gitlab-expert.md",
+        "./agents/jira-retrospective.md"
+      ],
+      "commands": [
+        "./commands/retrospective.md"
       ]
     }
   ]

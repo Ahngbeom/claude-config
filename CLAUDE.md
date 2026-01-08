@@ -48,6 +48,9 @@ Respond in Korean (한국어) unless explicitly requested otherwise.
 | **Documentation** | `markdown-document-writer` | "문서 작성", "README", "가이드" |
 | **Data Analysis** | `data-analyst` | "데이터 분석", "통계", "Pandas", "시각화" |
 | **DevOps** | `devops-engineer` | "배포", "CI/CD", "Docker", "Kubernetes" |
+| **GitHub** | `github-expert` | "GitHub Actions", "workflow", "gh", "GitHub CLI" |
+| **GitLab** | `gitlab-expert` | "GitLab CI", ".gitlab-ci.yml", "GitLab Runner" |
+| **Jira 회고록** | `jira-retrospective` | "회고록", "회고", "retrospective", "주간 정리", "Jira 이슈 정리" |
 
 ### Mandatory Agent Usage
 
@@ -87,6 +90,22 @@ User: "사용자 프로필 컴포넌트 만들어줘"
 User: "유저 테이블에 프로필 이미지 필드 추가"
 → 1. database-expert로 마이그레이션 생성 및 스키마 수정
 → 2. git-committer로 커밋
+```
+
+**Example 4: Jira 회고록 생성**
+```
+User: "지난 주 회고록 작성해줘"
+→ 1. jira-retrospective로 Jira 이슈 검색 및 분석
+→ 2. 프로젝트별 진행 현황 분류
+→ 3. Markdown 회고록 파일 자동 생성
+```
+
+또는 `/retrospective` 명령어 사용:
+```
+/retrospective
+→ Jira 설정 입력 (URL, 담당자)
+→ 기간 및 출력 형식 선택
+→ 회고록 자동 생성
 ```
 
 ## Project References
