@@ -9,6 +9,7 @@ plugins/installed_plugins.json
 plugins/known_marketplaces.json
 
 # 캐시 및 히스토리
+cache/
 debug/
 file-history/
 history.jsonl
