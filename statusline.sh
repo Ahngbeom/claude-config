@@ -144,6 +144,11 @@ context_used_tokens=""
 context_max_tokens=""
 context_color() { if [ "$use_color" -eq 1 ]; then printf '\033[1;37m'; fi; }  # default white
 
+# ---- Model-specific token usage (initialize) ----
+sonnet_tokens=0
+opus_tokens=0
+haiku_tokens=0
+
 # Determine max context based on model
 get_max_context() {
   local model_name="$1"
@@ -170,7 +175,7 @@ if [ -n "$session_id" ] && command -v jq >/dev/null 2>&1; then
   MAX_CONTEXT=$(get_max_context "$model_name")
   
   # Convert current dir to session file path
-  project_dir=$(echo "$current_dir" | sed "s|~|$HOME|g" | sed 's|/|-|g' | sed 's|^-||')
+  project_dir=$(echo "$current_dir" | sed "s|~|$HOME|g" | sed 's|/|-|g' | sed 's|\.|-|g' | sed 's|^-||')
   session_file="$HOME/.claude/projects/-${project_dir}/${session_id}.jsonl"
   
   if [ -f "$session_file" ]; then
@@ -193,6 +198,20 @@ if [ -n "$session_id" ] && command -v jq >/dev/null 2>&1; then
       fi
 
       context_pct="${context_remaining_pct}%"
+    fi
+
+    # ---- Model-specific token usage ----
+    # Extract per-model token counts from session file (JSONL format - one JSON per line)
+    if [ -f "$session_file" ]; then
+      # Aggregate tokens by model (input + cache_read)
+      sonnet_tokens=$(jq 'select(.message.model | test("sonnet")) | .message.usage | ((.input_tokens // 0) + (.cache_read_input_tokens // 0))' "$session_file" 2>/dev/null | jq -s 'add // 0')
+      opus_tokens=$(jq 'select(.message.model | test("opus")) | .message.usage | ((.input_tokens // 0) + (.cache_read_input_tokens // 0))' "$session_file" 2>/dev/null | jq -s 'add // 0')
+      haiku_tokens=$(jq 'select(.message.model | test("haiku")) | .message.usage | ((.input_tokens // 0) + (.cache_read_input_tokens // 0))' "$session_file" 2>/dev/null | jq -s 'add // 0')
+
+      # Ensure numeric values
+      sonnet_tokens=$(num_or_zero "$sonnet_tokens")
+      opus_tokens=$(num_or_zero "$opus_tokens")
+      haiku_tokens=$(num_or_zero "$haiku_tokens")
     fi
   fi
 fi
@@ -292,6 +311,19 @@ if command -v jq >/dev/null 2>&1; then
 fi
 
 # ---- render statusline ----
+# Separator color
+sep_color() { if [ "$use_color" -eq 1 ]; then printf '\033[38;5;240m'; fi; }  # dark gray
+
+# Model colors (define early)
+sonnet_color() { if [ "$use_color" -eq 1 ]; then printf '\033[38;5;147m'; fi; }  # light purple
+opus_color() { if [ "$use_color" -eq 1 ]; then printf '\033[38;5;210m'; fi; }    # coral
+haiku_color() { if [ "$use_color" -eq 1 ]; then printf '\033[38;5;158m'; fi; }   # mint green
+
+# Usage colors
+today_color() { if [ "$use_color" -eq 1 ]; then printf '\033[38;5;153m'; fi; }  # light blue
+week_color() { if [ "$use_color" -eq 1 ]; then printf '\033[38;5;183m'; fi; }   # light pink
+month_color() { if [ "$use_color" -eq 1 ]; then printf '\033[38;5;216m'; fi; }  # light coral
+
 # Line 1: Core info (directory, git, model, claude code version, output style)
 printf '📁 %s%s%s' "$(dir_color)" "$current_dir" "$(rst)"
 if [ -n "$git_branch" ]; then
@@ -308,83 +340,94 @@ if [ -n "$output_style" ] && [ "$output_style" != "null" ]; then
   printf '  🎨 %s%s%s' "$(style_color)" "$output_style" "$(rst)"
 fi
 
-# Line 2: Context with Cache and Speed info
-line2=""
-context_extra=""
+# Separator line
+printf '\n%s────────────────────────────────────────────────────────────────────%s' "$(sep_color)" "$(rst)"
 
-# Build extra info (Cache, Speed)
-if [ -n "$cache_hit_rate" ] && [[ "$cache_hit_rate" =~ ^[0-9]+$ ]]; then
-  context_extra="Cache: ${cache_hit_rate}%"
-fi
-if [ -n "$tpm" ] && [[ "$tpm" =~ ^[0-9.]+$ ]]; then
-  tpm_formatted=$(format_tokens "$(printf '%.0f' "$tpm")")
-  if [ -n "$context_extra" ]; then
-    context_extra="${context_extra}, Speed: ${tpm_formatted}/min"
-  else
-    context_extra="Speed: ${tpm_formatted}/min"
-  fi
-fi
+# Line 2: Session info (tokens, reset time, cache, speed)
+session_parts=()
 
-if [ -n "$context_pct" ] && [ -n "$context_used_tokens" ]; then
-  context_bar=$(progress_bar "$context_remaining_pct" 10)
-  used_formatted=$(format_tokens "$context_used_tokens")
-  max_formatted=$(format_tokens "$context_max_tokens")
-  if [ -n "$context_extra" ]; then
-    line2="🧠 $(context_color)Context: ${used_formatted} / ${max_formatted} (${context_remaining_pct}%) [${context_bar}] (${context_extra})$(rst)"
-  else
-    line2="🧠 $(context_color)Context: ${used_formatted} / ${max_formatted} (${context_remaining_pct}%) [${context_bar}]$(rst)"
-  fi
-fi
-if [ -z "$line2" ]; then
-  if [ -n "$context_extra" ]; then
-    line2="🧠 $(context_color)Context: TBD (${context_extra})$(rst)"
-  else
-    line2="🧠 $(context_color)Context: TBD$(rst)"
-  fi
-fi
-
-# Line 3: Session info
-line3=""
-primary_parts=()
-
-# Tokens
+# Session tokens
 if [ -n "$tot_tokens" ] && [[ "$tot_tokens" =~ ^[0-9]+$ ]]; then
-  primary_parts+=("$(format_tokens "$tot_tokens") tokens")
+  session_parts+=("$(format_tokens "$tot_tokens") tokens")
 fi
 
 # Time remaining with gauge
 if [ -n "$rh" ] || [ -n "$rm" ]; then
   session_bar=$(progress_bar "$session_pct" 10)
-  primary_parts+=("Reset: ${rh}h ${rm}m [${session_bar}]")
+  session_parts+=("Reset: ${rh}h ${rm}m [${session_bar}]")
 fi
 
-# Build line3
-if [ ${#primary_parts[@]} -gt 0 ]; then
-  # Join with ' | ' separator
+# Cache hit rate
+if [ -n "$cache_hit_rate" ] && [[ "$cache_hit_rate" =~ ^[0-9]+$ ]]; then
+  session_parts+=("Cache: ${cache_hit_rate}%")
+fi
+
+# Speed (tokens per minute)
+if [ -n "$tpm" ] && [[ "$tpm" =~ ^[0-9.]+$ ]]; then
+  tpm_formatted=$(format_tokens "$(printf '%.0f' "$tpm")")
+  session_parts+=("Speed: ${tpm_formatted}/min")
+fi
+
+# Build session line
+if [ ${#session_parts[@]} -gt 0 ]; then
   session_content=""
-  for i in "${!primary_parts[@]}"; do
+  for i in "${!session_parts[@]}"; do
     if [ "$i" -gt 0 ]; then
       session_content="${session_content} | "
     fi
-    session_content="${session_content}${primary_parts[$i]}"
+    session_content="${session_content}${session_parts[$i]}"
   done
-  line3="⏱️ $(usage_color)Session: ${session_content}$(rst)"
+  printf '\n💬 %sSession: %s%s' "$(usage_color)" "$session_content" "$(rst)"
 fi
 
-# Line 4: Daily, Weekly, Monthly usage
-line4=""
-today_color() { if [ "$use_color" -eq 1 ]; then printf '\033[38;5;153m'; fi; }  # light blue
-week_color() { if [ "$use_color" -eq 1 ]; then printf '\033[38;5;183m'; fi; }   # light pink
-month_color() { if [ "$use_color" -eq 1 ]; then printf '\033[38;5;216m'; fi; }  # light coral
+# Line 3: Context window info
+if [ -n "$context_pct" ] && [ -n "$context_used_tokens" ]; then
+  context_bar=$(progress_bar "$context_remaining_pct" 10)
+  used_formatted=$(format_tokens "$context_used_tokens")
+  max_formatted=$(format_tokens "$context_max_tokens")
+  printf '\n🧠 %sContext: %s / %s (%s%% left) [%s]%s' "$(context_color)" "$used_formatted" "$max_formatted" "$context_remaining_pct" "$context_bar" "$(rst)"
+else
+  printf '\n🧠 %sContext: TBD%s' "$(context_color)" "$(rst)"
+fi
+
+# Line 4: Model-specific token usage
+model_parts=()
+
+if [ "$sonnet_tokens" -gt 0 ] 2>/dev/null; then
+  sonnet_formatted=$(format_tokens "$sonnet_tokens")
+  model_parts+=("$(sonnet_color)Sonnet: ${sonnet_formatted}$(rst)")
+fi
+if [ "$opus_tokens" -gt 0 ] 2>/dev/null; then
+  opus_formatted=$(format_tokens "$opus_tokens")
+  model_parts+=("$(opus_color)Opus: ${opus_formatted}$(rst)")
+fi
+if [ "$haiku_tokens" -gt 0 ] 2>/dev/null; then
+  haiku_formatted=$(format_tokens "$haiku_tokens")
+  model_parts+=("$(haiku_color)Haiku: ${haiku_formatted}$(rst)")
+fi
+
+if [ ${#model_parts[@]} -gt 0 ]; then
+  model_content=""
+  for i in "${!model_parts[@]}"; do
+    if [ "$i" -gt 0 ]; then
+      model_content="${model_content} | "
+    fi
+    model_content="${model_content}${model_parts[$i]}"
+  done
+  printf '\n🎯 Models: %s' "$model_content"
+fi
+
+# Line 5: Daily, Weekly, Monthly usage
+usage_parts=()
 
 # Today's usage
 if [ -n "$today_tokens" ] && [[ "$today_tokens" =~ ^[0-9]+$ ]]; then
   today_tokens_formatted=$(format_tokens "$today_tokens")
   if [ -n "$today_cost" ] && [[ "$today_cost" =~ ^[0-9.]+$ ]]; then
     today_cost_formatted=$(printf '%.2f' "$today_cost")
-    line4="📅 $(today_color)Today: ${today_tokens_formatted} (\$${today_cost_formatted})$(rst)"
+    usage_parts+=("$(today_color)Today: ${today_tokens_formatted} (\$${today_cost_formatted})$(rst)")
   else
-    line4="📅 $(today_color)Today: ${today_tokens_formatted}$(rst)"
+    usage_parts+=("$(today_color)Today: ${today_tokens_formatted}$(rst)")
   fi
 fi
 
@@ -393,17 +436,9 @@ if [ -n "$week_tokens" ] && [[ "$week_tokens" =~ ^[0-9]+$ ]]; then
   week_tokens_formatted=$(format_tokens "$week_tokens")
   if [ -n "$week_cost" ] && [[ "$week_cost" =~ ^[0-9.]+$ ]]; then
     week_cost_formatted=$(printf '%.2f' "$week_cost")
-    if [ -n "$line4" ]; then
-      line4="$line4  📆 $(week_color)Week: ${week_tokens_formatted} (\$${week_cost_formatted})$(rst)"
-    else
-      line4="📆 $(week_color)Week: ${week_tokens_formatted} (\$${week_cost_formatted})$(rst)"
-    fi
+    usage_parts+=("$(week_color)Week: ${week_tokens_formatted} (\$${week_cost_formatted})$(rst)")
   else
-    if [ -n "$line4" ]; then
-      line4="$line4  📆 $(week_color)Week: ${week_tokens_formatted}$(rst)"
-    else
-      line4="📆 $(week_color)Week: ${week_tokens_formatted}$(rst)"
-    fi
+    usage_parts+=("$(week_color)Week: ${week_tokens_formatted}$(rst)")
   fi
 fi
 
@@ -412,28 +447,21 @@ if [ -n "$month_tokens" ] && [[ "$month_tokens" =~ ^[0-9]+$ ]]; then
   month_tokens_formatted=$(format_tokens "$month_tokens")
   if [ -n "$month_cost" ] && [[ "$month_cost" =~ ^[0-9.]+$ ]]; then
     month_cost_formatted=$(printf '%.2f' "$month_cost")
-    if [ -n "$line4" ]; then
-      line4="$line4  🗓️ $(month_color)Month: ${month_tokens_formatted} (\$${month_cost_formatted})$(rst)"
-    else
-      line4="🗓️ $(month_color)Month: ${month_tokens_formatted} (\$${month_cost_formatted})$(rst)"
-    fi
+    usage_parts+=("$(month_color)Month: ${month_tokens_formatted} (\$${month_cost_formatted})$(rst)")
   else
-    if [ -n "$line4" ]; then
-      line4="$line4  🗓️ $(month_color)Month: ${month_tokens_formatted}$(rst)"
-    else
-      line4="🗓️ $(month_color)Month: ${month_tokens_formatted}$(rst)"
-    fi
+    usage_parts+=("$(month_color)Month: ${month_tokens_formatted}$(rst)")
   fi
 fi
 
-# Print lines
-if [ -n "$line2" ]; then
-  printf '\n%s' "$line2"
+if [ ${#usage_parts[@]} -gt 0 ]; then
+  usage_content=""
+  for i in "${!usage_parts[@]}"; do
+    if [ "$i" -gt 0 ]; then
+      usage_content="${usage_content} | "
+    fi
+    usage_content="${usage_content}${usage_parts[$i]}"
+  done
+  printf '\n📊 Usage: %s' "$usage_content"
 fi
-if [ -n "$line3" ]; then
-  printf '\n%s' "$line3"
-fi
-if [ -n "$line4" ]; then
-  printf '\n%s' "$line4"
-fi
+
 printf '\n'
