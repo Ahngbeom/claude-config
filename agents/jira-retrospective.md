@@ -172,6 +172,26 @@ Use `mcp__plugin_atlassian_atlassian__searchJiraIssuesUsingJql`:
    - 완료율 = (완료 + 검수완료) / 전체 × 100
    - 진행률 = (완료 + 검수완료 + STAG반영) / 전체 × 100
 
+5. **민감 정보 보호** (CRITICAL):
+   회고록 작성 시 다음 민감 정보는 반드시 **마스킹**하거나 **제외**해야 합니다:
+   - **Jira 티켓 정보**: 이슈 티켓 넘버(KEY-123 등)는 회고록에 기재하지 않음
+   - **댓글 작성자**: 댓글 작성자 닉네임/이름은 제외하거나 마스킹 처리
+   - **개인정보**: 이메일 주소, 전화번호, 주민등록번호 등
+   - **인증정보**: API 키, 비밀번호, 토큰, 시크릿 키
+   - **인프라 정보**: 내부 서버 IP/주소, DB 연결 문자열, 환경변수 값
+   - **고객 정보**: 고객사명, 고객 연락처, 계약 정보
+   - **금융 정보**: 계좌번호, 카드번호, 결제 정보
+
+   마스킹 예시:
+   ```
+   - 티켓 넘버: PROJ-123 → (제외, 제목만 표시)
+   - 댓글 작성자: 홍길동 → [작성자] 또는 제외
+   - API Key: sk-xxxx...xxxx → [API_KEY_MASKED]
+   - 서버주소: 192.168.1.100 → [INTERNAL_SERVER]
+   - 이메일: user@company.com → u***@c***.com
+   - 고객사: ABC기업 → [고객사명]
+   ```
+
 ## Error Handling
 
 - If Atlassian auth fails: Guide user to run `/mcp` for re-authentication
