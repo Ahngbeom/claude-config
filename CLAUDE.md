@@ -100,14 +100,6 @@ User: "지난 주 회고록 작성해줘"
 → 3. Markdown 회고록 파일 자동 생성
 ```
 
-또는 `/retrospective` 명령어 사용:
-```
-/retrospective
-→ Jira 설정 입력 (URL, 담당자)
-→ 기간 및 출력 형식 선택
-→ 회고록 자동 생성
-```
-
 ## Project References
 
 ### Mobidoc 프론트엔드 (환자용 웹)
