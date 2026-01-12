@@ -45,3 +45,9 @@ telemetry/
 
 # 브라우저 확장
 chrome/
+
+# 붙여넣기 캐시 (민감 정보 포함 가능)
+paste-cache/
+
+# 보안 경고 상태 (로컬 세션별)
+security_warnings_state_*.json
