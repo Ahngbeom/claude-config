@@ -2,7 +2,7 @@
 
 전문화된 AI 에이전트 카탈로그입니다. 각 에이전트는 특정 영역의 전문가로, 복잡한 개발 작업을 효율적으로 처리합니다.
 
-## 전체 에이전트 목록 (6개)
+## 전체 에이전트 목록 (9개)
 
 ---
 
@@ -149,6 +149,81 @@
 
 ---
 
+### 7. healthcare-stats-normalizer 🔵
+**파일**: `healthcare-stats-normalizer.md`
+**전문 분야**: 의료 데이터 정규화, 표준화, 코드 매핑, 데이터 품질
+
+**주요 역할**:
+- 의료 코드 매핑 (ICD-10, ICD-11, SNOMED CT, LOINC, CPT)
+- 데이터 정규화 및 표준화 (Z-score, Min-Max, Clinical Range)
+- 결측치 처리 (KNN, MICE, 도메인 기반 대체)
+- 이상치 탐지 (IQR, Z-score, 임상 범위 기반)
+- 의료 단위 변환 (mg/dL ↔ mmol/L 등)
+
+**사용 예시**:
+```
+"healthcare-stats-normalizer, 이 검사 결과 데이터를 정규화해줘"
+"ICD-10 코드를 검증하고 카테고리별로 분류해줘"
+"환자 데이터의 결측치를 임상적으로 적절하게 처리해줘"
+```
+
+**협업**:
+- `data-analyst`: 정규화된 데이터셋 제공
+- `healthcare-stats-tester`: 데이터 품질 메트릭 공유
+- `healthcare-stats-forecaster`: 시계열 데이터 전처리
+
+---
+
+### 8. healthcare-stats-tester 🟠
+**파일**: `healthcare-stats-tester.md`
+**전문 분야**: 생물통계학, 가설 검정, 임상 시험 분석, 진단 평가
+
+**주요 역할**:
+- 통계적 가설 검정 (t-test, ANOVA, Chi-square, Mann-Whitney)
+- 검정력 분석 및 표본 크기 계산
+- 생존 분석 (Kaplan-Meier, Cox regression, Log-rank test)
+- 진단 검사 평가 (ROC, AUC, Sensitivity, Specificity)
+- 의료 데이터 품질 테스트
+
+**사용 예시**:
+```
+"healthcare-stats-tester, 두 치료군 간 효과 차이를 검정해줘"
+"이 진단 모델의 ROC 분석을 수행해줘"
+"임상 시험에 필요한 표본 크기를 계산해줘"
+```
+
+**협업**:
+- `healthcare-stats-normalizer`: 데이터 품질 검증
+- `healthcare-stats-forecaster`: 예측 모델 검증
+- `data-analyst`: 통계 방법론 조율
+
+---
+
+### 9. healthcare-stats-forecaster 🟣
+**파일**: `healthcare-stats-forecaster.md`
+**전문 분야**: 의료 시계열 예측, 수요 예측, 임상 결과 예측, 역학 모델링
+
+**주요 역할**:
+- 시계열 예측 (ARIMA, SARIMA, Prophet, LSTM)
+- 환자 수요 예측 (응급실 방문, 입원, 병상 수요)
+- 임상 결과 예측 (재입원 위험, 사망률 예측)
+- 역학 모델링 (SEIR 모델, 감염병 발생 예측)
+- 리스크 스코어 계산 (LACE Index 등)
+
+**사용 예시**:
+```
+"healthcare-stats-forecaster, 다음 주 응급실 환자 수를 예측해줘"
+"환자의 30일 재입원 위험도를 계산해줘"
+"독감 시즌 피크를 예측하고 자원 계획을 세워줘"
+```
+
+**협업**:
+- `healthcare-stats-normalizer`: 시계열 데이터 전처리
+- `healthcare-stats-tester`: 예측 정확도 검증
+- `devops-engineer`: 예측 모델 배포
+
+---
+
 ## 다중 에이전트 협업 시나리오
 
 ### 시나리오 1: 완전한 기능 구현 (블로그 포스트 CRUD)
@@ -214,6 +289,14 @@
 | 인증 구현 | `backend-api-architect` |
 | 상태 관리 | `frontend-engineer` |
 | E2E 테스트 | `test-automation-engineer` |
+| 의료 데이터 정규화 | `healthcare-stats-normalizer` |
+| 의료 데이터 품질 검증 | `healthcare-stats-normalizer` |
+| 통계적 가설 검정 | `healthcare-stats-tester` |
+| 임상 시험 분석 | `healthcare-stats-tester` |
+| 진단 모델 평가 | `healthcare-stats-tester` |
+| 환자 수요 예측 | `healthcare-stats-forecaster` |
+| 재입원 위험 예측 | `healthcare-stats-forecaster` |
+| 역학 모델링 | `healthcare-stats-forecaster` |
 
 ---
 
@@ -258,5 +341,5 @@ A: 네! 프로젝트 루트에 `.claude/agents/` 디렉토리를 만들면 프�
 
 ---
 
-**마지막 업데이트**: 2025-12-06
-**총 에이전트 수**: 6개
+**마지막 업데이트**: 2026-01-09
+**총 에이전트 수**: 9개
