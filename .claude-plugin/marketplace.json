@@ -31,9 +31,6 @@
         "./agents/github-expert.md",
         "./agents/gitlab-expert.md",
         "./agents/jira-retrospective.md"
-      ],
-      "commands": [
-        "./commands/retrospective.md"
       ]
     }
   ]
