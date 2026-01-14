@@ -51,6 +51,7 @@ Respond in Korean (한국어) unless explicitly requested otherwise.
 | **GitHub** | `github-expert` | "GitHub Actions", "workflow", "gh", "GitHub CLI" |
 | **GitLab** | `gitlab-expert` | "GitLab CI", ".gitlab-ci.yml", "GitLab Runner" |
 | **Jira 회고록** | `jira-retrospective` | "회고록", "회고", "retrospective", "주간 정리", "Jira 이슈 정리" |
+| **Git 커밋 회고록** | `commit-retrospective` | "커밋 회고", "Git 회고", "GitHub 회고", "GitLab 회고", "작업 이력 정리" |
 
 ### Mandatory Agent Usage
 
@@ -98,6 +99,15 @@ User: "지난 주 회고록 작성해줘"
 → 1. jira-retrospective로 Jira 이슈 검색 및 분석
 → 2. 프로젝트별 진행 현황 분류
 → 3. Markdown 회고록 파일 자동 생성
+```
+
+**Example 5: Git 커밋 기반 회고록 생성**
+```
+User: "이번 주 내 커밋 회고록 작성해줘"
+→ 1. commit-retrospective로 Git 커밋 히스토리 수집
+→ 2. 커밋 유형별 분류 (feat, fix, docs 등)
+→ 3. 레포지토리별 작업 내역 정리
+→ 4. Markdown 회고록 파일 자동 생성
 ```
 
 ## Project References
