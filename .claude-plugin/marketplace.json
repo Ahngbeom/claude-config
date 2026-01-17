@@ -1,37 +1,21 @@
 {
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "ahngbeom-claude-config",
+  "description": "Custom Claude Code plugins with development agents for backend/frontend, data engineering, ML, DevOps, and healthcare analytics",
   "owner": {
-    "name": "ahngbeom"
-  },
-  "metadata": {
-    "description": "Custom Claude Code agents for backend/frontend development",
-    "version": "1.0.0"
+    "name": "ahngbeom",
+    "email": "ahngbeom@github.com"
   },
   "plugins": [
     {
       "name": "ahngbeom-dev-agents",
-      "description": "Development agents for API design, Node.js, Spring Boot, database, frontend, and testing",
-      "source": "./",
-      "strict": false,
-      "agents": [
-        "./agents/backend-api-architect.md",
-        "./agents/nodejs-backend.md",
-        "./agents/spring-boot-backend.md",
-        "./agents/database-expert.md",
-        "./agents/frontend-engineer.md",
-        "./agents/mobile-app-developer.md",
-        "./agents/desktop-app-developer.md",
-        "./agents/devops-engineer.md",
-        "./agents/data-engineer.md",
-        "./agents/ml-engineer.md",
-        "./agents/data-analyst.md",
-        "./agents/git-committer.md",
-        "./agents/markdown-document-writer.md",
-        "./agents/test-automation-engineer.md",
-        "./agents/github-expert.md",
-        "./agents/gitlab-expert.md",
-        "./agents/jira-retrospective.md"
-      ]
+      "description": "Development agents for API design, Node.js, Spring Boot, database, frontend, DevOps, data engineering, ML, and testing",
+      "author": {
+        "name": "ahngbeom"
+      },
+      "source": "./plugins/ahngbeom-dev-agents",
+      "category": "development",
+      "homepage": "https://github.com/Ahngbeom/claude-config"
     }
   ]
 }
