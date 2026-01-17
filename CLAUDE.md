@@ -47,9 +47,14 @@ Respond in Korean (한국어) unless explicitly requested otherwise.
 | **Testing** | `test-automation-engineer` | "테스트", "test", "Jest", "Playwright" |
 | **Documentation** | `markdown-document-writer` | "문서 작성", "README", "가이드" |
 | **Data Analysis** | `data-analyst` | "데이터 분석", "통계", "Pandas", "시각화" |
-| **DevOps** | `devops-engineer` | "배포", "CI/CD", "Docker", "Kubernetes" |
+| **Data Engineering** | `data-engineer` | "ETL", "파이프라인", "Spark", "Airflow", "데이터 웨어하우스" |
+| **ML/AI** | `ml-engineer` | "모델 학습", "PyTorch", "TensorFlow", "MLOps", "LLM" |
+| **DevOps** | `devops-engineer` | "배포", "CI/CD", "Docker", "Kubernetes", "Terraform" |
 | **GitHub** | `github-expert` | "GitHub Actions", "workflow", "gh", "GitHub CLI" |
 | **GitLab** | `gitlab-expert` | "GitLab CI", ".gitlab-ci.yml", "GitLab Runner" |
+| **Mobile App** | `mobile-app-developer` | "React Native", "Flutter", "iOS", "Android", "모바일 앱" |
+| **Desktop App** | `desktop-app-developer` | "Electron", "Tauri", "데스크톱 앱" |
+| **Healthcare Stats** | `healthcare-stats-normalizer`, `healthcare-stats-tester`, `healthcare-stats-forecaster` | "의료 데이터", "ICD", "SNOMED", "임상 통계", "헬스케어" |
 | **Jira 회고록** | `jira-retrospective` | "회고록", "회고", "retrospective", "주간 정리", "Jira 이슈 정리" |
 | **Git 커밋 회고록** | `commit-retrospective` | "커밋 회고", "Git 회고", "GitHub 회고", "GitLab 회고", "작업 이력 정리" |
 
@@ -112,7 +117,4 @@ User: "이번 주 내 커밋 회고록 작성해줘"
 
 ## Project References
 
-### Mobidoc 프론트엔드 (환자용 웹)
-- **경로**: `/Users/bahn/Flyingdoctor/mobidoc-front/front-patient`
-- **용도**: Flutter WebView에서 표시하는 웹 화면 소스코드
-- Flutter 앱과 웹 연동 작업 시 함께 참조
+프로젝트별 참조 경로는 각 프로젝트의 `.claude/settings.local.json`에서 설정하세요.

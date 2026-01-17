@@ -43,40 +43,83 @@ git status  # "sparse checkout with X% of tracked files present"
 
 ---
 
-## Agents
+## Agents (21개)
+
+### 개발 에이전트
 
 | Agent | Description | Color |
 |-------|-------------|-------|
 | `backend-api-architect` | API design principles, RESTful/GraphQL patterns, authentication concepts | purple |
 | `nodejs-backend` | Node.js/Express, TypeScript, middleware patterns | green |
 | `spring-boot-backend` | Spring Boot, Java, Spring Security | orange |
-| `database-expert` | PostgreSQL/MySQL schema design, query optimization | - |
 | `frontend-engineer` | React/Next.js, component architecture, state management | blue |
 | `mobile-app-developer` | React Native, Flutter, Swift, Kotlin for iOS/Android | cyan |
 | `desktop-app-developer` | Electron, Tauri for cross-platform desktop apps | yellow |
+
+### 인프라/데이터 에이전트
+
+| Agent | Description | Color |
+|-------|-------------|-------|
+| `database-expert` | PostgreSQL/MySQL schema design, query optimization, migration | orange |
 | `devops-engineer` | ELK Stack, Kubernetes, CI/CD, Terraform, cloud infrastructure | red |
 | `data-engineer` | Data pipelines, ETL/ELT, Spark, Airflow, data warehouse | indigo |
 | `ml-engineer` | PyTorch, TensorFlow, model training, MLOps, LLM | pink |
 | `data-analyst` | Pandas, SQL, visualization, statistical analysis, EDA | teal |
-| `git-committer` | Git commit and push automation | - |
-| `markdown-document-writer` | Documentation writing in markdown format | - |
-| `test-automation-engineer` | Jest/Vitest, React Testing Library, Playwright | - |
+
+### 개발 도구 에이전트
+
+| Agent | Description | Color |
+|-------|-------------|-------|
+| `git-committer` | Git commit and push automation | green |
+| `test-automation-engineer` | Jest/Vitest, React Testing Library, Playwright | yellow |
+| `markdown-document-writer` | Documentation writing in markdown format | cyan |
+| `github-expert` | GitHub Actions workflows, CI/CD automation, GitHub CLI | gray |
+| `gitlab-expert` | GitLab CI/CD pipelines, .gitlab-ci.yml configuration | orange |
+
+### 회고 에이전트
+
+| Agent | Description | Color |
+|-------|-------------|-------|
+| `jira-retrospective` | Jira 이슈 기반 회고록 자동 생성 | blue |
+| `commit-retrospective` | Git 커밋 히스토리 기반 회고록 자동 생성 | cyan |
+
+### 헬스케어 특화 에이전트
+
+| Agent | Description | Color |
+|-------|-------------|-------|
+| `healthcare-stats-normalizer` | Medical data normalization, ICD/SNOMED code mapping | cyan |
+| `healthcare-stats-tester` | Medical statistics, hypothesis testing, clinical trial analysis | orange |
+| `healthcare-stats-forecaster` | Healthcare time series forecasting, disease outbreak prediction | purple |
 
 ## Usage
 
 Claude와 대화할 때 에이전트 이름을 언급하면 자동으로 활성화됩니다:
 
 ```
+# 개발 에이전트
 "frontend-engineer, 이 컴포넌트를 최적화해줘"
 "backend-api-architect, RESTful API를 설계해줘"
 "nodejs-backend, Express 미들웨어를 구현해줘"
 "spring-boot-backend, Spring Security 설정해줘"
 "mobile-app-developer, React Native 앱을 만들어줘"
 "desktop-app-developer, Electron 앱을 구성해줘"
+
+# 인프라/데이터 에이전트
+"database-expert, 쿼리 최적화해줘"
 "devops-engineer, Kubernetes 배포 설정해줘"
 "data-engineer, Airflow DAG 작성해줘"
 "ml-engineer, PyTorch 모델 학습 파이프라인 구현해줘"
 "data-analyst, 매출 데이터 EDA 분석해줘"
+
+# 개발 도구 에이전트
+"git-committer, 변경사항 커밋해줘"
+"test-automation-engineer, 테스트 코드 작성해줘"
+"github-expert, GitHub Actions 워크플로우 만들어줘"
+"gitlab-expert, GitLab CI 파이프라인 설정해줘"
+
+# 회고 에이전트
+"jira-retrospective, 지난 주 회고록 작성해줘"
+"commit-retrospective, 이번 주 커밋 회고록 작성해줘"
 ```
 
 ### Priority
