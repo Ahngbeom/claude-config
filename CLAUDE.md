@@ -42,17 +42,20 @@ Respond in Korean (한국어) unless explicitly requested otherwise.
 |-----------|-------|----------------------|
 | **Git Operations** | `git-committer` | "commit", "push", "커밋", "푸시", after completing features |
 | **Frontend/React** | `frontend-engineer` | "컴포넌트", "리액트", "Vue", "UI", component architecture |
-| **Backend API** | `backend-api-architect` or `nodejs-backend` or `spring-boot-backend` | "API", "엔드포인트", "REST", "GraphQL" |
+| **Backend API** | `backend-api-architect` or `nodejs-backend` or `spring-boot-backend` or `python-fastapi-backend` | "API", "엔드포인트", "REST", "GraphQL" |
+| **Python/FastAPI** | `python-fastapi-backend` | "FastAPI", "Pydantic", "uvicorn", "Python API", "async Python" |
 | **Database** | `database-expert` | "스키마", "쿼리", "migration", "인덱스", "DB" |
 | **Testing** | `test-automation-engineer` | "테스트", "test", "Jest", "Playwright" |
 | **Documentation** | `markdown-document-writer` | "문서 작성", "README", "가이드" |
 | **Data Analysis** | `data-analyst` | "데이터 분석", "통계", "Pandas", "시각화" |
 | **Data Engineering** | `data-engineer` | "ETL", "파이프라인", "Spark", "Airflow", "데이터 웨어하우스" |
 | **ML/AI** | `ml-engineer` | "모델 학습", "PyTorch", "TensorFlow", "MLOps", "LLM" |
+| **Computer Vision** | `computer-vision-engineer` | "얼굴 인식", "MediaPipe", "OpenCV", "face_recognition", "랜드마크", "AR 필터" |
 | **DevOps** | `devops-engineer` | "배포", "CI/CD", "Docker", "Kubernetes", "Terraform" |
 | **GitHub** | `github-expert` | "GitHub Actions", "workflow", "gh", "GitHub CLI" |
 | **GitLab** | `gitlab-expert` | "GitLab CI", ".gitlab-ci.yml", "GitLab Runner" |
 | **Mobile App** | `mobile-app-developer` | "React Native", "Flutter", "iOS", "Android", "모바일 앱" |
+| **AR Mobile** | `ar-mobile-developer` | "ARCore", "ARKit", "AR 필터", "얼굴 필터", "증강현실", "Face Mesh" |
 | **Desktop App** | `desktop-app-developer` | "Electron", "Tauri", "데스크톱 앱" |
 | **Healthcare Stats** | `healthcare-stats-normalizer`, `healthcare-stats-tester`, `healthcare-stats-forecaster` | "의료 데이터", "ICD", "SNOMED", "임상 통계", "헬스케어" |
 | **Jira 회고록** | `jira-retrospective` | "회고록", "회고", "retrospective", "주간 정리", "Jira 이슈 정리" |
@@ -113,6 +116,33 @@ User: "이번 주 내 커밋 회고록 작성해줘"
 → 2. 커밋 유형별 분류 (feat, fix, docs 등)
 → 3. 레포지토리별 작업 내역 정리
 → 4. Markdown 회고록 파일 자동 생성
+```
+
+**Example 6: FastAPI 백엔드 개발**
+```
+User: "얼굴 분석 API 만들어줘 (FastAPI)"
+→ 1. python-fastapi-backend로 API 엔드포인트 설계 및 구현
+→ 2. Pydantic 스키마 정의
+→ 3. test-automation-engineer로 pytest 테스트 작성
+→ 4. git-committer로 커밋
+```
+
+**Example 7: 컴퓨터 비전/얼굴 분석**
+```
+User: "얼굴 랜드마크 분석 기능 구현해줘"
+→ 1. computer-vision-engineer로 MediaPipe Face Mesh 연동
+→ 2. 랜드마크 기반 측정 로직 구현
+→ 3. python-fastapi-backend로 API 엔드포인트 연동
+→ 4. git-committer로 커밋
+```
+
+**Example 8: AR 얼굴 필터 개발**
+```
+User: "실시간 AR 메이크업 필터 만들어줘"
+→ 1. ar-mobile-developer로 ARKit/ARCore 연동
+→ 2. computer-vision-engineer로 얼굴 랜드마크 매핑
+→ 3. 필터 렌더링 및 오버레이 구현
+→ 4. git-committer로 커밋
 ```
 
 ## Project References
