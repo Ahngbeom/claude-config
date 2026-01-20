@@ -4,9 +4,5 @@
   "author": {
     "name": "ahngbeom",
     "email": "ahngbeom@github.com"
-  },
-  "includes": {
-    "agents": "agents/",
-    "hooks": "hooks/"
   }
 }
