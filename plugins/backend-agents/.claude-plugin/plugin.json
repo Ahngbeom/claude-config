@@ -1,0 +1,12 @@
+{
+  "name": "backend-agents",
+  "description": "Backend development agents for API architecture, Node.js, Spring Boot, FastAPI, and database design",
+  "author": {
+    "name": "ahngbeom",
+    "email": "ahngbeom@github.com"
+  },
+  "includes": {
+    "agents": "agents/",
+    "hooks": "hooks/"
+  }
+}

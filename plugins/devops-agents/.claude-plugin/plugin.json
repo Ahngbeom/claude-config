@@ -1,0 +1,12 @@
+{
+  "name": "devops-agents",
+  "description": "DevOps and Git workflow agents for CI/CD, Docker, Kubernetes, and version control",
+  "author": {
+    "name": "ahngbeom",
+    "email": "ahngbeom@github.com"
+  },
+  "includes": {
+    "agents": "agents/",
+    "hooks": "hooks/"
+  }
+}

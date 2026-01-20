@@ -1,0 +1,11 @@
+{
+  "name": "mobile-agents",
+  "description": "Mobile and desktop application agents for React Native, Flutter, AR/VR, Electron, and Tauri",
+  "author": {
+    "name": "ahngbeom",
+    "email": "ahngbeom@github.com"
+  },
+  "includes": {
+    "agents": "agents/"
+  }
+}
