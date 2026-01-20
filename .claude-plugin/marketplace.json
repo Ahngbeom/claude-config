@@ -1,20 +1,80 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "ahngbeom-claude-config",
-  "description": "Custom Claude Code plugins with development agents for backend/frontend, data engineering, ML, DevOps, and healthcare analytics",
+  "description": "Custom Claude Code plugins with specialized development agents for backend, frontend, data science, DevOps, healthcare analytics, mobile development, and productivity",
   "owner": {
     "name": "ahngbeom",
     "email": "ahngbeom@github.com"
   },
   "plugins": [
     {
-      "name": "ahngbeom-dev-agents",
-      "description": "Development agents for API design, Node.js, Spring Boot, database, frontend, DevOps, data engineering, ML, and testing",
+      "name": "backend-agents",
+      "description": "Backend development agents for API architecture, Node.js, Spring Boot, FastAPI, and database design",
       "author": {
         "name": "ahngbeom"
       },
-      "source": "./plugins/ahngbeom-dev-agents",
+      "source": "./plugins/backend-agents",
       "category": "development",
+      "homepage": "https://github.com/Ahngbeom/claude-config"
+    },
+    {
+      "name": "frontend-agents",
+      "description": "Frontend development agents for React, Vue, and modern web UI development",
+      "author": {
+        "name": "ahngbeom"
+      },
+      "source": "./plugins/frontend-agents",
+      "category": "development",
+      "homepage": "https://github.com/Ahngbeom/claude-config"
+    },
+    {
+      "name": "data-agents",
+      "description": "Data science and ML agents for data analysis, engineering, machine learning, and computer vision",
+      "author": {
+        "name": "ahngbeom"
+      },
+      "source": "./plugins/data-agents",
+      "category": "development",
+      "homepage": "https://github.com/Ahngbeom/claude-config"
+    },
+    {
+      "name": "devops-agents",
+      "description": "DevOps and Git workflow agents for CI/CD, Docker, Kubernetes, GitHub/GitLab, and version control",
+      "author": {
+        "name": "ahngbeom"
+      },
+      "source": "./plugins/devops-agents",
+      "category": "productivity",
+      "homepage": "https://github.com/Ahngbeom/claude-config"
+    },
+    {
+      "name": "healthcare-agents",
+      "description": "Healthcare analytics agents for medical data normalization (ICD, SNOMED), statistical analysis, and forecasting",
+      "author": {
+        "name": "ahngbeom"
+      },
+      "source": "./plugins/healthcare-agents",
+      "category": "development",
+      "homepage": "https://github.com/Ahngbeom/claude-config"
+    },
+    {
+      "name": "mobile-agents",
+      "description": "Mobile and desktop application agents for React Native, Flutter, AR/VR (ARKit/ARCore), Electron, and Tauri",
+      "author": {
+        "name": "ahngbeom"
+      },
+      "source": "./plugins/mobile-agents",
+      "category": "development",
+      "homepage": "https://github.com/Ahngbeom/claude-config"
+    },
+    {
+      "name": "productivity-agents",
+      "description": "Productivity agents for documentation, testing, Jira/Git retrospectives, and workflow automation",
+      "author": {
+        "name": "ahngbeom"
+      },
+      "source": "./plugins/productivity-agents",
+      "category": "productivity",
       "homepage": "https://github.com/Ahngbeom/claude-config"
     }
   ]

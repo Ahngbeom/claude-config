@@ -1,0 +1,12 @@
+{
+  "name": "frontend-agents",
+  "description": "Frontend development agents for React, Vue, and modern web UI development",
+  "author": {
+    "name": "ahngbeom",
+    "email": "ahngbeom@github.com"
+  },
+  "includes": {
+    "agents": "agents/",
+    "hooks": "hooks/"
+  }
+}

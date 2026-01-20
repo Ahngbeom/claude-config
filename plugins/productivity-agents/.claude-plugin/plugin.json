@@ -1,0 +1,12 @@
+{
+  "name": "productivity-agents",
+  "description": "Productivity agents for documentation, testing, retrospectives, and workflow automation",
+  "author": {
+    "name": "ahngbeom",
+    "email": "ahngbeom@github.com"
+  },
+  "includes": {
+    "agents": "agents/",
+    "hooks": "hooks/"
+  }
+}

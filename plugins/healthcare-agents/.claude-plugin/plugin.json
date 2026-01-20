@@ -1,0 +1,11 @@
+{
+  "name": "healthcare-agents",
+  "description": "Healthcare analytics agents for medical data normalization, statistical analysis, and forecasting",
+  "author": {
+    "name": "ahngbeom",
+    "email": "ahngbeom@github.com"
+  },
+  "includes": {
+    "agents": "agents/"
+  }
+}

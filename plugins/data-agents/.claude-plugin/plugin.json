@@ -1,0 +1,11 @@
+{
+  "name": "data-agents",
+  "description": "Data science and ML agents for data analysis, engineering, machine learning, and computer vision",
+  "author": {
+    "name": "ahngbeom",
+    "email": "ahngbeom@github.com"
+  },
+  "includes": {
+    "agents": "agents/"
+  }
+}
