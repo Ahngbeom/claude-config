@@ -1,16 +1,41 @@
 # Claude Code Configuration
 
-Custom Claude Code agents for backend/frontend development.
+Custom Claude Code plugin marketplace with specialized development agents.
 
 ## Installation
 
-### Method 1: Marketplace Plugin
+### Marketplace Plugin (Recommended)
 
+Install all plugins at once:
 ```bash
 claude plugin install https://github.com/ahngbeom/claude-config
 ```
 
-### Method 2: Direct Installation
+Or install individual plugins by category:
+```bash
+# Backend development
+claude plugin install backend-agents@ahngbeom-claude-config
+
+# Frontend development
+claude plugin install frontend-agents@ahngbeom-claude-config
+
+# Data science & ML
+claude plugin install data-agents@ahngbeom-claude-config
+
+# DevOps & Git workflows
+claude plugin install devops-agents@ahngbeom-claude-config
+
+# Healthcare analytics
+claude plugin install healthcare-agents@ahngbeom-claude-config
+
+# Mobile & desktop apps
+claude plugin install mobile-agents@ahngbeom-claude-config
+
+# Productivity tools
+claude plugin install productivity-agents@ahngbeom-claude-config
+```
+
+### Direct Installation
 
 ```bash
 git clone https://github.com/ahngbeom/claude-config
@@ -18,72 +43,76 @@ cd claude-config
 ./install.sh
 ```
 
-### Method 3: Sparse Checkout (agents/ 제외)
+---
 
-플러그인으로 에이전트를 사용하면서 `~/.claude`를 이 레포로 관리할 때, `agents/` 중복을 방지하려면:
+## Plugin Structure
 
-```bash
-# 1. Clone
-git clone https://github.com/ahngbeom/claude-config ~/.claude
-cd ~/.claude
+This marketplace follows the [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official) structure.
 
-# 2. Sparse checkout 설정
-git sparse-checkout init
-echo -e '/*\n!/agents/' > .git/info/sparse-checkout
-git read-tree -mu HEAD
-
-# 3. 확인
-git status  # "sparse checkout with X% of tracked files present"
 ```
-
-이 설정으로:
-- `agents/` 디렉토리가 로컬에 체크아웃되지 않음
-- 에이전트는 플러그인(`dev-agents:*`)으로 사용
-- 원격 레포의 `agents/`는 그대로 유지됨
+ahngbeom-claude-config/
+├── .claude-plugin/
+│   └── marketplace.json          # Marketplace metadata
+├── plugins/
+│   ├── backend-agents/           # 5 agents
+│   ├── frontend-agents/          # 1 agent
+│   ├── data-agents/              # 4 agents
+│   ├── devops-agents/            # 4 agents
+│   ├── healthcare-agents/        # 3 agents
+│   ├── mobile-agents/            # 3 agents
+│   └── productivity-agents/      # 4 agents
+└── README.md
+```
 
 ---
 
-## Agents (21개)
+## Plugins & Agents (24 total)
 
-### 개발 에이전트
+### backend-agents (5 agents)
+
+Backend development agents for API architecture and server-side implementation.
 
 | Agent | Description | Color |
 |-------|-------------|-------|
-| `backend-api-architect` | API design principles, RESTful/GraphQL patterns, authentication concepts | purple |
+| `backend-api-architect` | API design principles, RESTful/GraphQL patterns, authentication | purple |
 | `nodejs-backend` | Node.js/Express, TypeScript, middleware patterns | green |
 | `spring-boot-backend` | Spring Boot, Java, Spring Security | orange |
-| `frontend-engineer` | React/Next.js, component architecture, state management | blue |
-| `mobile-app-developer` | React Native, Flutter, Swift, Kotlin for iOS/Android | cyan |
-| `desktop-app-developer` | Electron, Tauri for cross-platform desktop apps | yellow |
+| `python-fastapi-backend` | FastAPI, Pydantic, async Python, uvicorn | blue |
+| `database-expert` | PostgreSQL/MySQL schema design, query optimization, migration | orange |
 
-### 인프라/데이터 에이전트
+### frontend-agents (1 agent)
+
+Frontend development agents for modern web UI.
 
 | Agent | Description | Color |
 |-------|-------------|-------|
-| `database-expert` | PostgreSQL/MySQL schema design, query optimization, migration | orange |
-| `devops-engineer` | ELK Stack, Kubernetes, CI/CD, Terraform, cloud infrastructure | red |
+| `frontend-engineer` | React/Next.js, Vue, component architecture, state management | blue |
+
+### data-agents (4 agents)
+
+Data science and machine learning agents.
+
+| Agent | Description | Color |
+|-------|-------------|-------|
+| `data-analyst` | Pandas, SQL, visualization, statistical analysis, EDA | teal |
 | `data-engineer` | Data pipelines, ETL/ELT, Spark, Airflow, data warehouse | indigo |
 | `ml-engineer` | PyTorch, TensorFlow, model training, MLOps, LLM | pink |
-| `data-analyst` | Pandas, SQL, visualization, statistical analysis, EDA | teal |
+| `computer-vision-engineer` | MediaPipe, OpenCV, face recognition, AR filters | cyan |
 
-### 개발 도구 에이전트
+### devops-agents (4 agents)
+
+DevOps and Git workflow automation agents.
 
 | Agent | Description | Color |
 |-------|-------------|-------|
+| `devops-engineer` | Kubernetes, CI/CD, Terraform, cloud infrastructure | red |
 | `git-committer` | Git commit and push automation | green |
-| `test-automation-engineer` | Jest/Vitest, React Testing Library, Playwright | yellow |
-| `markdown-document-writer` | Documentation writing in markdown format | cyan |
 | `github-expert` | GitHub Actions workflows, CI/CD automation, GitHub CLI | gray |
 | `gitlab-expert` | GitLab CI/CD pipelines, .gitlab-ci.yml configuration | orange |
 
-### 회고 에이전트
+### healthcare-agents (3 agents)
 
-| Agent | Description | Color |
-|-------|-------------|-------|
-| `jira-retrospective` | Jira 이슈 기반 회고록 자동 생성 | blue |
-| `commit-retrospective` | Git 커밋 히스토리 기반 회고록 자동 생성 | cyan |
-
-### 헬스케어 특화 에이전트
+Healthcare analytics and medical data processing agents.
 
 | Agent | Description | Color |
 |-------|-------------|-------|
@@ -91,41 +120,67 @@ git status  # "sparse checkout with X% of tracked files present"
 | `healthcare-stats-tester` | Medical statistics, hypothesis testing, clinical trial analysis | orange |
 | `healthcare-stats-forecaster` | Healthcare time series forecasting, disease outbreak prediction | purple |
 
+### mobile-agents (3 agents)
+
+Mobile and desktop application development agents.
+
+| Agent | Description | Color |
+|-------|-------------|-------|
+| `mobile-app-developer` | React Native, Flutter, Swift, Kotlin for iOS/Android | cyan |
+| `ar-mobile-developer` | ARCore, ARKit, AR filters, Face Mesh, augmented reality | magenta |
+| `desktop-app-developer` | Electron, Tauri for cross-platform desktop apps | yellow |
+
+### productivity-agents (4 agents)
+
+Documentation, testing, and workflow automation agents.
+
+| Agent | Description | Color |
+|-------|-------------|-------|
+| `markdown-document-writer` | Documentation writing in markdown format | cyan |
+| `test-automation-engineer` | Jest/Vitest, React Testing Library, Playwright, pytest | yellow |
+| `commit-retrospective` | Git commit history-based retrospective generation | cyan |
+| `jira-retrospective` | Jira issue-based retrospective generation | blue |
+
+---
+
 ## Usage
 
-Claude와 대화할 때 에이전트 이름을 언급하면 자동으로 활성화됩니다:
+### Using Plugin Namespace
 
-```
-# 개발 에이전트
-"frontend-engineer, 이 컴포넌트를 최적화해줘"
-"backend-api-architect, RESTful API를 설계해줘"
-"nodejs-backend, Express 미들웨어를 구현해줘"
-"spring-boot-backend, Spring Security 설정해줘"
-"mobile-app-developer, React Native 앱을 만들어줘"
-"desktop-app-developer, Electron 앱을 구성해줘"
+After installing a plugin, use the namespace prefix:
 
-# 인프라/데이터 에이전트
-"database-expert, 쿼리 최적화해줘"
-"devops-engineer, Kubernetes 배포 설정해줘"
-"data-engineer, Airflow DAG 작성해줘"
-"ml-engineer, PyTorch 모델 학습 파이프라인 구현해줘"
-"data-analyst, 매출 데이터 EDA 분석해줘"
+```bash
+# Backend agents
+"backend-agents:nodejs-backend, Express 미들웨어를 구현해줘"
+"backend-agents:database-expert, 쿼리 최적화해줘"
 
-# 개발 도구 에이전트
-"git-committer, 변경사항 커밋해줘"
-"test-automation-engineer, 테스트 코드 작성해줘"
-"github-expert, GitHub Actions 워크플로우 만들어줘"
-"gitlab-expert, GitLab CI 파이프라인 설정해줘"
+# Data agents
+"data-agents:ml-engineer, PyTorch 모델 학습 파이프라인 구현해줘"
+"data-agents:data-analyst, 매출 데이터 EDA 분석해줘"
 
-# 회고 에이전트
-"jira-retrospective, 지난 주 회고록 작성해줘"
-"commit-retrospective, 이번 주 커밋 회고록 작성해줘"
+# DevOps agents
+"devops-agents:git-committer, 변경사항 커밋해줘"
+"devops-agents:github-expert, GitHub Actions 워크플로우 만들어줘"
+
+# Productivity agents
+"productivity-agents:jira-retrospective, 지난 주 회고록 작성해줘"
 ```
 
-### Priority
+### Auto-Trigger Keywords
 
-1. **Project Level**: `./project/.claude/agents/` (highest)
-2. **Global Level**: `~/.claude/agents/` (fallback)
+Agents are automatically activated based on keywords:
+
+| Keywords | Activated Agent |
+|----------|-----------------|
+| "API", "REST", "GraphQL" | backend-api-architect |
+| "컴포넌트", "React", "Vue" | frontend-engineer |
+| "commit", "push", "커밋" | git-committer |
+| "테스트", "Jest", "Playwright" | test-automation-engineer |
+| "Docker", "Kubernetes", "CI/CD" | devops-engineer |
+| "Pandas", "시각화", "EDA" | data-analyst |
+| "PyTorch", "모델 학습", "MLOps" | ml-engineer |
+
+---
 
 ## Multi-Agent Collaboration
 
@@ -136,6 +191,7 @@ Claude와 대화할 때 에이전트 이름을 언급하면 자동으로 활성�
 3. nodejs-backend (or spring-boot-backend): Implementation
 4. frontend-engineer: UI development
 5. test-automation-engineer: Test writing
+6. git-committer: Commit changes
 ```
 
 ### Parallel Execution
@@ -146,17 +202,9 @@ Claude와 대화할 때 에이전트 이름을 언급하면 자동으로 활성�
 
 ---
 
-## Additional Plugins
-
-For extra skills (document processing, design, etc.):
-
-```bash
-claude mcp add anthropic-agent-skills -- npx -y @anthropic-ai/claude-code-mcp
-```
-
 ## Adding New Agents
 
-1. Create `.md` file in `~/.claude/agents/`
+1. Create `.md` file in the appropriate plugin's `agents/` folder
 2. Add YAML frontmatter:
    ```yaml
    ---
@@ -167,3 +215,9 @@ claude mcp add anthropic-agent-skills -- npx -y @anthropic-ai/claude-code-mcp
    ---
    ```
 3. Write agent prompt (expertise, core knowledge, working principles)
+
+---
+
+## License
+
+MIT
