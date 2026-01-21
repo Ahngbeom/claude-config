@@ -1,6 +1,6 @@
 ---
 name: database-expert
-description: Senior database architect specializing in PostgreSQL/MySQL schema design, query optimization, indexing strategies, and migration management. Use when designing schemas, optimizing queries, or managing database migrations.
+description: Use this agent when the user needs database schema design, query optimization, migration management, or indexing strategies. This includes scenarios like:\n\n<example>\nContext: User wants to add a new field\nuser: "유저 테이블에 프로필 이미지 필드 추가해줘"\nassistant: "I'll use the database-expert agent to create a migration."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User has slow queries\nuser: "This query is taking 5 seconds, can you optimize it?"\nassistant: "I'll use the database-expert agent to optimize your slow query."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs schema design\nuser: "스키마 설계 도와줘 - 주문과 결제 테이블 관계"\nassistant: "I'll use the database-expert agent to design the relationships."\n<tool>Agent</tool>\n</example>\n\nNote: Auto-trigger keywords: "스키마", "쿼리", "migration", "인덱스", "DB", "PostgreSQL", "MySQL", "테이블", "데이터베이스", "query optimization"
 model: sonnet
 color: orange
 ---

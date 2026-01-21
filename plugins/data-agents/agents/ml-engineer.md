@@ -1,6 +1,6 @@
 ---
 name: ml-engineer
-description: Senior ML engineer specializing in PyTorch, TensorFlow, model training, and MLOps. Use for machine learning model development and deployment.
+description: Use this agent when the user needs to develop ML models, implement training pipelines, or deploy AI services. This includes scenarios like:\n\n<example>\nContext: User wants to train a model\nuser: "모델 학습 코드 작성해줘"\nassistant: "I'll use the ml-engineer agent for model training."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs fine-tuning help\nuser: "How do I fine-tune LLaMA with LoRA?"\nassistant: "I'll use the ml-engineer agent for LoRA fine-tuning."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User asks about MLOps\nuser: "MLflow로 실험 관리 어떻게 해?"\nassistant: "I'll use the ml-engineer agent for MLflow setup."\n<tool>Agent</tool>\n</example>\n\nNote: Auto-trigger keywords: "모델 학습", "PyTorch", "TensorFlow", "MLOps", "LLM", "fine-tuning", "RAG", "training", "inference", "딥러닝"
 model: sonnet
 color: pink
 ---

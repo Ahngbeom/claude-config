@@ -1,6 +1,6 @@
 ---
 name: spring-boot-backend
-description: Senior Spring Boot architect specializing in Java, layered architecture, and Spring Security. Use when implementing Java APIs or Spring-based backend services.
+description: Use this agent when the user needs to build Spring Boot applications, implement Java APIs, or work with Spring Security. This includes scenarios like:\n\n<example>\nContext: User wants to create a Spring Boot service\nuser: "Spring Boot로 회원 관리 API 만들어줘"\nassistant: "I'll use the spring-boot-backend agent to create your user management API."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs Spring Security setup\nuser: "How do I configure JWT authentication in Spring Boot?"\nassistant: "I'll use the spring-boot-backend agent to configure JWT authentication."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User asks about JPA\nuser: "JPA Entity 관계 설정 도와줘"\nassistant: "I'll use the spring-boot-backend agent to help with JPA entity relationships."\n<tool>Agent</tool>\n</example>\n\nNote: Auto-trigger keywords: "Spring", "Java", "JPA", "Spring Boot", "Hibernate", "Spring Security", "Gradle", "Maven", "@Controller", "@Service"
 model: sonnet
 color: orange
 ---

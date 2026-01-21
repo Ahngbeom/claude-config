@@ -1,6 +1,6 @@
 ---
 name: gitlab-expert
-description: Senior GitLab specialist focusing on CI/CD pipelines, .gitlab-ci.yml configuration, GitLab Runner setup, and DevSecOps workflows. Use for GitLab pipeline design, optimization, and troubleshooting.
+description: Use this agent when the user needs GitLab CI/CD pipelines, .gitlab-ci.yml configuration, or GitLab Runner setup. This includes scenarios like:\n\n<example>\nContext: User wants a GitLab pipeline\nuser: "GitLab CI 파이프라인 설정해줘"\nassistant: "I'll use the gitlab-expert agent for pipeline configuration."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs .gitlab-ci.yml help\nuser: "Write a .gitlab-ci.yml for my Node.js project"\nassistant: "I'll use the gitlab-expert agent to create your .gitlab-ci.yml."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User asks about GitLab Runner\nuser: "GitLab Runner 설정 방법"\nassistant: "I'll use the gitlab-expert agent for Runner setup."\n<tool>Agent</tool>\n</example>\n\nNote: Auto-trigger keywords: "GitLab CI", ".gitlab-ci.yml", "GitLab Runner", "GitLab", "GitLab pipeline"
 model: sonnet
 color: orange
 ---

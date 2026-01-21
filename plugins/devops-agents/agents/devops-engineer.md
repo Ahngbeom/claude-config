@@ -1,6 +1,6 @@
 ---
 name: devops-engineer
-description: Senior DevOps/SRE engineer specializing in ELK Stack, Kubernetes, CI/CD pipelines, and cloud infrastructure. Use for monitoring, deployment, and infrastructure tasks.
+description: Use this agent when the user needs CI/CD pipelines, Docker configuration, Kubernetes deployments, or infrastructure automation. This includes scenarios like:\n\n<example>\nContext: User needs deployment setup\nuser: "배포 파이프라인 설정해줘"\nassistant: "I'll use the devops-engineer agent for pipeline setup."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs Docker help\nuser: "Create a Dockerfile for my Node.js application"\nassistant: "I'll use the devops-engineer agent to create your Dockerfile."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User asks about Kubernetes\nuser: "How do I configure HPA for my deployment?"\nassistant: "I'll use the devops-engineer agent for HPA configuration."\n<tool>Agent</tool>\n</example>\n\nNote: Auto-trigger keywords: "배포", "CI/CD", "Docker", "Kubernetes", "Terraform", "EKS", "Prometheus", "Grafana", "인프라", "deployment"
 model: sonnet
 color: red
 ---

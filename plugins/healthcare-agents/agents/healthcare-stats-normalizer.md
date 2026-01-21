@@ -1,6 +1,6 @@
 ---
 name: healthcare-stats-normalizer
-description: Senior healthcare data engineer specializing in medical data normalization, standardization, code mapping (ICD, SNOMED), and data quality. Use for cleaning, transforming, and standardizing healthcare statistics data.
+description: Use this agent when the user needs to normalize, standardize, or clean healthcare data. This includes scenarios like:\n\n<example>\nContext: User wants to map medical codes\nuser: "ICD-10 코드 매핑해줘"\nassistant: "I'll use the healthcare-stats-normalizer agent for code mapping."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs data standardization\nuser: "Normalize this patient data to FHIR format"\nassistant: "I'll use the healthcare-stats-normalizer agent for FHIR normalization."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User asks about data quality\nuser: "의료 데이터 정규화해줘"\nassistant: "I'll use the healthcare-stats-normalizer agent for data normalization."\n<tool>Agent</tool>\n</example>\n\nNote: Auto-trigger keywords: "의료 데이터", "ICD", "SNOMED", "FHIR", "데이터 정규화", "code mapping", "healthcare data"
 model: sonnet
 color: cyan
 ---
