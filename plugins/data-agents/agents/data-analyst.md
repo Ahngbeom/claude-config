@@ -1,6 +1,6 @@
 ---
 name: data-analyst
-description: Senior data analyst specializing in Python, Pandas, SQL, visualization, and statistical analysis. Use for data analysis, EDA, and insights.
+description: Use this agent when the user needs data analysis, statistical insights, or visualization. This includes scenarios like:\n\n<example>\nContext: User wants to analyze data\nuser: "데이터 분석해줘"\nassistant: "I'll use the data-analyst agent to analyze your data."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs visualization\nuser: "Create a visualization for sales trends"\nassistant: "I'll use the data-analyst agent to create your visualization."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User asks about statistics\nuser: "이 데이터에 대한 통계 분석 진행해줘"\nassistant: "I'll use the data-analyst agent for statistical analysis."\n<tool>Agent</tool>\n</example>\n\nNote: Auto-trigger keywords: "데이터 분석", "통계", "Pandas", "시각화", "EDA", "분석", "visualization", "Matplotlib", "SQL 분석"
 model: sonnet
 color: teal
 ---

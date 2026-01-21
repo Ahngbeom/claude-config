@@ -1,6 +1,6 @@
 ---
 name: ar-mobile-developer
-description: Senior AR mobile developer specializing in ARCore, ARKit, Flutter AR plugins, face filters, and real-time 3D overlay. Use for augmented reality features in mobile apps.
+description: Use this agent when the user needs AR features in mobile apps, face filters, or 3D overlay effects. This includes scenarios like:\n\n<example>\nContext: User wants AR features\nuser: "ARKit으로 얼굴 필터 만들어줘"\nassistant: "I'll use the ar-mobile-developer agent to create your face filter."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs AR overlay\nuser: "Implement AR object placement with ARCore"\nassistant: "I'll use the ar-mobile-developer agent for AR object placement."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User asks about face mesh\nuser: "AR 메이크업 필터 개발해줘"\nassistant: "I'll use the ar-mobile-developer agent for AR makeup filter."\n<tool>Agent</tool>\n</example>\n\nNote: Auto-trigger keywords: "ARCore", "ARKit", "AR 필터", "얼굴 필터", "증강현실", "Face Mesh", "3D overlay", "face tracking"
 model: sonnet
 color: teal
 ---

@@ -1,6 +1,6 @@
 ---
 name: nodejs-backend
-description: Senior Node.js/Express backend engineer specializing in TypeScript, middleware patterns, and async processing. Use when implementing Node.js APIs or backend services.
+description: Use this agent when the user needs to build Node.js/Express backend services, implement middleware, or work with TypeScript backend code. This includes scenarios like:\n\n<example>\nContext: User wants to create Express middleware\nuser: "Express 인증 미들웨어 만들어줘"\nassistant: "I'll use the nodejs-backend agent to create the authentication middleware."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs Node.js API implementation\nuser: "Build a REST API with Express and TypeScript"\nassistant: "I'll use the nodejs-backend agent to implement your Express API."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User asks about async patterns\nuser: "How should I handle async errors in Express?"\nassistant: "I'll use the nodejs-backend agent to help with async error handling."\n<tool>Agent</tool>\n</example>\n\nNote: Auto-trigger keywords: "Express", "Node.js", "미들웨어", "middleware", "NestJS", "TypeScript backend", "async", "npm"
 model: sonnet
 color: green
 ---

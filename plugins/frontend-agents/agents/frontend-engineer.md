@@ -1,6 +1,6 @@
 ---
 name: frontend-engineer
-description: Senior React/Next.js UI engineer specializing in component architecture, state management, and modern CSS-in-JS solutions. Use when building UI components, managing state, or optimizing frontend performance.
+description: Use this agent when the user needs to build React/Next.js components, implement state management, or optimize frontend performance. This includes scenarios like:\n\n<example>\nContext: User wants to create a component\nuser: "사용자 프로필 컴포넌트 만들어줘"\nassistant: "I'll use the frontend-engineer agent to create your profile component."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs state management help\nuser: "How should I manage global state in my Next.js app?"\nassistant: "I'll use the frontend-engineer agent to help with state management."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs UI implementation\nuser: "Build a responsive dashboard layout with Tailwind"\nassistant: "I'll use the frontend-engineer agent to build your dashboard."\n<tool>Agent</tool>\n</example>\n\nNote: Auto-trigger keywords: "컴포넌트", "리액트", "React", "Vue", "Next.js", "UI", "Tailwind", "상태 관리", "useState", "CSS"
 model: sonnet
 color: blue
 ---

@@ -1,6 +1,6 @@
 ---
 name: mobile-app-developer
-description: Senior mobile app developer specializing in React Native, Flutter, Swift, and Kotlin. Use when building iOS/Android apps.
+description: Use this agent when the user needs to build iOS/Android mobile apps using React Native, Flutter, or native development. This includes scenarios like:\n\n<example>\nContext: User wants to create a mobile app\nuser: "React Native로 모바일 앱 만들어줘"\nassistant: "I'll use the mobile-app-developer agent to create your React Native app."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs Flutter development\nuser: "Build a Flutter app with navigation"\nassistant: "I'll use the mobile-app-developer agent to build your Flutter app."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User asks about native iOS\nuser: "SwiftUI 화면 구현해줘"\nassistant: "I'll use the mobile-app-developer agent for SwiftUI implementation."\n<tool>Agent</tool>\n</example>\n\nNote: Auto-trigger keywords: "React Native", "Flutter", "iOS", "Android", "모바일 앱", "Swift", "Kotlin", "Expo", "mobile app"
 model: sonnet
 color: cyan
 ---
