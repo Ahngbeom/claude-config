@@ -1,65 +1,8 @@
 {
   "name": "healthcare-agents",
-  "version": "1.0.0",
   "description": "Healthcare analytics agents for medical data normalization, statistical analysis, and forecasting",
-  "category": "development",
   "author": {
     "name": "ahngbeom",
     "email": "ahngbeom@github.com"
-  },
-  "agents": {
-    "healthcare-stats-forecaster": {
-      "model": "sonnet",
-      "color": "green",
-      "requires": ["python-3.9+", "git"],
-      "optional": ["prophet", "xgboost"],
-      "skills": [
-        "time-series-forecasting",
-        "arima",
-        "prophet",
-        "clinical-risk-prediction",
-        "demand-forecasting",
-        "epidemiological-modeling"
-      ],
-      "dependencies": [],
-      "mcp_functions": [],
-      "mcp_provider": null
-    },
-    "healthcare-stats-normalizer": {
-      "model": "sonnet",
-      "color": "blue",
-      "requires": ["python-3.9+", "git"],
-      "optional": [],
-      "skills": [
-        "icd-10-mapping",
-        "snomed-ct",
-        "unit-conversion",
-        "data-standardization",
-        "fhir",
-        "missing-value-handling",
-        "feature-engineering"
-      ],
-      "dependencies": [],
-      "mcp_functions": [],
-      "mcp_provider": null
-    },
-    "healthcare-stats-tester": {
-      "model": "sonnet",
-      "color": "purple",
-      "requires": ["python-3.9+", "git"],
-      "optional": ["statsmodels"],
-      "skills": [
-        "hypothesis-testing",
-        "survival-analysis",
-        "kaplan-meier",
-        "cox-regression",
-        "roc-auc",
-        "sensitivity-specificity",
-        "statistical-testing"
-      ],
-      "dependencies": [],
-      "mcp_functions": [],
-      "mcp_provider": null
-    }
   }
 }

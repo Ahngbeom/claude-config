@@ -1,80 +1,8 @@
 {
   "name": "productivity-agents",
-  "version": "1.0.0",
   "description": "Productivity agents for documentation, testing, retrospectives, and workflow automation",
-  "category": "productivity",
   "author": {
     "name": "ahngbeom",
     "email": "ahngbeom@github.com"
-  },
-  "agents": {
-    "test-automation-engineer": {
-      "model": "sonnet",
-      "color": "yellow",
-      "requires": ["git"],
-      "optional": ["node-18+", "python-3.9+"],
-      "skills": [
-        "jest",
-        "vitest",
-        "playwright",
-        "pytest",
-        "react-testing-library",
-        "e2e-testing",
-        "unit-testing",
-        "tdd"
-      ],
-      "dependencies": [],
-      "mcp_functions": [],
-      "mcp_provider": null
-    },
-    "markdown-document-writer": {
-      "model": "haiku",
-      "color": "cyan",
-      "requires": ["git"],
-      "optional": [],
-      "skills": [
-        "markdown",
-        "technical-writing",
-        "documentation"
-      ],
-      "dependencies": [],
-      "mcp_functions": [],
-      "mcp_provider": null
-    },
-    "jira-retrospective": {
-      "model": "haiku",
-      "color": "blue",
-      "requires": ["git"],
-      "optional": [],
-      "skills": [
-        "jira",
-        "retrospective",
-        "project-management",
-        "jql",
-        "data-analysis"
-      ],
-      "dependencies": [],
-      "mcp_functions": [
-        "mcp__plugin_atlassian_atlassian__searchJiraIssuesUsingJql",
-        "mcp__plugin_atlassian_atlassian__atlassianUserInfo",
-        "mcp__plugin_atlassian_atlassian__lookupJiraAccountId"
-      ],
-      "mcp_provider": "atlassian"
-    },
-    "commit-retrospective": {
-      "model": "sonnet",
-      "color": "cyan",
-      "requires": ["git"],
-      "optional": ["gh", "glab"],
-      "skills": [
-        "git",
-        "retrospective",
-        "commit-analysis",
-        "data-analysis"
-      ],
-      "dependencies": [],
-      "mcp_functions": [],
-      "mcp_provider": null
-    }
   }
 }
