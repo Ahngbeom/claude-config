@@ -1,8 +1,70 @@
 {
   "name": "mobile-agents",
+  "version": "1.0.0",
   "description": "Mobile and desktop application agents for React Native, Flutter, AR/VR, Electron, and Tauri",
+  "category": "development",
   "author": {
     "name": "ahngbeom",
     "email": "ahngbeom@github.com"
+  },
+  "agents": {
+    "ar-mobile-developer": {
+      "model": "sonnet",
+      "color": "magenta",
+      "requires": ["flutter-3.0+", "dart", "git"],
+      "optional": ["arcore", "arkit", "xcode", "android-studio"],
+      "skills": [
+        "arcore",
+        "arkit",
+        "face-tracking",
+        "3d-rendering",
+        "face-mesh",
+        "ar-filters",
+        "flutter",
+        "dart",
+        "computer-vision"
+      ],
+      "dependencies": [],
+      "mcp_functions": [],
+      "mcp_provider": null
+    },
+    "desktop-app-developer": {
+      "model": "sonnet",
+      "color": "gray",
+      "requires": ["git"],
+      "optional": ["node-18+", "rust-1.70+", "electron-28+", "tauri-1.4+"],
+      "skills": [
+        "electron",
+        "tauri",
+        "ipc-communication",
+        "cross-platform",
+        "code-signing",
+        "auto-updates",
+        "desktop-ui"
+      ],
+      "dependencies": [],
+      "mcp_functions": [],
+      "mcp_provider": null
+    },
+    "mobile-app-developer": {
+      "model": "sonnet",
+      "color": "blue",
+      "requires": ["git"],
+      "optional": ["node-18+", "react-native-0.72+", "flutter-3.0+", "dart", "xcode", "android-studio"],
+      "skills": [
+        "react-native",
+        "flutter",
+        "ios-development",
+        "android-development",
+        "navigation",
+        "state-management",
+        "native-modules",
+        "push-notifications",
+        "biometric-auth"
+      ],
+      "dependencies": [],
+      "mcp_functions": [],
+      "mcp_provider": null
+    }
   }
 }

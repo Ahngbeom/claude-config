@@ -1,8 +1,83 @@
 {
   "name": "devops-agents",
+  "version": "1.0.0",
   "description": "DevOps and Git workflow agents for CI/CD, Docker, Kubernetes, and version control",
+  "category": "productivity",
   "author": {
     "name": "ahngbeom",
     "email": "ahngbeom@github.com"
+  },
+  "agents": {
+    "devops-engineer": {
+      "model": "sonnet",
+      "color": "orange",
+      "requires": ["git"],
+      "optional": ["docker", "kubernetes", "terraform", "prometheus", "grafana", "elasticsearch", "kibana"],
+      "skills": [
+        "kubernetes",
+        "terraform",
+        "docker",
+        "ci-cd",
+        "monitoring",
+        "logging",
+        "elk-stack",
+        "prometheus",
+        "grafana",
+        "infrastructure-as-code"
+      ],
+      "dependencies": [],
+      "mcp_functions": [],
+      "mcp_provider": null
+    },
+    "git-committer": {
+      "model": "sonnet",
+      "color": "green",
+      "requires": ["git"],
+      "optional": [],
+      "skills": [
+        "git",
+        "version-control",
+        "commit-conventions",
+        "branch-management",
+        "git-workflow"
+      ],
+      "dependencies": [],
+      "mcp_functions": [],
+      "mcp_provider": null
+    },
+    "github-expert": {
+      "model": "sonnet",
+      "color": "purple",
+      "requires": ["git", "gh"],
+      "optional": ["docker"],
+      "skills": [
+        "github-actions",
+        "gh-cli",
+        "ci-cd",
+        "workflow-automation",
+        "github-api",
+        "release-automation"
+      ],
+      "dependencies": [],
+      "mcp_functions": [],
+      "mcp_provider": null
+    },
+    "gitlab-expert": {
+      "model": "sonnet",
+      "color": "orange",
+      "requires": ["git"],
+      "optional": ["docker", "gitlab-runner"],
+      "skills": [
+        "gitlab-ci",
+        "gitlab-runner",
+        "ci-cd",
+        "pipeline-optimization",
+        "devsecops",
+        "docker"
+      ],
+      "dependencies": [],
+      "mcp_functions": [],
+      "mcp_provider": null
+    }
   }
 }

@@ -1,8 +1,112 @@
 {
   "name": "backend-agents",
+  "version": "1.0.0",
   "description": "Backend development agents for API architecture, Node.js, Spring Boot, FastAPI, and database design",
+  "category": "development",
   "author": {
     "name": "ahngbeom",
     "email": "ahngbeom@github.com"
+  },
+  "agents": {
+    "backend-api-architect": {
+      "model": "sonnet",
+      "color": "purple",
+      "requires": ["git"],
+      "optional": ["docker", "postman"],
+      "skills": [
+        "rest-api-design",
+        "graphql",
+        "oauth2",
+        "jwt",
+        "message-queues",
+        "api-versioning",
+        "openapi",
+        "rbac",
+        "rate-limiting",
+        "pagination"
+      ],
+      "dependencies": [],
+      "mcp_functions": [],
+      "mcp_provider": null
+    },
+    "database-expert": {
+      "model": "sonnet",
+      "color": "blue",
+      "requires": ["git"],
+      "optional": ["docker", "postgresql", "mysql"],
+      "skills": [
+        "database-design",
+        "sql",
+        "indexing",
+        "query-optimization",
+        "migrations",
+        "normalization",
+        "transactions",
+        "connection-pooling"
+      ],
+      "dependencies": [],
+      "mcp_functions": [],
+      "mcp_provider": null
+    },
+    "nodejs-backend": {
+      "model": "sonnet",
+      "color": "green",
+      "requires": ["node-18+", "git"],
+      "optional": ["docker", "redis", "rabbitmq", "kafka", "postgresql"],
+      "skills": [
+        "express",
+        "typescript",
+        "rest-api",
+        "middleware",
+        "websocket",
+        "async-programming",
+        "jwt",
+        "oauth2",
+        "validation"
+      ],
+      "dependencies": [],
+      "mcp_functions": [],
+      "mcp_provider": null
+    },
+    "python-fastapi-backend": {
+      "model": "sonnet",
+      "color": "green",
+      "requires": ["python-3.9+", "git"],
+      "optional": ["docker", "postgresql", "redis", "asyncpg"],
+      "skills": [
+        "fastapi",
+        "pydantic",
+        "sqlalchemy",
+        "alembic",
+        "async-python",
+        "uvicorn",
+        "oauth2",
+        "jwt",
+        "dependency-injection"
+      ],
+      "dependencies": [],
+      "mcp_functions": [],
+      "mcp_provider": null
+    },
+    "spring-boot-backend": {
+      "model": "sonnet",
+      "color": "orange",
+      "requires": ["java-11+", "git"],
+      "optional": ["docker", "postgresql", "redis", "maven", "gradle"],
+      "skills": [
+        "spring-boot",
+        "spring-security",
+        "jpa",
+        "hibernate",
+        "maven",
+        "gradle",
+        "jwt",
+        "oauth2",
+        "bean-validation"
+      ],
+      "dependencies": [],
+      "mcp_functions": [],
+      "mcp_provider": null
+    }
   }
 }
