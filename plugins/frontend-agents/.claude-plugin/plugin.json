@@ -1,35 +1,8 @@
 {
   "name": "frontend-agents",
-  "version": "1.0.0",
   "description": "Frontend development agents for React, Vue, and modern web UI development",
-  "category": "development",
   "author": {
     "name": "ahngbeom",
     "email": "ahngbeom@github.com"
-  },
-  "agents": {
-    "frontend-engineer": {
-      "model": "sonnet",
-      "color": "cyan",
-      "requires": ["node-18+", "git"],
-      "optional": ["docker", "typescript"],
-      "skills": [
-        "react",
-        "nextjs",
-        "typescript",
-        "tailwindcss",
-        "server-components",
-        "app-router",
-        "state-management",
-        "tanstack-query",
-        "zustand",
-        "react-hook-form",
-        "accessibility",
-        "performance-optimization"
-      ],
-      "dependencies": [],
-      "mcp_functions": [],
-      "mcp_provider": null
-    }
   }
 }
