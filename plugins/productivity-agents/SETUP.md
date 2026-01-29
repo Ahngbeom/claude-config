@@ -24,7 +24,7 @@ Productivity Agents 플러그인 사용을 위한 초기 환경 설정 가이드
 플러그인 디렉토리에서 초기화 스크립트를 실행합니다:
 
 ```bash
-cd /home/user/claude-config/plugins/productivity-agents
+cd ~/.claude/plugins/marketplaces/ahngbeom-claude-config/plugins/productivity-agents
 ./setup/init.sh
 ```
 
@@ -40,7 +40,7 @@ cd /home/user/claude-config/plugins/productivity-agents
 
 ```bash
 cd /your/project
-/home/user/claude-config/plugins/productivity-agents/setup/init-project.sh
+~/.claude/plugins/marketplaces/ahngbeom-claude-config/plugins/productivity-agents/setup/init-project.sh
 ```
 
 ### 3단계: 설정 검증
@@ -48,7 +48,7 @@ cd /your/project
 설정이 올바른지 확인합니다:
 
 ```bash
-cd /home/user/claude-config/plugins/productivity-agents
+cd ~/.claude/plugins/marketplaces/ahngbeom-claude-config/plugins/productivity-agents
 ./setup/validate.sh
 ```
 
@@ -268,10 +268,10 @@ chmod 600 ~/.claude/.env
 ### 2. 템플릿 복사
 
 ```bash
-cp /home/user/claude-config/plugins/productivity-agents/setup/templates/productivity-agents.json.template \
+cp ~/.claude/plugins/marketplaces/ahngbeom-claude-config/plugins/productivity-agents/setup/templates/productivity-agents.json.template \
    ~/.claude/productivity-agents.json
 
-cp /home/user/claude-config/plugins/productivity-agents/setup/templates/.env.template \
+cp ~/.claude/plugins/marketplaces/ahngbeom-claude-config/plugins/productivity-agents/setup/templates/.env.template \
    ~/.claude/.env
 ```
 
@@ -297,7 +297,7 @@ mkdir -p ~/.claude/retrospectives
 ### 자동 검증
 
 ```bash
-cd /home/user/claude-config/plugins/productivity-agents
+cd ~/.claude/plugins/marketplaces/ahngbeom-claude-config/plugins/productivity-agents
 ./setup/validate.sh
 ```
 
@@ -455,7 +455,7 @@ Claude Code에서 다음을 실행:
 
 3. 설정 재실행:
    ```bash
-   cd /home/user/claude-config/plugins/productivity-agents
+   cd ~/.claude/plugins/marketplaces/ahngbeom-claude-config/plugins/productivity-agents
    ./setup/init.sh
    ```
 
@@ -523,7 +523,7 @@ Claude Code에서 다음을 실행:
 **A**: `init.sh`를 다시 실행하면 기존 설정을 백업하고 새로운 설정으로 업데이트됩니다:
 
 ```bash
-cd /home/user/claude-config/plugins/productivity-agents
+cd ~/.claude/plugins/marketplaces/ahngbeom-claude-config/plugins/productivity-agents
 ./setup/init.sh
 ```
 
