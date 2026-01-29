@@ -1,0 +1,20 @@
+{
+  "productivityAgents": {
+    "jira": {
+      "project": "PROJ",
+      "defaultAssignee": "use-global"
+    },
+    "repositories": [
+      {
+        "name": "main-repo",
+        "type": "github",
+        "owner": "company",
+        "repo": "project-name",
+        "branch": "main"
+      }
+    ],
+    "output": {
+      "retrospectivePath": "./docs/retrospectives"
+    }
+  }
+}
