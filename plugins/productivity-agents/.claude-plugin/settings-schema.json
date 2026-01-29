@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Productivity Agents Configuration",
+  "description": "Configuration schema for productivity-agents plugin",
+  "type": "object",
+  "properties": {
+    "atlassian": {
+      "type": "object",
+      "description": "Atlassian (Jira) configuration",
+      "properties": {
+        "defaultUrl": {
+          "type": "string",
+          "description": "Jira Cloud URL (e.g., yourcompany.atlassian.net)",
+          "pattern": "^[a-zA-Z0-9-]+\\.atlassian\\.net$"
+        },
+        "user": {
+          "type": "object",
+          "description": "User information for Jira",
+          "properties": {
+            "accountId": {
+              "type": "string",
+              "description": "Atlassian Account ID (auto-detected via MCP)"
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "description": "User email address"
+            },
+            "displayName": {
+              "type": "string",
+              "description": "User display name"
+            }
+          },
+          "required": ["accountId", "email"]
+        }
+      },
+      "required": ["defaultUrl", "user"]
+    },
+    "github": {
+      "type": "object",
+      "description": "GitHub configuration",
+      "properties": {
+        "defaultUrl": {
+          "type": "string",
+          "description": "GitHub URL",
+          "default": "github.com"
+        },
+        "user": {
+          "type": "object",
+          "description": "GitHub user information",
+          "properties": {
+            "username": {
+              "type": "string",
+              "description": "GitHub username"
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "description": "GitHub email"
+            }
+          },
+          "required": ["username", "email"]
+        }
+      }
+    },
+    "gitlab": {
+      "type": "object",
+      "description": "GitLab configuration",
+      "properties": {
+        "defaultUrl": {
+          "type": "string",
+          "description": "GitLab URL (e.g., gitlab.com or self-hosted)",
+          "default": "gitlab.com"
+        },
+        "user": {
+          "type": "object",
+          "description": "GitLab user information",
+          "properties": {
+            "username": {
+              "type": "string",
+              "description": "GitLab username"
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "description": "GitLab email"
+            }
+          },
+          "required": ["username", "email"]
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "description": "Output configuration",
+      "properties": {
+        "retrospectivePath": {
+          "type": "string",
+          "description": "Default path for saving retrospectives",
+          "default": "~/.claude/retrospectives"
+        }
+      }
+    }
+  }
+}
