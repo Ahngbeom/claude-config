@@ -2,6 +2,35 @@
 
 # Productivity Agents - Project Setup Script
 # This script creates project-specific configuration for productivity agents
+#
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Claude Code CLI 비대화형 모드 (Non-Interactive Mode)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#
+# Claude Code의 Bash 도구는 대화형 입력(read -p)을 지원하지 않습니다.
+# 비대화형 모드에서는 환경변수로 값을 전달하세요:
+#
+#   PRODUCTIVITY_AGENTS_TIMEOUT=0 \
+#   JIRA_PROJECT="PROJ" \
+#   REPO_TYPE="github" \
+#   REPO_OWNER="username" \
+#   REPO_NAME="repository" \
+#   RETRO_PATH="./docs/retrospectives" \
+#   ./init-project.sh
+#
+# 환경변수 목록:
+#   PRODUCTIVITY_AGENTS_TIMEOUT - 입력 대기 시간(초), 0=비대화형 모드
+#   JIRA_PROJECT    - Jira 프로젝트 키 (예: PROJ, DEV)
+#   REPO_TYPE       - 레포지토리 타입 (github, gitlab)
+#   REPO_OWNER      - GitHub owner (REPO_TYPE=github일 때)
+#   REPO_NAME       - GitHub repo 이름 (REPO_TYPE=github일 때)
+#   REPO_URL        - GitLab URL (REPO_TYPE=gitlab일 때, 기본: gitlab.com)
+#   REPO_PATH       - GitLab 프로젝트 경로 (REPO_TYPE=gitlab일 때)
+#   RETRO_PATH      - 회고록 저장 경로 (기본: ./docs/retrospectives)
+#   MERGE_EXISTING  - 기존 설정 병합 여부 (y/n)
+#   SKIP_GIT_CHECK  - Git 레포지토리 검사 건너뛰기 (y/n)
+#
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 set -e
 
@@ -38,6 +67,95 @@ print_info() {
     echo -e "${BLUE}ℹ️  $1${NC}"
 }
 
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Non-Interactive Mode Configuration
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Default timeout for read commands (in seconds)
+# Set to 0 for non-interactive mode (CI/CD or Claude Code)
+READ_TIMEOUT="${PRODUCTIVITY_AGENTS_TIMEOUT:-300}"
+
+# Environment variables for non-interactive mode defaults
+ENV_JIRA_PROJECT="${JIRA_PROJECT:-}"
+ENV_REPO_TYPE="${REPO_TYPE:-}"
+ENV_REPO_OWNER="${REPO_OWNER:-}"
+ENV_REPO_NAME="${REPO_NAME:-}"
+ENV_REPO_URL="${REPO_URL:-}"
+ENV_REPO_PATH="${REPO_PATH:-}"
+ENV_RETRO_PATH="${RETRO_PATH:-./docs/retrospectives}"
+ENV_MERGE_EXISTING="${MERGE_EXISTING:-}"
+ENV_SKIP_GIT_CHECK="${SKIP_GIT_CHECK:-}"
+
+# Helper function for read with timeout and default value
+# Usage: read_with_default "prompt" "default_value" "variable_name"
+read_with_default() {
+    local prompt="$1"
+    local default="$2"
+    local varname="$3"
+    local value=""
+
+    if [[ "$READ_TIMEOUT" -eq 0 ]]; then
+        # Non-interactive mode: use default value immediately
+        value="$default"
+        if [[ -n "$value" ]]; then
+            print_info "비대화형 모드: $varname=$value"
+        fi
+    else
+        # Interactive mode: prompt user with timeout
+        if read -t "$READ_TIMEOUT" -p "$prompt" value; then
+            : # Read succeeded
+        else
+            # Timeout or EOF: use default
+            echo ""
+            if [[ -n "$default" ]]; then
+                print_info "타임아웃: 기본값 사용 ($default)"
+            fi
+            value="$default"
+        fi
+    fi
+
+    # Set the variable in the calling scope
+    eval "$varname=\"\$value\""
+}
+
+# Helper function for single character read with timeout
+# Usage: read_char_with_default "prompt" "default_char" "variable_name"
+read_char_with_default() {
+    local prompt="$1"
+    local default="$2"
+    local varname="$3"
+    local value=""
+
+    if [[ "$READ_TIMEOUT" -eq 0 ]]; then
+        # Non-interactive mode: use default value immediately
+        value="$default"
+        if [[ -n "$value" ]]; then
+            print_info "비대화형 모드: $varname=$value"
+        fi
+    else
+        # Interactive mode: prompt user with timeout
+        if read -t "$READ_TIMEOUT" -p "$prompt" -n 1 -r value; then
+            echo ""
+        else
+            # Timeout or EOF: use default
+            echo ""
+            if [[ -n "$default" ]]; then
+                print_info "타임아웃: 기본값 사용 ($default)"
+            fi
+            value="$default"
+        fi
+    fi
+
+    # Set the variable in the calling scope
+    eval "$varname=\"\$value\""
+}
+
+# Check for non-interactive mode at start
+if [[ "$READ_TIMEOUT" -eq 0 ]]; then
+    print_info "비대화형 모드로 실행 중 (PRODUCTIVITY_AGENTS_TIMEOUT=0)"
+    print_info "환경변수에서 설정값을 읽습니다."
+fi
+
 # Get current directory
 PROJECT_DIR="$(pwd)"
 PROJECT_NAME="$(basename "$PROJECT_DIR")"
@@ -58,22 +176,26 @@ echo ""
 # Check if we're in a git repository
 if [[ ! -d "$PROJECT_DIR/.git" ]]; then
     print_warning "Git 레포지토리가 감지되지 않았습니다."
-    read -p "계속하시겠습니까? (y/N): " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        print_warning "설정을 취소했습니다."
-        exit 0
+
+    if [[ "$ENV_SKIP_GIT_CHECK" =~ ^[Yy]$ ]]; then
+        print_info "비대화형 모드: Git 체크 건너뛰기"
+    else
+        read_char_with_default "계속하시겠습니까? (y/N): " "n" "REPLY"
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            print_warning "설정을 취소했습니다."
+            exit 0
+        fi
     fi
 fi
 
-# Initialize variables
-REPO_TYPE=""
-REPO_OWNER=""
-REPO_NAME=""
-REPO_URL=""
-REPO_PATH=""
-JIRA_PROJECT=""
-RETRO_PATH="./docs/retrospectives"
+# Initialize variables from environment or defaults
+REPO_TYPE="$ENV_REPO_TYPE"
+REPO_OWNER="$ENV_REPO_OWNER"
+REPO_NAME="$ENV_REPO_NAME"
+REPO_URL="$ENV_REPO_URL"
+REPO_PATH="$ENV_REPO_PATH"
+JIRA_PROJECT="$ENV_JIRA_PROJECT"
+RETRO_PATH="$ENV_RETRO_PATH"
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Step 1: Auto-detect Git Repository
@@ -197,29 +319,32 @@ fi
 if [[ -z "$REPO_TYPE" ]]; then
     print_header "📝 레포지토리 정보 수동 입력"
 
-    echo "레포지토리 타입 선택:"
-    echo "  1) GitHub"
-    echo "  2) GitLab"
-    echo "  3) 건너뛰기"
-    read -p "선택 (1-3): " -n 1 -r
-    echo
+    # In non-interactive mode with no REPO_TYPE, skip repository configuration
+    if [[ "$READ_TIMEOUT" -eq 0 ]]; then
+        print_info "비대화형 모드: REPO_TYPE 환경변수가 없어 레포지토리 설정을 건너뜁니다."
+    else
+        echo "레포지토리 타입 선택:"
+        echo "  1) GitHub"
+        echo "  2) GitLab"
+        echo "  3) 건너뛰기"
+        read_char_with_default "선택 (1-3): " "3" "REPLY"
 
-    case $REPLY in
-        1)
-            REPO_TYPE="github"
-            read -p "Owner: " REPO_OWNER
-            read -p "Repo: " REPO_NAME
-            ;;
-        2)
-            REPO_TYPE="gitlab"
-            read -p "GitLab URL [gitlab.com]: " REPO_URL
-            REPO_URL=${REPO_URL:-gitlab.com}
-            read -p "Path (예: group/project): " REPO_PATH
-            ;;
-        *)
-            print_info "레포지토리 설정을 건너뜁니다."
-            ;;
-    esac
+        case $REPLY in
+            1)
+                REPO_TYPE="github"
+                read_with_default "Owner: " "" "REPO_OWNER"
+                read_with_default "Repo: " "" "REPO_NAME"
+                ;;
+            2)
+                REPO_TYPE="gitlab"
+                read_with_default "GitLab URL [gitlab.com]: " "gitlab.com" "REPO_URL"
+                read_with_default "Path (예: group/project): " "" "REPO_PATH"
+                ;;
+            *)
+                print_info "레포지토리 설정을 건너뜁니다."
+                ;;
+        esac
+    fi
 fi
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -228,9 +353,12 @@ fi
 
 print_header "📋 Jira 프로젝트 설정"
 
-echo "Jira 프로젝트 키 (선택):"
-echo "  예시: PROJ, DEV, INFRA"
-read -p "프로젝트 키 (Enter=스킵): " JIRA_PROJECT
+# Only prompt if not already set from environment variable
+if [[ -z "$JIRA_PROJECT" ]]; then
+    echo "Jira 프로젝트 키 (선택):"
+    echo "  예시: PROJ, DEV, INFRA"
+    read_with_default "프로젝트 키 (Enter=스킵): " "" "JIRA_PROJECT"
+fi
 
 if [[ -n "$JIRA_PROJECT" ]]; then
     print_success "Jira 프로젝트: $JIRA_PROJECT"
@@ -244,9 +372,12 @@ fi
 
 print_header "📁 회고록 저장 경로"
 
-echo "회고록을 저장할 경로:"
-read -p "경로 [./docs/retrospectives]: " RETRO_PATH
-RETRO_PATH=${RETRO_PATH:-./docs/retrospectives}
+# RETRO_PATH is already initialized from environment variable with default
+# Only prompt if in interactive mode and want to override
+if [[ "$READ_TIMEOUT" -ne 0 ]]; then
+    echo "회고록을 저장할 경로:"
+    read_with_default "경로 [$RETRO_PATH]: " "$RETRO_PATH" "RETRO_PATH"
+fi
 
 print_success "저장 경로: $RETRO_PATH"
 
@@ -265,8 +396,14 @@ if [[ -f "$SETTINGS_FILE" ]]; then
     print_warning "기존 설정 파일이 발견되었습니다."
     EXISTING_SETTINGS=$(cat "$SETTINGS_FILE")
 
-    read -p "기존 설정과 병합하시겠습니까? (y/N): " -n 1 -r
-    echo
+    # Use environment variable or prompt
+    if [[ -n "$ENV_MERGE_EXISTING" ]]; then
+        REPLY="$ENV_MERGE_EXISTING"
+        print_info "비대화형 모드: MERGE_EXISTING=$REPLY"
+    else
+        read_char_with_default "기존 설정과 병합하시겠습니까? (y/N): " "n" "REPLY"
+    fi
+
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
         EXISTING_SETTINGS=""
         BACKUP_FILE="$SETTINGS_FILE.backup.$(date +%Y%m%d_%H%M%S)"
