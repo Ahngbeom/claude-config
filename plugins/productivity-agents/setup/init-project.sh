@@ -82,8 +82,21 @@ RETRO_PATH="./docs/retrospectives"
 print_header "📦 Git 레포지토리 정보 자동 감지"
 
 if [[ -d "$PROJECT_DIR/.git" ]]; then
-    # Get remote URL
-    REMOTE_URL=$(git remote get-url origin 2>/dev/null || echo "")
+    # Get remote URL with proper error handling
+    REMOTE_URL=""
+    GIT_ERROR=""
+    if ! GIT_ERROR=$(git remote get-url origin 2>&1); then
+        # Handle specific git errors
+        if [[ "$GIT_ERROR" == *"No such remote"* ]]; then
+            print_info "Remote 'origin'이 설정되지 않았습니다."
+        elif [[ "$GIT_ERROR" == *"not a git repository"* ]]; then
+            print_warning "유효한 Git 레포지토리가 아닙니다."
+        else
+            print_warning "Remote URL 조회 실패: $GIT_ERROR"
+        fi
+    else
+        REMOTE_URL="$GIT_ERROR"  # On success, output goes to GIT_ERROR variable
+    fi
 
     if [[ -n "$REMOTE_URL" ]]; then
         print_success "Remote URL 감지: $REMOTE_URL"
@@ -104,19 +117,68 @@ if [[ -d "$PROJECT_DIR/.git" ]]; then
         elif [[ "$REMOTE_URL" =~ gitlab ]]; then
             REPO_TYPE="gitlab"
 
-            # Parse GitLab URL
-            if [[ "$REMOTE_URL" =~ gitlab\.com[:/](.+)\.git ]]; then
-                REPO_PATH="${BASH_REMATCH[1]}"
+            # Parse GitLab URL - handle various formats:
+            # - git@gitlab.com:group/project.git
+            # - https://gitlab.com/group/project.git
+            # - git@gitlab.mycompany.com:group/subgroup/project.git
+            # - https://gitlab.mycompany.com/group/project.git
 
-                print_success "타입: GitLab"
-                print_info "Path: $REPO_PATH"
-            elif [[ "$REMOTE_URL" =~ ([^:/]+)[:/](.+)\.git ]]; then
-                REPO_URL="${BASH_REMATCH[1]}"
+            # Extract host and path from SSH format (git@host:path.git)
+            if [[ "$REMOTE_URL" =~ ^git@([^:]+):(.+)\.git$ ]]; then
+                GITLAB_HOST="${BASH_REMATCH[1]}"
                 REPO_PATH="${BASH_REMATCH[2]}"
 
-                print_success "타입: GitLab (self-hosted)"
-                print_info "URL: $REPO_URL"
+                if [[ "$GITLAB_HOST" == "gitlab.com" ]]; then
+                    print_success "타입: GitLab"
+                    print_info "Path: $REPO_PATH"
+                else
+                    REPO_URL="$GITLAB_HOST"
+                    print_success "타입: GitLab (self-hosted)"
+                    print_info "URL: $REPO_URL"
+                    print_info "Path: $REPO_PATH"
+                fi
+            # Extract host and path from HTTPS format (https://host/path.git)
+            elif [[ "$REMOTE_URL" =~ ^https?://([^/]+)/(.+)\.git$ ]]; then
+                GITLAB_HOST="${BASH_REMATCH[1]}"
+                REPO_PATH="${BASH_REMATCH[2]}"
+
+                if [[ "$GITLAB_HOST" == "gitlab.com" ]]; then
+                    print_success "타입: GitLab"
+                    print_info "Path: $REPO_PATH"
+                else
+                    REPO_URL="$GITLAB_HOST"
+                    print_success "타입: GitLab (self-hosted)"
+                    print_info "URL: $REPO_URL"
+                    print_info "Path: $REPO_PATH"
+                fi
+            # Handle URLs without .git suffix
+            elif [[ "$REMOTE_URL" =~ ^git@([^:]+):(.+)$ ]]; then
+                GITLAB_HOST="${BASH_REMATCH[1]}"
+                REPO_PATH="${BASH_REMATCH[2]}"
+
+                if [[ "$GITLAB_HOST" == "gitlab.com" ]]; then
+                    print_success "타입: GitLab"
+                else
+                    REPO_URL="$GITLAB_HOST"
+                    print_success "타입: GitLab (self-hosted)"
+                    print_info "URL: $REPO_URL"
+                fi
                 print_info "Path: $REPO_PATH"
+            elif [[ "$REMOTE_URL" =~ ^https?://([^/]+)/(.+)$ ]]; then
+                GITLAB_HOST="${BASH_REMATCH[1]}"
+                REPO_PATH="${BASH_REMATCH[2]}"
+
+                if [[ "$GITLAB_HOST" == "gitlab.com" ]]; then
+                    print_success "타입: GitLab"
+                else
+                    REPO_URL="$GITLAB_HOST"
+                    print_success "타입: GitLab (self-hosted)"
+                    print_info "URL: $REPO_URL"
+                fi
+                print_info "Path: $REPO_PATH"
+            else
+                print_warning "GitLab URL 파싱 실패. 수동으로 입력해주세요."
+                REPO_TYPE=""
             fi
         else
             print_warning "알 수 없는 Git 호스트입니다. 수동으로 입력해주세요."
