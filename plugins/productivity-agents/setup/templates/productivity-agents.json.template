@@ -1,0 +1,28 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Ahngbeom/claude-config/main/plugins/productivity-agents/.claude-plugin/settings-schema.json",
+  "atlassian": {
+    "defaultUrl": "yourcompany.atlassian.net",
+    "user": {
+      "accountId": "AUTO_DETECTED_OR_MANUAL",
+      "email": "user@company.com",
+      "displayName": "Your Name"
+    }
+  },
+  "github": {
+    "defaultUrl": "github.com",
+    "user": {
+      "username": "yourname",
+      "email": "user@company.com"
+    }
+  },
+  "gitlab": {
+    "defaultUrl": "gitlab.com",
+    "user": {
+      "username": "yourname",
+      "email": "user@company.com"
+    }
+  },
+  "output": {
+    "retrospectivePath": "~/.claude/retrospectives"
+  }
+}
