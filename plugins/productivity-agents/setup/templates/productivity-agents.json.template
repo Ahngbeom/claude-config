@@ -13,14 +13,42 @@
     "user": {
       "username": "yourname",
       "email": "user@company.com"
-    }
+    },
+    "defaultRepositories": [
+      {
+        "alias": "api",
+        "owner": "company",
+        "repo": "backend-api",
+        "branch": "main"
+      },
+      {
+        "alias": "web",
+        "owner": "company",
+        "repo": "frontend-web",
+        "branch": "main"
+      }
+    ]
   },
   "gitlab": {
     "defaultUrl": "gitlab.com",
     "user": {
       "username": "yourname",
       "email": "user@company.com"
-    }
+    },
+    "defaultRepositories": [
+      {
+        "alias": "infra",
+        "url": "gitlab.company.com",
+        "path": "devops/infrastructure",
+        "branch": "main"
+      },
+      {
+        "alias": "deploy",
+        "url": "gitlab.com",
+        "path": "company/deployment-configs",
+        "branch": "main"
+      }
+    ]
   },
   "output": {
     "retrospectivePath": "~/.claude/retrospectives"
