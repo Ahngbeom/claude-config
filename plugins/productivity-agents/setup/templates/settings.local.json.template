@@ -6,10 +6,24 @@
     },
     "repositories": [
       {
-        "name": "main-repo",
+        "name": "main",
         "type": "github",
         "owner": "company",
-        "repo": "project-name",
+        "repo": "main-project",
+        "branch": "main"
+      },
+      {
+        "name": "api",
+        "type": "github",
+        "owner": "company",
+        "repo": "backend-api",
+        "branch": "develop"
+      },
+      {
+        "name": "infra",
+        "type": "gitlab",
+        "url": "gitlab.company.com",
+        "path": "devops/terraform",
         "branch": "main"
       }
     ],

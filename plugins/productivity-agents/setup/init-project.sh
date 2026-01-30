@@ -29,6 +29,9 @@
 #   RETRO_PATH      - 회고록 저장 경로 (기본: ./docs/retrospectives)
 #   MERGE_EXISTING  - 기존 설정 병합 여부 (y/n)
 #   SKIP_GIT_CHECK  - Git 레포지토리 검사 건너뛰기 (y/n)
+#   REPO_BRANCH     - 현재 저장소의 기본 브랜치 (기본: main)
+#   REPOSITORIES    - 전체 저장소 JSON 배열 (예: '[{"name":"main","type":"github","owner":"co","repo":"proj","branch":"main"}]')
+#   USE_GLOBAL_REPOS - 글로벌 설정에서 가져올 저장소 별칭 목록 (쉼표 구분, 예: "api,infra")
 #
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -85,6 +88,9 @@ ENV_REPO_PATH="${REPO_PATH:-}"
 ENV_RETRO_PATH="${RETRO_PATH:-./docs/retrospectives}"
 ENV_MERGE_EXISTING="${MERGE_EXISTING:-}"
 ENV_SKIP_GIT_CHECK="${SKIP_GIT_CHECK:-}"
+ENV_REPO_BRANCH="${REPO_BRANCH:-main}"
+ENV_REPOSITORIES="${REPOSITORIES:-}"
+ENV_USE_GLOBAL_REPOS="${USE_GLOBAL_REPOS:-}"
 
 # Helper function for read with timeout and default value
 # Usage: read_with_default "prompt" "default_value" "variable_name"
@@ -164,6 +170,12 @@ PROJECT_NAME="$(basename "$PROJECT_DIR")"
 CLAUDE_DIR="$PROJECT_DIR/.claude"
 SETTINGS_FILE="$CLAUDE_DIR/settings.local.json"
 GITIGNORE_FILE="$PROJECT_DIR/.gitignore"
+
+# Global configuration (for reading default repositories)
+GLOBAL_CONFIG_FILE="$HOME/.claude/productivity-agents.json"
+
+# Repositories array (will be populated during setup)
+REPOSITORIES_JSON="[]"
 
 # Welcome banner
 clear
@@ -245,62 +257,32 @@ if [[ -d "$PROJECT_DIR/.git" ]]; then
             # - git@gitlab.mycompany.com:group/subgroup/project.git
             # - https://gitlab.mycompany.com/group/project.git
 
-            # Extract host and path from SSH format (git@host:path.git)
-            if [[ "$REMOTE_URL" =~ ^git@([^:]+):(.+)\.git$ ]]; then
+            # Remove .git suffix for unified parsing
+            REMOTE_URL_CLEAN="${REMOTE_URL%.git}"
+
+            # Extract host and path from SSH format (git@host:path)
+            if [[ "$REMOTE_URL_CLEAN" =~ ^git@([^:]+):(.+)$ ]]; then
                 GITLAB_HOST="${BASH_REMATCH[1]}"
                 REPO_PATH="${BASH_REMATCH[2]}"
-
-                if [[ "$GITLAB_HOST" == "gitlab.com" ]]; then
-                    print_success "타입: GitLab"
-                    print_info "Path: $REPO_PATH"
-                else
-                    REPO_URL="$GITLAB_HOST"
-                    print_success "타입: GitLab (self-hosted)"
-                    print_info "URL: $REPO_URL"
-                    print_info "Path: $REPO_PATH"
-                fi
-            # Extract host and path from HTTPS format (https://host/path.git)
-            elif [[ "$REMOTE_URL" =~ ^https?://([^/]+)/(.+)\.git$ ]]; then
+            # Extract host and path from HTTPS format (https://host/path)
+            elif [[ "$REMOTE_URL_CLEAN" =~ ^https?://([^/]+)/(.+)$ ]]; then
                 GITLAB_HOST="${BASH_REMATCH[1]}"
                 REPO_PATH="${BASH_REMATCH[2]}"
-
-                if [[ "$GITLAB_HOST" == "gitlab.com" ]]; then
-                    print_success "타입: GitLab"
-                    print_info "Path: $REPO_PATH"
-                else
-                    REPO_URL="$GITLAB_HOST"
-                    print_success "타입: GitLab (self-hosted)"
-                    print_info "URL: $REPO_URL"
-                    print_info "Path: $REPO_PATH"
-                fi
-            # Handle URLs without .git suffix
-            elif [[ "$REMOTE_URL" =~ ^git@([^:]+):(.+)$ ]]; then
-                GITLAB_HOST="${BASH_REMATCH[1]}"
-                REPO_PATH="${BASH_REMATCH[2]}"
-
-                if [[ "$GITLAB_HOST" == "gitlab.com" ]]; then
-                    print_success "타입: GitLab"
-                else
-                    REPO_URL="$GITLAB_HOST"
-                    print_success "타입: GitLab (self-hosted)"
-                    print_info "URL: $REPO_URL"
-                fi
-                print_info "Path: $REPO_PATH"
-            elif [[ "$REMOTE_URL" =~ ^https?://([^/]+)/(.+)$ ]]; then
-                GITLAB_HOST="${BASH_REMATCH[1]}"
-                REPO_PATH="${BASH_REMATCH[2]}"
-
-                if [[ "$GITLAB_HOST" == "gitlab.com" ]]; then
-                    print_success "타입: GitLab"
-                else
-                    REPO_URL="$GITLAB_HOST"
-                    print_success "타입: GitLab (self-hosted)"
-                    print_info "URL: $REPO_URL"
-                fi
-                print_info "Path: $REPO_PATH"
             else
                 print_warning "GitLab URL 파싱 실패. 수동으로 입력해주세요."
                 REPO_TYPE=""
+            fi
+
+            # Print parsed information if successful
+            if [[ -n "$REPO_PATH" && -n "$GITLAB_HOST" ]]; then
+                if [[ "$GITLAB_HOST" == "gitlab.com" ]]; then
+                    print_success "타입: GitLab"
+                else
+                    REPO_URL="$GITLAB_HOST"
+                    print_success "타입: GitLab (self-hosted)"
+                    print_info "URL: $REPO_URL"
+                fi
+                print_info "Path: $REPO_PATH"
             fi
         else
             print_warning "알 수 없는 Git 호스트입니다. 수동으로 입력해주세요."
@@ -313,37 +295,320 @@ else
 fi
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Step 2: Manual Repository Configuration (if needed)
+# Helper: Add repository to JSON array
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-if [[ -z "$REPO_TYPE" ]]; then
-    print_header "📝 레포지토리 정보 수동 입력"
+# Helper function to add a GitHub repo to REPOSITORIES_JSON
+add_github_repo() {
+    local name="$1"
+    local owner="$2"
+    local repo="$3"
+    local branch="${4:-main}"
 
-    # In non-interactive mode with no REPO_TYPE, skip repository configuration
-    if [[ "$READ_TIMEOUT" -eq 0 ]]; then
-        print_info "비대화형 모드: REPO_TYPE 환경변수가 없어 레포지토리 설정을 건너뜁니다."
+    if command -v jq &> /dev/null; then
+        REPOSITORIES_JSON=$(echo "$REPOSITORIES_JSON" | jq --arg name "$name" --arg owner "$owner" --arg repo "$repo" --arg branch "$branch" \
+            '. + [{"name": $name, "type": "github", "owner": $owner, "repo": $repo, "branch": $branch}]')
     else
-        echo "레포지토리 타입 선택:"
-        echo "  1) GitHub"
-        echo "  2) GitLab"
-        echo "  3) 건너뛰기"
-        read_char_with_default "선택 (1-3): " "3" "REPLY"
+        local new_entry="{\"name\":\"$name\",\"type\":\"github\",\"owner\":\"$owner\",\"repo\":\"$repo\",\"branch\":\"$branch\"}"
+        if [[ "$REPOSITORIES_JSON" == "[]" || -z "$REPOSITORIES_JSON" ]]; then
+            REPOSITORIES_JSON="[$new_entry]"
+        elif [[ "$REPOSITORIES_JSON" =~ ^\[.*\]$ ]]; then
+            REPOSITORIES_JSON="${REPOSITORIES_JSON%]},$new_entry]"
+        else
+            print_error "잘못된 JSON 배열 형식"
+            return 1
+        fi
+    fi
+}
 
-        case $REPLY in
+# Helper function to add a GitLab repo to REPOSITORIES_JSON
+add_gitlab_repo() {
+    local name="$1"
+    local url="$2"
+    local path="$3"
+    local branch="${4:-main}"
+
+    if command -v jq &> /dev/null; then
+        REPOSITORIES_JSON=$(echo "$REPOSITORIES_JSON" | jq --arg name "$name" --arg url "$url" --arg path "$path" --arg branch "$branch" \
+            '. + [{"name": $name, "type": "gitlab", "url": $url, "path": $path, "branch": $branch}]')
+    else
+        local new_entry="{\"name\":\"$name\",\"type\":\"gitlab\",\"url\":\"$url\",\"path\":\"$path\",\"branch\":\"$branch\"}"
+        if [[ "$REPOSITORIES_JSON" == "[]" || -z "$REPOSITORIES_JSON" ]]; then
+            REPOSITORIES_JSON="[$new_entry]"
+        elif [[ "$REPOSITORIES_JSON" =~ ^\[.*\]$ ]]; then
+            REPOSITORIES_JSON="${REPOSITORIES_JSON%]},$new_entry]"
+        else
+            print_error "잘못된 JSON 배열 형식"
+            return 1
+        fi
+    fi
+}
+
+# Helper function to display current repositories
+display_repositories() {
+    echo ""
+    echo "현재 저장소 목록:"
+    if [[ "$REPOSITORIES_JSON" == "[]" ]]; then
+        echo "  (없음)"
+    else
+        if command -v jq &> /dev/null; then
+            echo "$REPOSITORIES_JSON" | jq -r '.[] | "  \(.name): \(.type):\(if .type == "github" then "\(.owner)/\(.repo)" else "\(.url)/\(.path)" end)@\(.branch)"'
+        else
+            echo "  $REPOSITORIES_JSON"
+        fi
+    fi
+    echo ""
+}
+
+# Helper function to load global default repositories
+load_global_repos() {
+    local repo_type="$1"  # "github" or "gitlab"
+
+    if [[ ! -f "$GLOBAL_CONFIG_FILE" ]]; then
+        print_warning "글로벌 설정 파일이 없습니다: $GLOBAL_CONFIG_FILE"
+        return 1
+    fi
+
+    if ! command -v jq &> /dev/null; then
+        print_warning "jq가 설치되지 않아 글로벌 저장소를 로드할 수 없습니다."
+        return 1
+    fi
+
+    local repos
+    repos=$(jq -r ".$repo_type.defaultRepositories // []" "$GLOBAL_CONFIG_FILE" 2>/dev/null)
+
+    if [[ "$repos" == "[]" || -z "$repos" ]]; then
+        print_info "$repo_type 글로벌 기본 저장소가 없습니다."
+        return 1
+    fi
+
+    echo "$repos"
+}
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Step 2: Repository Configuration (Auto-detect + Manual)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# First, add auto-detected repository to the list
+if [[ -n "$REPO_TYPE" ]]; then
+    if [[ "$REPO_TYPE" == "github" && -n "$REPO_OWNER" && -n "$REPO_NAME" ]]; then
+        add_github_repo "main" "$REPO_OWNER" "$REPO_NAME" "$ENV_REPO_BRANCH"
+    elif [[ "$REPO_TYPE" == "gitlab" && -n "$REPO_PATH" ]]; then
+        add_gitlab_repo "main" "${REPO_URL:-gitlab.com}" "$REPO_PATH" "$ENV_REPO_BRANCH"
+    fi
+fi
+
+# Non-interactive mode: handle REPOSITORIES environment variable
+if [[ "$READ_TIMEOUT" -eq 0 ]]; then
+    if [[ -n "$ENV_REPOSITORIES" ]]; then
+        print_info "비대화형 모드: REPOSITORIES 환경변수에서 저장소 로드"
+        REPOSITORIES_JSON="$ENV_REPOSITORIES"
+    elif [[ -n "$ENV_USE_GLOBAL_REPOS" ]]; then
+        print_info "비대화형 모드: USE_GLOBAL_REPOS=$ENV_USE_GLOBAL_REPOS"
+        # Load specified global repos by alias
+        IFS=',' read -ra ALIASES <<< "$ENV_USE_GLOBAL_REPOS"
+        for alias in "${ALIASES[@]}"; do
+            alias=$(echo "$alias" | tr -d ' ')
+            [[ -z "$alias" ]] && continue  # 빈 별칭 건너뛰기
+
+            # Try GitHub first
+            if command -v jq &> /dev/null && [[ -f "$GLOBAL_CONFIG_FILE" ]]; then
+                github_repo=$(jq -r ".github.defaultRepositories[]? | select(.alias == \"$alias\")" "$GLOBAL_CONFIG_FILE" 2>/dev/null)
+                if [[ -n "$github_repo" ]]; then
+                    owner=$(echo "$github_repo" | jq -r '.owner')
+                    repo=$(echo "$github_repo" | jq -r '.repo')
+                    branch=$(echo "$github_repo" | jq -r '.branch // "main"')
+                    add_github_repo "$alias" "$owner" "$repo" "$branch"
+                    print_info "글로벌 저장소 로드: $alias (github)"
+                    continue
+                fi
+
+                # Try GitLab
+                gitlab_repo=$(jq -r ".gitlab.defaultRepositories[]? | select(.alias == \"$alias\")" "$GLOBAL_CONFIG_FILE" 2>/dev/null)
+                if [[ -n "$gitlab_repo" ]]; then
+                    url=$(echo "$gitlab_repo" | jq -r '.url // "gitlab.com"')
+                    path=$(echo "$gitlab_repo" | jq -r '.path')
+                    branch=$(echo "$gitlab_repo" | jq -r '.branch // "main"')
+                    add_gitlab_repo "$alias" "$url" "$path" "$branch"
+                    print_info "글로벌 저장소 로드: $alias (gitlab)"
+                    continue
+                fi
+
+                print_warning "글로벌 저장소를 찾을 수 없음: $alias"
+            fi
+        done
+    fi
+else
+    # Interactive mode: Repository management menu
+    print_header "📦 추가 저장소 설정"
+
+    display_repositories
+
+    while true; do
+        echo "추가 저장소를 등록하시겠습니까?"
+        echo "  [1] 글로벌 기본 저장소에서 선택"
+        echo "  [2] 새 GitHub 저장소 추가"
+        echo "  [3] 새 GitLab 저장소 추가"
+        echo "  [4] 저장소 삭제"
+        echo "  [5] 브랜치 변경"
+        echo "  [6] 완료"
+        read_char_with_default "선택 (1-6): " "6" "MENU_CHOICE"
+
+        case $MENU_CHOICE in
             1)
-                REPO_TYPE="github"
-                read_with_default "Owner: " "" "REPO_OWNER"
-                read_with_default "Repo: " "" "REPO_NAME"
+                # Select from global default repositories
+                echo ""
+                echo "글로벌 기본 저장소:"
+
+                GITHUB_GLOBAL_REPOS=$(load_global_repos "github" 2>/dev/null || echo "[]")
+                GITLAB_GLOBAL_REPOS=$(load_global_repos "gitlab" 2>/dev/null || echo "[]")
+
+                if [[ "$GITHUB_GLOBAL_REPOS" == "[]" && "$GITLAB_GLOBAL_REPOS" == "[]" ]]; then
+                    print_warning "등록된 글로벌 기본 저장소가 없습니다."
+                    print_info "init.sh를 다시 실행하여 기본 저장소를 등록하세요."
+                    continue
+                fi
+
+                # List GitHub repos
+                if [[ "$GITHUB_GLOBAL_REPOS" != "[]" ]]; then
+                    echo "  GitHub:"
+                    echo "$GITHUB_GLOBAL_REPOS" | jq -r '.[] | "    - \(.alias): \(.owner)/\(.repo)"'
+                fi
+
+                # List GitLab repos
+                if [[ "$GITLAB_GLOBAL_REPOS" != "[]" ]]; then
+                    echo "  GitLab:"
+                    echo "$GITLAB_GLOBAL_REPOS" | jq -r '.[] | "    - \(.alias): \(.url)/\(.path)"'
+                fi
+
+                echo ""
+                read_with_default "추가할 저장소 별칭 (쉼표 구분): " "" "SELECTED_ALIASES"
+
+                if [[ -n "$SELECTED_ALIASES" ]]; then
+                    IFS=',' read -ra ALIASES <<< "$SELECTED_ALIASES"
+                    for alias in "${ALIASES[@]}"; do
+                        alias=$(echo "$alias" | tr -d ' ')
+                        [[ -z "$alias" ]] && continue  # 빈 별칭 건너뛰기
+
+                        # Try GitHub
+                        github_repo=$(echo "$GITHUB_GLOBAL_REPOS" | jq -r ".[] | select(.alias == \"$alias\")" 2>/dev/null)
+                        if [[ -n "$github_repo" ]]; then
+                            owner=$(echo "$github_repo" | jq -r '.owner')
+                            repo=$(echo "$github_repo" | jq -r '.repo')
+                            branch=$(echo "$github_repo" | jq -r '.branch // "main"')
+                            add_github_repo "$alias" "$owner" "$repo" "$branch"
+                            print_success "추가됨: $alias (github:$owner/$repo)"
+                            continue
+                        fi
+
+                        # Try GitLab
+                        gitlab_repo=$(echo "$GITLAB_GLOBAL_REPOS" | jq -r ".[] | select(.alias == \"$alias\")" 2>/dev/null)
+                        if [[ -n "$gitlab_repo" ]]; then
+                            url=$(echo "$gitlab_repo" | jq -r '.url // "gitlab.com"')
+                            path=$(echo "$gitlab_repo" | jq -r '.path')
+                            branch=$(echo "$gitlab_repo" | jq -r '.branch // "main"')
+                            add_gitlab_repo "$alias" "$url" "$path" "$branch"
+                            print_success "추가됨: $alias (gitlab:$url/$path)"
+                            continue
+                        fi
+
+                        print_warning "저장소를 찾을 수 없음: $alias"
+                    done
+                fi
+
+                display_repositories
                 ;;
+
             2)
-                REPO_TYPE="gitlab"
-                read_with_default "GitLab URL [gitlab.com]: " "gitlab.com" "REPO_URL"
-                read_with_default "Path (예: group/project): " "" "REPO_PATH"
+                # Add new GitHub repository
+                echo ""
+                read_with_default "저장소 이름 (프로젝트 내 식별자): " "" "NEW_NAME"
+                read_with_default "Owner: " "" "NEW_OWNER"
+                read_with_default "Repo: " "" "NEW_REPO"
+                read_with_default "브랜치 [main]: " "main" "NEW_BRANCH"
+
+                if [[ -n "$NEW_NAME" && -n "$NEW_OWNER" && -n "$NEW_REPO" ]]; then
+                    add_github_repo "$NEW_NAME" "$NEW_OWNER" "$NEW_REPO" "$NEW_BRANCH"
+                    print_success "추가됨: $NEW_NAME (github:$NEW_OWNER/$NEW_REPO@$NEW_BRANCH)"
+                else
+                    print_warning "필수 정보가 누락되었습니다."
+                fi
+
+                display_repositories
                 ;;
-            *)
-                print_info "레포지토리 설정을 건너뜁니다."
+
+            3)
+                # Add new GitLab repository
+                echo ""
+                read_with_default "저장소 이름 (프로젝트 내 식별자): " "" "NEW_NAME"
+                read_with_default "GitLab URL [gitlab.com]: " "gitlab.com" "NEW_URL"
+                read_with_default "Path (예: group/project): " "" "NEW_PATH"
+                read_with_default "브랜치 [main]: " "main" "NEW_BRANCH"
+
+                if [[ -n "$NEW_NAME" && -n "$NEW_PATH" ]]; then
+                    add_gitlab_repo "$NEW_NAME" "$NEW_URL" "$NEW_PATH" "$NEW_BRANCH"
+                    print_success "추가됨: $NEW_NAME (gitlab:$NEW_URL/$NEW_PATH@$NEW_BRANCH)"
+                else
+                    print_warning "필수 정보가 누락되었습니다."
+                fi
+
+                display_repositories
+                ;;
+
+            4)
+                # Delete repository
+                if [[ "$REPOSITORIES_JSON" == "[]" ]]; then
+                    print_warning "삭제할 저장소가 없습니다."
+                    continue
+                fi
+
+                display_repositories
+                read_with_default "삭제할 저장소 이름: " "" "DEL_NAME"
+
+                if [[ -n "$DEL_NAME" ]] && command -v jq &> /dev/null; then
+                    REPOSITORIES_JSON=$(echo "$REPOSITORIES_JSON" | jq --arg name "$DEL_NAME" '[.[] | select(.name != $name)]')
+                    print_success "삭제됨: $DEL_NAME"
+                else
+                    print_warning "jq가 필요하거나 이름이 입력되지 않았습니다."
+                fi
+
+                display_repositories
+                ;;
+
+            5)
+                # Change branch
+                if [[ "$REPOSITORIES_JSON" == "[]" ]]; then
+                    print_warning "변경할 저장소가 없습니다."
+                    continue
+                fi
+
+                display_repositories
+                read_with_default "브랜치를 변경할 저장소 이름: " "" "TARGET_NAME"
+                read_with_default "새 브랜치: " "" "NEW_BRANCH"
+
+                if [[ -n "$TARGET_NAME" && -n "$NEW_BRANCH" ]] && command -v jq &> /dev/null; then
+                    REPOSITORIES_JSON=$(echo "$REPOSITORIES_JSON" | jq --arg name "$TARGET_NAME" --arg branch "$NEW_BRANCH" \
+                        '[.[] | if .name == $name then .branch = $branch else . end]')
+                    print_success "브랜치 변경됨: $TARGET_NAME -> $NEW_BRANCH"
+                else
+                    print_warning "jq가 필요하거나 정보가 입력되지 않았습니다."
+                fi
+
+                display_repositories
+                ;;
+
+            6|*)
+                # Done
+                break
                 ;;
         esac
+    done
+fi
+
+# Handle case where no repos and no auto-detection in non-interactive
+if [[ -z "$REPO_TYPE" && "$REPOSITORIES_JSON" == "[]" ]]; then
+    if [[ "$READ_TIMEOUT" -eq 0 ]]; then
+        print_info "비대화형 모드: 저장소가 설정되지 않았습니다."
     fi
 fi
 
@@ -414,11 +679,17 @@ fi
 
 # Create settings.local.json
 if [[ -z "$EXISTING_SETTINGS" ]]; then
-    # New file
-    cat > "$SETTINGS_FILE" <<EOF
+    # New file with error handling
+    {
+        cat > "$SETTINGS_FILE" <<EOF
 {
   "productivityAgents": {
 EOF
+    } || {
+        print_error "설정 파일 생성 실패: $SETTINGS_FILE"
+        print_error "디스크 공간이 부족하거나 쓰기 권한이 없을 수 있습니다."
+        exit 1
+    }
 
     # Add Jira configuration
     if [[ -n "$JIRA_PROJECT" ]]; then
@@ -431,35 +702,15 @@ EOF
     fi
 
     # Add repositories configuration
-    if [[ -n "$REPO_TYPE" ]]; then
-        cat >> "$SETTINGS_FILE" <<EOF
-    "repositories": [
-EOF
-
-        if [[ "$REPO_TYPE" == "github" ]]; then
-            cat >> "$SETTINGS_FILE" <<EOF
-      {
-        "name": "main",
-        "type": "github",
-        "owner": "$REPO_OWNER",
-        "repo": "$REPO_NAME",
-        "branch": "main"
-      }
-EOF
-        elif [[ "$REPO_TYPE" == "gitlab" ]]; then
-            cat >> "$SETTINGS_FILE" <<EOF
-      {
-        "name": "main",
-        "type": "gitlab",
-        "url": "$REPO_URL",
-        "path": "$REPO_PATH",
-        "branch": "main"
-      }
-EOF
+    if [[ "$REPOSITORIES_JSON" != "[]" ]]; then
+        # Format JSON nicely for the config file
+        if command -v jq &> /dev/null; then
+            FORMATTED_REPOS=$(echo "$REPOSITORIES_JSON" | jq -M '.')
+        else
+            FORMATTED_REPOS="$REPOSITORIES_JSON"
         fi
-
         cat >> "$SETTINGS_FILE" <<EOF
-    ],
+    "repositories": $FORMATTED_REPOS,
 EOF
     fi
 
@@ -547,7 +798,7 @@ echo ""
 if [[ -n "$JIRA_PROJECT" ]]; then
     echo "  - \"$JIRA_PROJECT 프로젝트 회고록 작성해줘\" (jira-retrospective)"
 fi
-if [[ -n "$REPO_TYPE" ]]; then
+if [[ "$REPOSITORIES_JSON" != "[]" ]]; then
     echo "  - \"이 레포지토리의 지난 주 커밋 분석해줘\" (commit-retrospective)"
 fi
 echo ""

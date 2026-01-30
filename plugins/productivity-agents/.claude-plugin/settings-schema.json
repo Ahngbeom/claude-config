@@ -69,6 +69,34 @@
             }
           },
           "required": ["username", "email"]
+        },
+        "defaultRepositories": {
+          "type": "array",
+          "description": "Pre-configured GitHub repositories for quick selection",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "alias": {
+                "type": "string",
+                "description": "Short alias for quick reference (e.g., 'api', 'web')"
+              },
+              "owner": {
+                "type": "string",
+                "description": "GitHub owner (user or organization)"
+              },
+              "repo": {
+                "type": "string",
+                "description": "Repository name"
+              },
+              "branch": {
+                "type": "string",
+                "description": "Default branch",
+                "default": "main"
+              }
+            },
+            "required": ["alias", "owner", "repo"]
+          }
         }
       }
     },
@@ -98,6 +126,35 @@
             }
           },
           "required": ["username", "email"]
+        },
+        "defaultRepositories": {
+          "type": "array",
+          "description": "Pre-configured GitLab repositories for quick selection",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "alias": {
+                "type": "string",
+                "description": "Short alias for quick reference (e.g., 'infra', 'deploy')"
+              },
+              "url": {
+                "type": "string",
+                "description": "GitLab URL (e.g., gitlab.com or gitlab.company.com)",
+                "default": "gitlab.com"
+              },
+              "path": {
+                "type": "string",
+                "description": "Project path (e.g., 'group/project' or 'group/subgroup/project')"
+              },
+              "branch": {
+                "type": "string",
+                "description": "Default branch",
+                "default": "main"
+              }
+            },
+            "required": ["alias", "path"]
+          }
         }
       }
     },

@@ -178,6 +178,10 @@ GITLAB_TOKEN=""
 
 RETRO_PATH="$RETRO_DIR"
 
+# Default repositories (JSON arrays)
+GITHUB_DEFAULT_REPOS=""
+GITLAB_DEFAULT_REPOS=""
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Step 1: Atlassian (Jira) Configuration
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -259,6 +263,64 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
         GITHUB_USERNAME=""
     else
         print_success "GitHub 설정 완료"
+
+        # GitHub default repositories registration
+        echo ""
+        if [[ "$READ_TIMEOUT" -eq 0 ]]; then
+            # Non-interactive mode: read from environment variable
+            if [[ -n "${GITHUB_DEFAULT_REPOS:-}" ]]; then
+                print_info "비대화형 모드: GITHUB_DEFAULT_REPOS 환경변수에서 기본 저장소 로드"
+            fi
+        else
+            read -t "$READ_TIMEOUT" -p "자주 사용하는 GitHub 저장소를 미리 등록하시겠습니까? (y/N): " -n 1 -r || REPLY="n"
+            echo
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                GITHUB_DEFAULT_REPOS="[]"
+                REPO_COUNT=0
+                while true; do
+                    REPO_COUNT=$((REPO_COUNT + 1))
+                    echo ""
+                    echo "  [저장소 $REPO_COUNT]"
+                    read -t "$READ_TIMEOUT" -p "    별칭 (예: api, web): " REPO_ALIAS || break
+                    if [[ -z "$REPO_ALIAS" ]]; then
+                        REPO_COUNT=$((REPO_COUNT - 1))
+                        break
+                    fi
+                    read -t "$READ_TIMEOUT" -p "    Owner: " REPO_OWNER || break
+                    read -t "$READ_TIMEOUT" -p "    Repo: " REPO_NAME || break
+                    read -t "$READ_TIMEOUT" -p "    브랜치 [main]: " REPO_BRANCH || REPO_BRANCH=""
+                    REPO_BRANCH=${REPO_BRANCH:-main}
+
+                    if [[ -n "$REPO_OWNER" && -n "$REPO_NAME" ]]; then
+                        # Append to JSON array using jq if available, otherwise manual
+                        if command -v jq &> /dev/null; then
+                            GITHUB_DEFAULT_REPOS=$(echo "$GITHUB_DEFAULT_REPOS" | jq --arg alias "$REPO_ALIAS" --arg owner "$REPO_OWNER" --arg repo "$REPO_NAME" --arg branch "$REPO_BRANCH" '. + [{"alias": $alias, "owner": $owner, "repo": $repo, "branch": $branch}]')
+                        else
+                            if [[ "$GITHUB_DEFAULT_REPOS" == "[]" || -z "$GITHUB_DEFAULT_REPOS" ]]; then
+                                GITHUB_DEFAULT_REPOS="[{\"alias\":\"$REPO_ALIAS\",\"owner\":\"$REPO_OWNER\",\"repo\":\"$REPO_NAME\",\"branch\":\"$REPO_BRANCH\"}]"
+                            elif [[ "$GITHUB_DEFAULT_REPOS" =~ ^\[.*\]$ ]]; then
+                                GITHUB_DEFAULT_REPOS="${GITHUB_DEFAULT_REPOS%]},{\"alias\":\"$REPO_ALIAS\",\"owner\":\"$REPO_OWNER\",\"repo\":\"$REPO_NAME\",\"branch\":\"$REPO_BRANCH\"}]"
+                            else
+                                print_error "잘못된 JSON 배열 형식"
+                            fi
+                        fi
+                        print_success "등록됨: $REPO_ALIAS ($REPO_OWNER/$REPO_NAME@$REPO_BRANCH)"
+                    fi
+
+                    read -t "$READ_TIMEOUT" -p "  추가 등록? (y/N): " -n 1 -r || REPLY="n"
+                    echo
+                    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                        break
+                    fi
+                done
+
+                if [[ "$GITHUB_DEFAULT_REPOS" == "[]" ]]; then
+                    GITHUB_DEFAULT_REPOS=""
+                else
+                    print_success "GitHub 기본 저장소 $REPO_COUNT개 등록 완료"
+                fi
+            fi
+        fi
     fi
 else
     print_info "GitHub 설정을 건너뜁니다."
@@ -297,6 +359,65 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
         GITLAB_USERNAME=""
     else
         print_success "GitLab 설정 완료"
+
+        # GitLab default repositories registration
+        echo ""
+        if [[ "$READ_TIMEOUT" -eq 0 ]]; then
+            # Non-interactive mode: read from environment variable
+            if [[ -n "${GITLAB_DEFAULT_REPOS:-}" ]]; then
+                print_info "비대화형 모드: GITLAB_DEFAULT_REPOS 환경변수에서 기본 저장소 로드"
+            fi
+        else
+            read -t "$READ_TIMEOUT" -p "자주 사용하는 GitLab 저장소를 미리 등록하시겠습니까? (y/N): " -n 1 -r || REPLY="n"
+            echo
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                GITLAB_DEFAULT_REPOS="[]"
+                REPO_COUNT=0
+                while true; do
+                    REPO_COUNT=$((REPO_COUNT + 1))
+                    echo ""
+                    echo "  [저장소 $REPO_COUNT]"
+                    read -t "$READ_TIMEOUT" -p "    별칭 (예: infra, deploy): " REPO_ALIAS || break
+                    if [[ -z "$REPO_ALIAS" ]]; then
+                        REPO_COUNT=$((REPO_COUNT - 1))
+                        break
+                    fi
+                    read -t "$READ_TIMEOUT" -p "    URL [$GITLAB_URL]: " REPO_URL || REPO_URL=""
+                    REPO_URL=${REPO_URL:-$GITLAB_URL}
+                    read -t "$READ_TIMEOUT" -p "    Path (예: group/project): " REPO_PATH || break
+                    read -t "$READ_TIMEOUT" -p "    브랜치 [main]: " REPO_BRANCH || REPO_BRANCH=""
+                    REPO_BRANCH=${REPO_BRANCH:-main}
+
+                    if [[ -n "$REPO_PATH" ]]; then
+                        # Append to JSON array using jq if available, otherwise manual
+                        if command -v jq &> /dev/null; then
+                            GITLAB_DEFAULT_REPOS=$(echo "$GITLAB_DEFAULT_REPOS" | jq --arg alias "$REPO_ALIAS" --arg url "$REPO_URL" --arg path "$REPO_PATH" --arg branch "$REPO_BRANCH" '. + [{"alias": $alias, "url": $url, "path": $path, "branch": $branch}]')
+                        else
+                            if [[ "$GITLAB_DEFAULT_REPOS" == "[]" || -z "$GITLAB_DEFAULT_REPOS" ]]; then
+                                GITLAB_DEFAULT_REPOS="[{\"alias\":\"$REPO_ALIAS\",\"url\":\"$REPO_URL\",\"path\":\"$REPO_PATH\",\"branch\":\"$REPO_BRANCH\"}]"
+                            elif [[ "$GITLAB_DEFAULT_REPOS" =~ ^\[.*\]$ ]]; then
+                                GITLAB_DEFAULT_REPOS="${GITLAB_DEFAULT_REPOS%]},{\"alias\":\"$REPO_ALIAS\",\"url\":\"$REPO_URL\",\"path\":\"$REPO_PATH\",\"branch\":\"$REPO_BRANCH\"}]"
+                            else
+                                print_error "잘못된 JSON 배열 형식"
+                            fi
+                        fi
+                        print_success "등록됨: $REPO_ALIAS ($REPO_URL/$REPO_PATH@$REPO_BRANCH)"
+                    fi
+
+                    read -t "$READ_TIMEOUT" -p "  추가 등록? (y/N): " -n 1 -r || REPLY="n"
+                    echo
+                    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                        break
+                    fi
+                done
+
+                if [[ "$GITLAB_DEFAULT_REPOS" == "[]" ]]; then
+                    GITLAB_DEFAULT_REPOS=""
+                else
+                    print_success "GitLab 기본 저장소 $REPO_COUNT개 등록 완료"
+                fi
+            fi
+        fi
     fi
 else
     print_info "GitLab 설정을 건너뜁니다."
@@ -380,6 +501,15 @@ if [[ -n "$GITHUB_USERNAME" ]]; then
       "username": "$GITHUB_USERNAME",
       "email": "$GITHUB_EMAIL"
     }
+EOF
+    # Add defaultRepositories if available
+    if [[ -n "$GITHUB_DEFAULT_REPOS" && "$GITHUB_DEFAULT_REPOS" != "[]" ]]; then
+        cat >> "$CONFIG_FILE" <<EOF
+    ,
+    "defaultRepositories": $GITHUB_DEFAULT_REPOS
+EOF
+    fi
+    cat >> "$CONFIG_FILE" <<EOF
   },
 EOF
 fi
@@ -393,6 +523,15 @@ if [[ -n "$GITLAB_USERNAME" ]]; then
       "username": "$GITLAB_USERNAME",
       "email": "$GITLAB_EMAIL"
     }
+EOF
+    # Add defaultRepositories if available
+    if [[ -n "$GITLAB_DEFAULT_REPOS" && "$GITLAB_DEFAULT_REPOS" != "[]" ]]; then
+        cat >> "$CONFIG_FILE" <<EOF
+    ,
+    "defaultRepositories": $GITLAB_DEFAULT_REPOS
+EOF
+    fi
+    cat >> "$CONFIG_FILE" <<EOF
   },
 EOF
 fi
