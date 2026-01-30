@@ -31,6 +31,28 @@ When using compact, focus on:
 
 Respond in Korean (한국어) unless explicitly requested otherwise.
 
+## Available Skills (Slash Commands)
+
+워크플로우형 작업을 위한 슬래시 명령어입니다. 에이전트와 달리 직접 호출하여 사용합니다.
+
+| Command | Description | Example |
+|---------|-------------|---------|
+| `/commit` | 스마트 커밋 메시지 생성 및 Git 커밋 | `/commit PROJ-123` |
+| `/jira-retro` | Jira 이슈 기반 회고록 생성 | `/jira-retro 2w` |
+| `/git-retro` | Git 커밋 기반 회고록 생성 | `/git-retro 14` |
+| `/write-docs` | 마크다운 문서 작성 | `/write-docs API.md` |
+| `/write-tests` | 테스트 코드 자동 생성 | `/write-tests src/auth.ts` |
+
+### Skill vs Agent 사용 가이드
+
+- **Skill (슬래시 명령)**: 사용자가 직접 호출, 현재 컨텍스트에서 실행
+- **Agent (Task tool)**: 자동 트리거 또는 복잡한 작업, 별도 컨텍스트에서 실행
+
+> 기존 에이전트 (`git-committer`, `jira-retrospective` 등)는 하위 호환성을 위해 유지됩니다.
+> Task tool을 통한 자동 트리거도 계속 작동합니다.
+
+---
+
 ## Plugin Structure
 
 This marketplace contains 7 category-based plugins:
