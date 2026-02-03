@@ -61,7 +61,7 @@ This marketplace contains 7 category-based plugins:
 |--------|--------|----------|
 | `backend-agents` | 5 | development |
 | `frontend-agents` | 1 | development |
-| `data-agents` | 4 | development |
+| `data-agents` | 5 | development |
 | `devops-agents` | 4 | productivity |
 | `healthcare-agents` | 3 | development |
 | `mobile-agents` | 3 | development |
@@ -89,6 +89,7 @@ This marketplace contains 7 category-based plugins:
 | **Data Engineering** | `data-agents:data-engineer` | "ETL", "파이프라인", "Spark", "Airflow", "데이터 웨어하우스" |
 | **ML/AI** | `data-agents:ml-engineer` | "모델 학습", "PyTorch", "TensorFlow", "MLOps", "LLM" |
 | **Computer Vision** | `data-agents:computer-vision-engineer` | "얼굴 인식", "MediaPipe", "OpenCV", "face_recognition", "랜드마크", "AR 필터" |
+| **Jupyter/Notebooks** | `data-agents:jupyter-expert` | "Jupyter", "노트북", "notebook", "IPython", "magic command", "위젯", "widget", "nbconvert", "JupyterLab", "인터랙티브" |
 | **DevOps** | `devops-agents:devops-engineer` | "배포", "CI/CD", "Docker", "Kubernetes", "Terraform" |
 | **GitHub** | `devops-agents:github-expert` | "GitHub Actions", "workflow", "gh", "GitHub CLI" |
 | **GitLab** | `devops-agents:gitlab-expert` | "GitLab CI", ".gitlab-ci.yml", "GitLab Runner" |
@@ -197,6 +198,15 @@ User: "환자 데이터 정규화하고 분석해줘"
 → 1. healthcare-agents:healthcare-stats-normalizer로 ICD/SNOMED 코드 매핑
 → 2. healthcare-agents:healthcare-stats-tester로 통계 분석
 → 3. healthcare-agents:healthcare-stats-forecaster로 예측 모델 생성
+```
+
+**Example 11: Jupyter Notebook 개발 및 대시보드**
+```
+User: "데이터 분석 노트북 만들고 대시보드로 배포해줘"
+→ 1. data-agents:jupyter-expert로 구조화된 분석 노트북 생성
+→ 2. data-agents:data-analyst로 EDA 및 시각화 추가
+→ 3. data-agents:jupyter-expert로 Voila 대시보드로 변환
+→ 4. devops-agents:git-committer로 커밋
 ```
 
 ## Project References
