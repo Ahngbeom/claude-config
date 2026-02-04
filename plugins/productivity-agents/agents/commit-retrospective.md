@@ -297,24 +297,166 @@ glab api projects/:id/repository/commits
 
 ## Privacy & Data Handling
 
+### 민감 정보 보호 및 마스킹 전략 (CRITICAL)
+
+회고록 작성 시 다음 **4단계 마스킹 전략**을 적용합니다:
+
+#### 마스킹 전략 개요
+| 정보 유형 | 마스킹 방식 | 예시 |
+|-----------|-------------|------|
+| 고객사/병원명 | 익명화 (알파벳 순서) | A병원, B의원, C사 |
+| 팀원 정보 | 역할 기반 익명화 | 백엔드 개발자, 프론트엔드 개발자, 리뷰어 |
+| 커밋 해시 | 일련번호 또는 제거 | Commit #1, Commit #2 또는 완전 제외 |
+| Jira/이슈 키 | 순차 번호 일반화 | 이슈 #N (커밋 메시지에서 검출) |
+| 브랜치명 | 일반화 | feature/MPT-123 → feature 브랜치 |
+| 회사/제품명 | 유지 | 모비닥, Flyingdoctor |
+| 파일 경로 | 카테고리화 | src/clients/SamsungHospital.ts → 클라이언트 연동 파일 |
+
+#### 1단계: 고객사/병원명 익명화
+- 커밋 메시지, 브랜치명, 파일 경로에서 고객사명 검출 후 A병원, B의원 등으로 치환
+- 동일 고객사는 문서 전체에서 **동일한 익명**으로 유지
+- 첫 번째 언급: A병원, 두 번째 언급: B의원, 세 번째: C사 ...
+
+```
+예시:
+- 커밋 메시지: "서울대병원 연동 API 수정" → "A병원 연동 API 수정"
+- 브랜치명: "feature/samsung-hospital-integration" → "feature/B병원-integration"
+- 파일 경로: "src/clients/GangnamSeverance.ts" → "src/clients/C병원.ts" 또는 "클라이언트 연동 파일"
+```
+
+#### 2단계: 팀원 정보 역할 기반 익명화
+- Git author name → **역할/직무**로 대체
+  - 백엔드 개발자, 프론트엔드 개발자, DevOps 엔지니어, 디자이너
+- 코드 리뷰어명 → "리뷰어", "팀 리더", "시니어 개발자"
+- 커밋 메시지 내 개인명 → 역할로 치환
+- Git author email → 제거 또는 일반화 (개발자@company)
+
+```
+예시:
+- Author: "홍길동 <hong@company.com>" → "백엔드 개발자"
+- Commit message: "김철수 리뷰 반영" → "리뷰어 피드백 반영"
+- Reviewer: "이영희" → "프론트엔드 개발자"
+```
+
+#### 3단계: 커밋 메시지 민감정보 제거
+- **Jira 이슈 키** (MPT-123, MOBIDOC-456 등) → **이슈 #N**으로 일반화
+  - 각 회고록마다 독립적으로 #1부터 순차 번호 부여
+  - 동일 이슈가 여러 커밋에서 언급될 경우 같은 번호 유지
+- **브랜치명**에서 프로젝트 코드 제거
+  - feature/MPT-8572-api → feature 브랜치
+  - hotfix/MOBIDOC-123 → hotfix 브랜치
+- **이메일, URL, IP 주소** 완전 제거
+- **API 키, 토큰, 비밀번호** 발견 시 경고 및 제거
+
+```
+예시:
+Before:
+- "[MPT-8572] 서울대병원 연동 API 개발 (Author: hong@company.com)"
+- "Merge branch 'feature/MPT-8572-samsung-integration'"
+- "Fix bug reported by 김철수 (IP: 192.168.1.100)"
+
+After:
+- "[이슈 #1] A병원 연동 API 개발 (담당: 백엔드 개발자)"
+- "Merge branch 'feature 브랜치'"
+- "Fix bug reported by 리뷰어"
+```
+
+#### 4단계: 파일 경로 일반화
+- 민감한 파일 경로는 **카테고리화**하여 표현
+- 고객사/병원명이 포함된 경로는 익명화 또는 일반 설명으로 대체
+- 통계에 파일 경로가 필요한 경우 상대 경로의 일반 패턴만 사용
+
+```
+예시:
+Before:
+- src/clients/SamsungHospital/api.ts
+- config/seoul-national-hospital.json
+- tests/severance/integration.test.ts
+
+After:
+- 클라이언트 연동 파일 (src/clients/)
+- 병원 설정 파일 (config/)
+- 통합 테스트 파일 (tests/)
+
+또는:
+- src/clients/A병원/api.ts
+- config/B병원.json
+- tests/C병원/integration.test.ts
+```
+
+#### 커밋 해시 처리
+- **외부 공유용 회고록**: 커밋 해시를 일련번호(Commit #1, #2)로 치환 또는 완전 제외
+- **내부용 회고록**: 짧은 해시(7자) 유지 가능 (사용자 선택)
+- **풀 해시**: 절대 노출 금지
+
+```
+예시:
+- Full hash: a1b2c3d4e5f6g7h8i9j0 → ❌ 노출 금지
+- Short hash: a1b2c3d → Commit #1 또는 제외
+```
+
+#### 추가 마스킹 대상 (필수)
+다음 정보가 커밋 메시지, 브랜치명, 파일 경로에서 발견될 경우 **반드시 제거 또는 마스킹**:
+
+- **인증정보**: API 키, 비밀번호, 토큰, AWS 키, DB 자격증명
+  - 발견 시 ⚠️ **경고 메시지** 출력 및 제거
+- **인프라 정보**: 서버 IP, DB 연결 문자열, 내부 URL
+- **개인정보**: 이메일, 전화번호, 주민번호
+- **금융 정보**: 계좌번호, 카드번호
+- **계약/비즈니스 정보**: 계약 금액, 계약 조건
+
+#### 유지 항목 (마스킹 제외)
+- **자사 제품명**: 모비닥, Mobidoc
+- **자사 회사명**: Flyingdoctor, 플라잉닥터
+- **오픈소스 라이브러리**: React, Node.js, Express 등
+- **일반 기술 용어**: API, DB, 서버, 클라이언트
+
+> 이유: 회고록의 맥락과 가독성 유지를 위해 자사 정보와 일반 기술 용어는 그대로 유지
+
+#### 마스킹 적용 예시 (Git Commit 환경)
+
+```
+Before (원본 커밋 히스토리):
+a1b2c3d [MPT-8572] 서울대병원 연동 API 개발 - hong@company.com
+e5f6g7h [MPT-8659] 삼성서울병원에서 요청한 기능 수정 완료 - kim@company.com
+i9j0k1l Merge branch 'feature/MPT-8572-samsung-integration' into develop
+m2n3o4p [MPT-8572] Fix bug reported by 김철수 (Reviewer: 이영희)
+
+After (마스킹 적용):
+Commit #1 [이슈 #1] A병원 연동 API 개발 - 백엔드 개발자
+Commit #2 [이슈 #2] B병원에서 요청한 기능 수정 완료 - 프론트엔드 개발자
+Commit #3 Merge branch 'feature 브랜치' into develop
+Commit #4 [이슈 #1] Fix bug reported by 리뷰어 (Reviewer: 시니어 개발자)
+```
+
+> **참고**:
+> - 동일 이슈(MPT-8572)가 두 번 언급되었으므로 같은 번호(이슈 #1) 유지
+> - 커밋 해시는 일련번호로 치환
+> - 개인 이메일 제거 및 역할로 대체
+
 ### Information to Include
-- Commit messages (summarized)
-- File paths (relative to repo)
+- Commit messages (마스킹 적용 후)
+- File paths (카테고리화 또는 일반화)
 - Statistics (counts, percentages)
 - Date/time information
+- Repository names (익명화 옵션 적용 시 Repo A, Repo B)
 
 ### Information to EXCLUDE (Sensitive Data)
-- Full commit hashes in external reports
+- Full commit hashes (짧은 해시 또는 일련번호 사용)
 - Specific code content
 - Internal URLs or endpoints
 - API keys or credentials found in commits
-- Personal information beyond author name/email
+- Personal information (emails, phone numbers)
+- Customer/hospital names (익명화 필수)
+- Team member real names (역할로 대체)
+- Jira issue keys (순차 번호로 일반화)
 
 ### Anonymization Option
 If user requests anonymized report:
 - Replace repository names with aliases (Repo A, Repo B)
-- Use generic file categories instead of paths
+- Use generic file categories instead of full paths
 - Summarize without specific implementation details
+- Remove all commit hashes (use sequential numbers only)
 
 ## Error Handling
 
