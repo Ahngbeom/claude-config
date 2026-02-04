@@ -466,6 +466,97 @@ If user requests anonymized report:
 - **Remote fetch failed**: Check network and authentication
 - **Invalid date format**: Guide user to correct format (YYYY-MM-DD)
 
+## Step 6: Save or Output
+
+### 파일 저장 규칙 (REQUIRED)
+
+**1. 파일명 표준 (MANDATORY)**
+
+**필수 형식**: `YYYY-MM-DD-YYYY-MM-DD-{type}-retrospective.md`
+
+- `{type}`: `weekly`, `monthly`, `quarterly`
+- 예시:
+  - 주간: `2026-02-03-2026-02-09-weekly-retrospective.md`
+  - 월간: `2026-01-01-2026-01-31-monthly-retrospective.md`
+  - 분기: `2026-01-01-2026-03-31-quarterly-retrospective.md`
+
+**금지 형식** (Legacy, 새 회고록에 사용 금지):
+- ❌ `2025-10-monthly-retrospective.md` (날짜 범위 누락)
+- ❌ `retrospective_YYYY-MM-DD.md` (기간 정보 부족)
+
+**2. 중복 파일 검사 (MUST)**
+
+저장 전 **반드시** 기존 파일 확인:
+
+```bash
+# 동일 기간 파일 검색
+EXISTING_FILE=$(ls "$OUTPUT_DIR" | grep -E "^${START_DATE}-${END_DATE}-(weekly|monthly|quarterly)-retrospective\.md$")
+
+if [[ -n "$EXISTING_FILE" ]]; then
+  # AskUserQuestion 도구 사용하여 사용자에게 선택 요청
+  AskUserQuestion:
+  "동일 기간(${START_DATE} ~ ${END_DATE})의 회고록이 이미 존재합니다: ${EXISTING_FILE}
+
+  어떻게 처리하시겠습니까?
+  1. 덮어쓰기 (기존 파일을 .backup으로 백업 후 새로 생성)
+  2. 버전 번호 추가 (파일명에 -v1.1 추가하여 새 버전으로 저장)
+  3. 취소 (파일 저장하지 않고 콘솔 출력만)"
+fi
+```
+
+**3. Front Matter 필수 필드**
+
+모든 회고록 파일은 다음 Front Matter를 **반드시** 포함:
+
+```yaml
+---
+title: "{타입} 회고록 (YYYY.MM.DD ~ YYYY.MM.DD)"
+date: "YYYY-MM-DD"  # 회고록 생성일 (종료일 사용)
+tags: [회고, {프로젝트명}, {타입}회고]
+version: "1.0"  # 재생성 시 증가 (1.0, 1.1, 1.2 ...)
+generated_by: "commit-retrospective"  # 생성 에이전트 명시
+---
+```
+
+**예시**:
+```yaml
+---
+title: "Git 커밋 월간 회고록 (2026.01.01 ~ 2026.01.31)"
+date: "2026-01-31"
+tags: [회고, Git, 월간회고]
+version: "1.0"
+generated_by: "commit-retrospective"
+---
+```
+
+**4. 기본 저장 경로**
+
+```
+Default: ~/.claude/retrospectives/YYYY/YYYY-MM-DD-YYYY-MM-DD-{type}-retrospective.md
+```
+
+- 연도별 디렉토리 자동 생성 (`mkdir -p ~/.claude/retrospectives/YYYY`)
+- 디렉토리가 없으면 자동 생성
+- 사용자가 다른 경로 지정 시 해당 경로 사용
+
+**예시**:
+```
+~/.claude/retrospectives/
+├── 2024/
+│   ├── 2024-01-01-2024-01-31-monthly-retrospective.md
+│   ├── 2024-04-01-2024-04-30-monthly-retrospective.md
+│   └── 2024-07-01-2024-07-31-monthly-retrospective.md
+└── 2026/
+    ├── 2026-01-01-2026-01-31-monthly-retrospective.md
+    └── 2026-02-01-2026-02-29-monthly-retrospective.md
+```
+
+**5. 출력 옵션**
+
+- **파일 저장** (기본): 위 규칙에 따라 파일 생성
+- **콘솔 출력**: 파일 저장 없이 Markdown 출력
+- **Confluence 페이지 생성**: Atlassian MCP 사용 (사용자 요청 시)
+
 ## Output Format
 
 Always respond in Korean (한국어) and provide:
