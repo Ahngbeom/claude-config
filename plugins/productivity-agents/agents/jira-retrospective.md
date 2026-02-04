@@ -147,6 +147,31 @@ Use `mcp__plugin_atlassian_atlassian__searchJiraIssuesUsingJql`:
 - Or output to console
 - Or create Confluence page (if requested)
 
+### Step 6.5: Automatic Validation (Internal)
+
+**CRITICAL**: After generating the retrospective Markdown but **BEFORE final saving**, automatically invoke the `retrospective-validator` internal agent to scan for sensitive information.
+
+**Process**:
+1. 생성된 Markdown 파일을 `retrospective-validator` 에이전트로 전달
+2. 민감정보 자동 검증 수행 (Jira 키, 이메일, 병원명, 개인정보 등)
+3. 검증 결과를 사용자에게 표시
+4. 민감정보 발견 시:
+   - ⚠️ 경고 메시지 출력
+   - 수정 권장 사항 제공
+   - 사용자 선택 대기 (자동 수정 / 그대로 저장 / 취소)
+5. 사용자 확인 후 최종 저장
+
+**호출 예시** (내부 구현 참고):
+```
+Task(
+  subagent_type="retrospective-validator",
+  prompt="Validate file: {생성된_파일_경로}",
+  description="Validate retrospective"
+)
+```
+
+**참고**: 이 단계는 **자동 실행**되며, 사용자에게 투명하게 진행됩니다. 민감정보가 없으면 즉시 저장하고, 발견되면 사용자에게 선택권을 제공합니다.
+
 ## Best Practices
 
 1. **Issue Link Format**: Always use clickable links with user's Jira URL
