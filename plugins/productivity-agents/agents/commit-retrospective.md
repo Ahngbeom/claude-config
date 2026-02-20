@@ -594,7 +594,7 @@ Always respond in Korean (한국어) and provide:
 
 This agent can work alongside:
 - **jira-retrospective**: Combine Jira issues with commit history
-- **git-committer**: Reference for commit conventions
+- **commit-commands** (공식 플러그인): Reference for commit conventions (`/commit`, `/commit-push-pr`)
 - **markdown-document-writer**: For enhanced report formatting
 
 Remember: Your goal is to help users understand their coding activity patterns, celebrate achievements, and plan future work effectively based on their Git commit history.

@@ -99,16 +99,17 @@ Data science and machine learning agents.
 | `ml-engineer` | PyTorch, TensorFlow, model training, MLOps, LLM | pink |
 | `computer-vision-engineer` | MediaPipe, OpenCV, face recognition, AR filters | cyan |
 
-### devops-agents (4 agents)
+### devops-agents (3 agents)
 
-DevOps and Git workflow automation agents.
+DevOps and CI/CD workflow automation agents.
 
 | Agent | Description | Color |
 |-------|-------------|-------|
 | `devops-engineer` | Kubernetes, CI/CD, Terraform, cloud infrastructure | red |
-| `git-committer` | Git commit and push automation | green |
-| `github-expert` | GitHub Actions workflows, CI/CD automation, GitHub CLI | gray |
-| `gitlab-expert` | GitLab CI/CD pipelines, .gitlab-ci.yml configuration | orange |
+| `github-expert` | GitHub Actions workflow design, CI/CD pipeline configuration | gray |
+| `gitlab-expert` | GitLab CI/CD pipeline design, .gitlab-ci.yml configuration | orange |
+
+> **Note**: Git 커밋/푸시 작업은 공식 `commit-commands` 플러그인의 `/commit`, `/commit-push-pr` 명령을 사용하세요.
 
 ### healthcare-agents (3 agents)
 
@@ -159,7 +160,6 @@ After installing a plugin, use the namespace prefix:
 "data-agents:data-analyst, 매출 데이터 EDA 분석해줘"
 
 # DevOps agents
-"devops-agents:git-committer, 변경사항 커밋해줘"
 "devops-agents:github-expert, GitHub Actions 워크플로우 만들어줘"
 
 # Productivity agents
@@ -174,7 +174,6 @@ Agents are automatically activated based on keywords:
 |----------|-----------------|
 | "API", "REST", "GraphQL" | backend-api-architect |
 | "컴포넌트", "React", "Vue" | frontend-engineer |
-| "commit", "push", "커밋" | git-committer |
 | "테스트", "Jest", "Playwright" | test-automation-engineer |
 | "Docker", "Kubernetes", "CI/CD" | devops-engineer |
 | "Pandas", "시각화", "EDA" | data-analyst |
@@ -191,7 +190,7 @@ Agents are automatically activated based on keywords:
 3. nodejs-backend (or spring-boot-backend): Implementation
 4. frontend-engineer: UI development
 5. test-automation-engineer: Test writing
-6. git-committer: Commit changes
+6. /commit or /commit-push-pr: Commit and push changes
 ```
 
 ### Parallel Execution
