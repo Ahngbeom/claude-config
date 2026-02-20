@@ -76,16 +76,6 @@
       "source": "./plugins/productivity-agents",
       "category": "productivity",
       "homepage": "https://github.com/Ahngbeom/claude-config"
-    },
-    {
-      "name": "claude-hookify",
-      "description": "Agent preference hooks - recommends specialized agents based on file and command patterns",
-      "author": {
-        "name": "ahngbeom"
-      },
-      "source": "./claude-hookify",
-      "category": "productivity",
-      "homepage": "https://github.com/Ahngbeom/claude-config"
     }
   ]
 }
