@@ -39,5 +39,5 @@ User: "지난 달 내 GitHub 작업 내역 정리해줘"
 
 ## Integration
 - `jira-retrospective`: Jira 이슈와 커밋을 함께 분석할 때 협업
-- `git-committer`: 커밋 컨벤션 참조
+- `commit-commands` (공식 플러그인): 커밋 컨벤션 참조
 - `markdown-document-writer`: 회고록 포맷 개선

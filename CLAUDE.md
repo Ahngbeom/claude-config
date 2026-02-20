@@ -50,8 +50,8 @@ Respond in Korean (한국어) unless explicitly requested otherwise.
 - **Skill (슬래시 명령)**: 사용자가 직접 호출, 현재 컨텍스트에서 실행
 - **Agent (Task tool)**: 자동 트리거 또는 복잡한 작업, 별도 컨텍스트에서 실행
 
-> 기존 에이전트 (`git-committer`, `jira-retrospective` 등)는 하위 호환성을 위해 유지됩니다.
-> Task tool을 통한 자동 트리거도 계속 작동합니다.
+> Task tool을 통한 에이전트 자동 트리거도 계속 작동합니다.
+> Git 커밋/푸시 작업은 공식 `commit-commands` 플러그인의 `/commit`, `/commit-push-pr` 명령을 사용하세요.
 
 ---
 
@@ -64,7 +64,7 @@ This marketplace contains 7 category-based plugins:
 | `backend-agents` | 5 | development |
 | `frontend-agents` | 1 | development |
 | `data-agents` | 5 | development |
-| `devops-agents` | 4 | productivity |
+| `devops-agents` | 3 | productivity |
 | `healthcare-agents` | 3 | development |
 | `mobile-agents` | 3 | development |
 | `productivity-agents` | 4 | productivity |
@@ -78,7 +78,6 @@ This marketplace contains 7 category-based plugins:
 
 | Task Type | Plugin:Agent | Auto-Trigger Keywords |
 |-----------|--------------|----------------------|
-| **Git Operations** | `devops-agents:git-committer` | "commit", "push", "커밋", "푸시", after completing features |
 | **Frontend/React** | `frontend-agents:frontend-engineer` | "컴포넌트", "리액트", "Vue", "UI", component architecture |
 | **Backend API** | `backend-agents:backend-api-architect` | "API", "엔드포인트", "REST", "GraphQL" |
 | **Node.js Backend** | `backend-agents:nodejs-backend` | "Express", "Node.js", "미들웨어" |
@@ -93,8 +92,8 @@ This marketplace contains 7 category-based plugins:
 | **Computer Vision** | `data-agents:computer-vision-engineer` | "얼굴 인식", "MediaPipe", "OpenCV", "face_recognition", "랜드마크", "AR 필터" |
 | **Jupyter/Notebooks** | `data-agents:jupyter-expert` | "Jupyter", "노트북", "notebook", "IPython", "magic command", "위젯", "widget", "nbconvert", "JupyterLab", "인터랙티브" |
 | **DevOps** | `devops-agents:devops-engineer` | "배포", "CI/CD", "Docker", "Kubernetes", "Terraform" |
-| **GitHub** | `devops-agents:github-expert` | "GitHub Actions", "workflow", "gh", "GitHub CLI" |
-| **GitLab** | `devops-agents:gitlab-expert` | "GitLab CI", ".gitlab-ci.yml", "GitLab Runner" |
+| **GitHub CI/CD** | `devops-agents:github-expert` | "GitHub Actions", "workflow", ".github/workflows" (워크플로우 설계 전문, API 작업은 공식 `github` 플러그인 사용) |
+| **GitLab CI/CD** | `devops-agents:gitlab-expert` | "GitLab CI", ".gitlab-ci.yml", "GitLab Runner" (파이프라인 설계 전문, API 작업은 공식 `gitlab` 플러그인 사용) |
 | **Mobile App** | `mobile-agents:mobile-app-developer` | "React Native", "Flutter", "iOS", "Android", "모바일 앱" |
 | **AR Mobile** | `mobile-agents:ar-mobile-developer` | "ARCore", "ARKit", "AR 필터", "얼굴 필터", "증강현실", "Face Mesh" |
 | **Desktop App** | `mobile-agents:desktop-app-developer` | "Electron", "Tauri", "데스크톱 앱" |
@@ -105,7 +104,7 @@ This marketplace contains 7 category-based plugins:
 ### Mandatory Agent Usage
 
 1. **After Code Completion**
-   - Feature implementation → `devops-agents:git-committer` (자동으로 commit & push)
+   - Feature implementation → `/commit` 또는 `/commit-push-pr` (공식 `commit-commands` 플러그인)
    - API changes → `backend-agents:backend-api-architect` 또는 해당 백엔드 에이전트로 리뷰
    - Frontend changes → `frontend-agents:frontend-engineer`로 리뷰
 
@@ -124,7 +123,7 @@ This marketplace contains 7 category-based plugins:
 User: "로그인 API 구현해줘"
 → 1. backend-agents:backend-api-architect로 API 설계 및 구현
 → 2. productivity-agents:test-automation-engineer로 테스트 작성
-→ 3. devops-agents:git-committer로 자동 commit & push
+→ 3. `/commit` 또는 `/commit-push-pr`로 커밋
 ```
 
 **Example 2: Frontend Component**
@@ -132,14 +131,14 @@ User: "로그인 API 구현해줘"
 User: "사용자 프로필 컴포넌트 만들어줘"
 → 1. frontend-agents:frontend-engineer로 컴포넌트 구현
 → 2. productivity-agents:test-automation-engineer로 테스트 추가
-→ 3. devops-agents:git-committer로 커밋
+→ 3. `/commit`으로 커밋
 ```
 
 **Example 3: Database Schema Change**
 ```
 User: "유저 테이블에 프로필 이미지 필드 추가"
 → 1. backend-agents:database-expert로 마이그레이션 생성 및 스키마 수정
-→ 2. devops-agents:git-committer로 커밋
+→ 2. `/commit`으로 커밋
 ```
 
 **Example 4: Jira 회고록 생성**
@@ -165,7 +164,7 @@ User: "얼굴 분석 API 만들어줘 (FastAPI)"
 → 1. backend-agents:python-fastapi-backend로 API 엔드포인트 설계 및 구현
 → 2. Pydantic 스키마 정의
 → 3. productivity-agents:test-automation-engineer로 pytest 테스트 작성
-→ 4. devops-agents:git-committer로 커밋
+→ 4. `/commit`으로 커밋
 ```
 
 **Example 7: 컴퓨터 비전/얼굴 분석**
@@ -174,7 +173,7 @@ User: "얼굴 랜드마크 분석 기능 구현해줘"
 → 1. data-agents:computer-vision-engineer로 MediaPipe Face Mesh 연동
 → 2. 랜드마크 기반 측정 로직 구현
 → 3. backend-agents:python-fastapi-backend로 API 엔드포인트 연동
-→ 4. devops-agents:git-committer로 커밋
+→ 4. `/commit`으로 커밋
 ```
 
 **Example 8: AR 얼굴 필터 개발**
@@ -183,7 +182,7 @@ User: "실시간 AR 메이크업 필터 만들어줘"
 → 1. mobile-agents:ar-mobile-developer로 ARKit/ARCore 연동
 → 2. data-agents:computer-vision-engineer로 얼굴 랜드마크 매핑
 → 3. 필터 렌더링 및 오버레이 구현
-→ 4. devops-agents:git-committer로 커밋
+→ 4. `/commit`으로 커밋
 ```
 
 **Example 9: Data Pipeline**
@@ -191,7 +190,7 @@ User: "실시간 AR 메이크업 필터 만들어줘"
 User: "매출 데이터 ETL 파이프라인 구축해줘"
 → 1. data-agents:data-engineer로 Airflow DAG 설계
 → 2. data-agents:data-analyst로 데이터 검증 로직 추가
-→ 3. devops-agents:git-committer로 커밋
+→ 3. `/commit`으로 커밋
 ```
 
 **Example 10: Healthcare Analytics**
@@ -208,8 +207,26 @@ User: "데이터 분석 노트북 만들고 대시보드로 배포해줘"
 → 1. data-agents:jupyter-expert로 구조화된 분석 노트북 생성
 → 2. data-agents:data-analyst로 EDA 및 시각화 추가
 → 3. data-agents:jupyter-expert로 Voila 대시보드로 변환
-→ 4. devops-agents:git-committer로 커밋
+→ 4. `/commit`으로 커밋
 ```
+
+## 공식 플러그인과의 역할 분담
+
+아래 공식 플러그인(`claude-plugins-official`)과 로컬 에이전트의 역할을 구분합니다.
+
+| 작업 | 공식 플러그인 사용 | 로컬 에이전트 사용 |
+|------|-------------------|-------------------|
+| **Git 커밋/푸시/PR** | `/commit`, `/commit-push-pr`, `/clean_gone` (`commit-commands`) | - |
+| **코드 리뷰** | `code-review`, `pr-review-toolkit` | - |
+| **기능 개발 워크플로우** | `feature-dev` (범용 7단계 워크플로우) | 도메인 특화 에이전트 (backend, frontend, data 등) |
+| **GitHub API/Issue/PR 조작** | `github` (MCP, external) | - |
+| **GitHub Actions 워크플로우 설계** | - | `devops-agents:github-expert` |
+| **GitLab API 작업** | `gitlab` (MCP, external) | - |
+| **GitLab CI/CD 파이프라인 설계** | - | `devops-agents:gitlab-expert` |
+| **프론트엔드 디자인 미학** | `frontend-design` | - |
+| **React/Next.js 엔지니어링** | - | `frontend-agents:frontend-engineer` |
+| **Playwright 브라우저 자동화** | `playwright` (MCP, external) | - |
+| **테스트 코드 작성** | - | `productivity-agents:test-automation-engineer`, `/write-tests` |
 
 ## Project References
 

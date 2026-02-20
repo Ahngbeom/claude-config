@@ -1,5 +1,5 @@
 ---
-name: prefer-git-committer
+name: prefer-commit-commands
 enabled: true
 event: bash
 pattern: git\s+(commit|push|add\s+.*&&.*commit)
@@ -8,7 +8,7 @@ action: warn
 
 🤖 **Git 작업이 감지되었습니다!**
 
-더 나은 커밋 메시지와 안전한 푸시를 위해 **commit-commands 스킬** 사용을 권장합니다.
+더 나은 커밋 메시지와 안전한 푸시를 위해 공식 **commit-commands** 플러그인 사용을 권장합니다.
 
 ## 스킬을 사용하면
 
