@@ -35,13 +35,15 @@ Respond in Korean (한국어) unless explicitly requested otherwise.
 
 워크플로우형 작업을 위한 슬래시 명령어입니다. 에이전트와 달리 직접 호출하여 사용합니다.
 
-| Command | Description | Example |
-|---------|-------------|---------|
-| `/commit` | 스마트 커밋 메시지 생성 및 Git 커밋 | `/commit PROJ-123` |
-| `/jira-retro` | Jira 이슈 기반 회고록 생성 | `/jira-retro 2w` |
-| `/git-retro` | Git 커밋 기반 회고록 생성 | `/git-retro 14` |
-| `/write-docs` | 마크다운 문서 작성 | `/write-docs API.md` |
-| `/write-tests` | 테스트 코드 자동 생성 | `/write-tests src/auth.ts` |
+| Command | Source | Description | Example |
+|---------|--------|-------------|---------|
+| `/commit` | `commit-commands` (공식) | 변경사항 분석 후 레포 스타일에 맞는 커밋 자동 생성 | `/commit` |
+| `/commit-push-pr` | `commit-commands` (공식) | 커밋 → 푸시 → PR 생성 원스톱 워크플로우 | `/commit-push-pr` |
+| `/clean_gone` | `commit-commands` (공식) | 리모트에서 삭제된 로컬 브랜치 정리 | `/clean_gone` |
+| `/jira-retro` | `productivity-agents` | Jira 이슈 기반 회고록 생성 | `/jira-retro 2w` |
+| `/git-retro` | `productivity-agents` | Git 커밋 기반 회고록 생성 | `/git-retro 14` |
+| `/write-docs` | `productivity-agents` | 마크다운 문서 작성 | `/write-docs API.md` |
+| `/write-tests` | `productivity-agents` | 테스트 코드 자동 생성 | `/write-tests src/auth.ts` |
 
 ### Skill vs Agent 사용 가이드
 
