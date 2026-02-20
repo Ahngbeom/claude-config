@@ -33,6 +33,9 @@ claude plugin install mobile-agents@ahngbeom-claude-config
 
 # Productivity tools
 claude plugin install productivity-agents@ahngbeom-claude-config
+
+# Agent preference hooks (optional)
+claude plugin install claude-hookify@ahngbeom-claude-config
 ```
 
 ### Direct Installation
@@ -53,11 +56,15 @@ This marketplace follows the [anthropics/claude-plugins-official](https://github
 ahngbeom-claude-config/
 ├── .claude-plugin/
 │   └── marketplace.json          # Marketplace metadata
+├── claude-hookify/               # Agent preference hooks (optional)
+│   ├── .claude-plugin/
+│   │   └── plugin.json
+│   └── hooks/                    # 8 hookify files
 ├── plugins/
 │   ├── backend-agents/           # 5 agents
 │   ├── frontend-agents/          # 1 agent
 │   ├── data-agents/              # 4 agents
-│   ├── devops-agents/            # 4 agents
+│   ├── devops-agents/            # 3 agents
 │   ├── healthcare-agents/        # 3 agents
 │   ├── mobile-agents/            # 3 agents
 │   └── productivity-agents/      # 4 agents
@@ -141,6 +148,21 @@ Documentation, testing, and workflow automation agents.
 | `test-automation-engineer` | Jest/Vitest, React Testing Library, Playwright, pytest | yellow |
 | `commit-retrospective` | Git commit history-based retrospective generation | cyan |
 | `jira-retrospective` | Jira issue-based retrospective generation | blue |
+
+### claude-hookify (8 hooks)
+
+Agent preference hooks that recommend specialized agents based on file and command patterns. Install separately to enable.
+
+| Hook | Trigger | Recommended Agent |
+|------|---------|-------------------|
+| `prefer-backend-agent` | API endpoint files (controller, route, service) | backend-api-architect, nodejs-backend, spring-boot-backend |
+| `prefer-database-expert` | DB schema/migration files | database-expert |
+| `prefer-frontend-engineer` | Frontend component files (.tsx, .vue, .jsx) | frontend-engineer |
+| `prefer-commit-commands` | `git commit/push` commands | /commit, /commit-push-pr |
+| `prefer-test-automation` | Test files (.test.ts, .spec.js) | test-automation-engineer |
+| `prefer-markdown-writer` | Markdown document files | markdown-document-writer |
+| `prefer-jira-retrospective` | Retrospective keywords | jira-retrospective |
+| `prefer-commit-retrospective` | Commit retrospective keywords | commit-retrospective |
 
 ---
 

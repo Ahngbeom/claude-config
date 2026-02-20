@@ -1,3 +1,11 @@
+---
+name: prefer-commit-retrospective
+enabled: true
+event: user_prompt
+pattern: (커밋\s*회고|commit\s*retro|Git\s*회고|GitHub\s*회고|GitLab\s*회고|작업\s*이력\s*정리|커밋\s*정리|커밋\s*분석|내\s*커밋|my\s*commits)
+action: suggest
+---
+
 # Hookify: Prefer commit-retrospective Agent
 
 ## Purpose
