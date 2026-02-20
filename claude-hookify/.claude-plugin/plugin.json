@@ -1,8 +1,0 @@
-{
-  "name": "claude-hookify",
-  "description": "Agent preference hooks for Claude Code - recommends specialized agents based on file and command patterns",
-  "author": {
-    "name": "ahngbeom",
-    "email": "ahngbeom@github.com"
-  }
-}

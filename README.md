@@ -34,8 +34,8 @@ claude plugin install mobile-agents@ahngbeom-claude-config
 # Productivity tools
 claude plugin install productivity-agents@ahngbeom-claude-config
 
-# Agent preference hooks (optional)
-claude plugin install claude-hookify@ahngbeom-claude-config
+# Agent preference hooks (optional, separate install)
+claude plugin install https://github.com/Ahngbeom/claude-hookify
 ```
 
 ### Direct Installation
@@ -56,10 +56,6 @@ This marketplace follows the [anthropics/claude-plugins-official](https://github
 ahngbeom-claude-config/
 ├── .claude-plugin/
 │   └── marketplace.json          # Marketplace metadata
-├── claude-hookify/               # Agent preference hooks (optional)
-│   ├── .claude-plugin/
-│   │   └── plugin.json
-│   └── hooks/                    # 8 hookify files
 ├── plugins/
 │   ├── backend-agents/           # 5 agents
 │   ├── frontend-agents/          # 1 agent
@@ -151,7 +147,11 @@ Documentation, testing, and workflow automation agents.
 
 ### claude-hookify (8 hooks)
 
-Agent preference hooks that recommend specialized agents based on file and command patterns. Install separately to enable.
+Agent preference hooks that recommend specialized agents based on file and command patterns. Maintained in a **separate repository**: https://github.com/Ahngbeom/claude-hookify
+
+```bash
+claude plugin install https://github.com/Ahngbeom/claude-hookify
+```
 
 | Hook | Trigger | Recommended Agent |
 |------|---------|-------------------|

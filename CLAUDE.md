@@ -57,7 +57,7 @@ Respond in Korean (한국어) unless explicitly requested otherwise.
 
 ## Plugin Structure
 
-This marketplace contains 8 plugins (7 agent plugins + 1 hooks plugin):
+This marketplace contains 7 agent plugins:
 
 | Plugin | Agents | Category |
 |--------|--------|----------|
@@ -68,7 +68,8 @@ This marketplace contains 8 plugins (7 agent plugins + 1 hooks plugin):
 | `healthcare-agents` | 3 | development |
 | `mobile-agents` | 3 | development |
 | `productivity-agents` | 4 | productivity |
-| `claude-hookify` | 0 (hooks only) | productivity |
+
+> **Hookify**: 에이전트 자동 라우팅 훅은 별도 레포로 분리됨 → `claude plugin install https://github.com/Ahngbeom/claude-hookify`
 
 ## Agent Activation Rules
 
