@@ -44,6 +44,8 @@ Respond in Korean (한국어) unless explicitly requested otherwise.
 | `/git-retro` | `productivity-agents` | Git 커밋 기반 회고록 생성 | `/git-retro 14` |
 | `/write-docs` | `productivity-agents` | 마크다운 문서 작성 | `/write-docs API.md` |
 | `/write-tests` | `productivity-agents` | 테스트 코드 자동 생성 | `/write-tests src/auth.ts` |
+| `/railway-deploy` | `devops-agents` | Railway 배포 설정 생성 | `/railway-deploy fastapi` |
+| `/railway-setup` | `devops-agents` | Railway 프로젝트 초기 설정 | `/railway-setup "Node.js + PostgreSQL"` |
 
 ### Skill vs Agent 사용 가이드
 
@@ -64,7 +66,7 @@ This marketplace contains 7 agent plugins:
 | `backend-agents` | 5 | development |
 | `frontend-agents` | 1 | development |
 | `data-agents` | 5 | development |
-| `devops-agents` | 3 | productivity |
+| `devops-agents` | 4 | productivity |
 | `healthcare-agents` | 3 | development |
 | `mobile-agents` | 3 | development |
 | `productivity-agents` | 4 | productivity |
@@ -96,6 +98,7 @@ This marketplace contains 7 agent plugins:
 | **DevOps** | `devops-agents:devops-engineer` | "배포", "CI/CD", "Docker", "Kubernetes", "Terraform" |
 | **GitHub CI/CD** | `devops-agents:github-expert` | "GitHub Actions", "workflow", ".github/workflows" (워크플로우 설계 전문, API 작업은 공식 `github` 플러그인 사용) |
 | **GitLab CI/CD** | `devops-agents:gitlab-expert` | "GitLab CI", ".gitlab-ci.yml", "GitLab Runner" (파이프라인 설계 전문, API 작업은 공식 `gitlab` 플러그인 사용) |
+| **Railway** | `devops-agents:railway-expert` | "Railway", "railway.json", "Nixpacks", "Railway 배포" (Railway 플랫폼 전문, 서비스 배포/DB/네트워킹) |
 | **Mobile App** | `mobile-agents:mobile-app-developer` | "React Native", "Flutter", "iOS", "Android", "모바일 앱" |
 | **AR Mobile** | `mobile-agents:ar-mobile-developer` | "ARCore", "ARKit", "AR 필터", "얼굴 필터", "증강현실", "Face Mesh" |
 | **Desktop App** | `mobile-agents:desktop-app-developer` | "Electron", "Tauri", "데스크톱 앱" |
@@ -212,6 +215,15 @@ User: "데이터 분석 노트북 만들고 대시보드로 배포해줘"
 → 4. `/commit`으로 커밋
 ```
 
+**Example 12: Railway 배포**
+```
+User: "FastAPI 서비스를 Railway에 배포해줘"
+→ 1. devops-agents:railway-expert로 배포 설정 생성
+→ 2. railway.json, Nixpacks 설정 파일 생성
+→ 3. 환경변수 및 PostgreSQL 서비스 연결
+→ 4. `/commit`으로 커밋
+```
+
 ## 공식 플러그인과의 역할 분담
 
 아래 공식 플러그인(`claude-plugins-official`)과 로컬 에이전트의 역할을 구분합니다.
@@ -229,6 +241,7 @@ User: "데이터 분석 노트북 만들고 대시보드로 배포해줘"
 | **React/Next.js 엔지니어링** | - | `frontend-agents:frontend-engineer` |
 | **Playwright 브라우저 자동화** | `playwright` (MCP, external) | - |
 | **테스트 코드 작성** | - | `productivity-agents:test-automation-engineer`, `/write-tests` |
+| **Railway 배포/관리** | - | `devops-agents:railway-expert`, `/railway-deploy`, `/railway-setup` |
 
 ## Project References
 

@@ -39,7 +39,7 @@
     },
     {
       "name": "devops-agents",
-      "description": "DevOps and Git workflow agents for CI/CD, Docker, Kubernetes, GitHub/GitLab, and version control",
+      "description": "DevOps and Git workflow agents for CI/CD, Docker, Kubernetes, GitHub/GitLab, Railway, and version control",
       "author": {
         "name": "ahngbeom"
       },
