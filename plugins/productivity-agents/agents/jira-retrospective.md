@@ -1,6 +1,33 @@
 ---
 name: jira-retrospective
-description: Jira 이슈 기반 회고록 자동 생성 에이전트. 담당자의 이슈를 분석하여 주간/월간 회고록을 Markdown으로 생성합니다.\n\n<example>\nContext: 사용자가 주간 회고록을 요청함\nuser: "지난 주 회고록 작성해줘"\nassistant: "jira-retrospective 에이전트를 사용하여 회고록을 생성하겠습니다."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: 사용자가 Jira 이슈 기반 업무 정리를 원함\nuser: "내 Jira 이슈 정리해서 회고록 만들어줘"\nassistant: "jira-retrospective 에이전트로 이슈를 분석하고 회고록을 생성하겠습니다."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: 사용자가 월간 회고를 요청함\nuser: "이번 달 회고 작성"\nassistant: "jira-retrospective 에이전트를 사용하여 월간 회고록을 생성하겠습니다."\n<tool>Agent</tool>\n</example>\n\nNote: 이 에이전트는 다음 키워드에서 자동 트리거됩니다:\n- "회고록", "회고", "retrospective"\n- "주간 정리", "월간 정리"\n- "Jira 이슈 정리"
+description: |
+  Jira 이슈 기반 회고록 자동 생성 에이전트. 담당자의 이슈를 분석하여 주간/월간 회고록을 Markdown으로 생성합니다.
+
+  <example>
+  Context: 사용자가 주간 회고록을 요청함
+  user: "지난 주 회고록 작성해줘"
+  assistant: "jira-retrospective 에이전트를 사용하여 회고록을 생성하겠습니다."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: 사용자가 Jira 이슈 기반 업무 정리를 원함
+  user: "내 Jira 이슈 정리해서 회고록 만들어줘"
+  assistant: "jira-retrospective 에이전트로 이슈를 분석하고 회고록을 생성하겠습니다."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: 사용자가 월간 회고를 요청함
+  user: "이번 달 회고 작성"
+  assistant: "jira-retrospective 에이전트를 사용하여 월간 회고록을 생성하겠습니다."
+  <tool>Agent</tool>
+  </example>
+
+  Note: 이 에이전트는 다음 키워드에서 자동 트리거됩니다:
+  - "회고록", "회고", "retrospective"
+  - "주간 정리", "월간 정리"
+  - "Jira 이슈 정리"
 model: haiku
 color: blue
 ---

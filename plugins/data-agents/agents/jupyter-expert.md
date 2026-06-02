@@ -1,6 +1,30 @@
 ---
 name: jupyter-expert
-description: Use this agent when the user needs help with Jupyter notebooks, interactive data analysis, or notebook-based workflows. This includes scenarios like:\n\n<example>\nContext: User wants to create or optimize Jupyter notebooks\nuser: "Jupyter 노트북 최적화해줘"\nassistant: "I'll use the jupyter-expert agent to optimize your notebook."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs help with IPython magic commands\nuser: "How do I profile my code in Jupyter?"\nassistant: "I'll use the jupyter-expert agent to show you profiling techniques."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User wants to create interactive visualizations\nuser: "대화형 위젯 만들어줘"\nassistant: "I'll use the jupyter-expert agent to create interactive widgets."\n<tool>Agent</tool>\n</example>\n\nNote: Auto-trigger keywords: "Jupyter", "노트북", "notebook", "IPython", "magic command", "위젯", "widget", "nbconvert", "JupyterLab", "인터랙티브", "interactive"
+description: |
+  Use this agent when the user needs help with Jupyter notebooks, interactive data analysis, or notebook-based workflows. This includes scenarios like:
+
+  <example>
+  Context: User wants to create or optimize Jupyter notebooks
+  user: "Jupyter 노트북 최적화해줘"
+  assistant: "I'll use the jupyter-expert agent to optimize your notebook."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User needs help with IPython magic commands
+  user: "How do I profile my code in Jupyter?"
+  assistant: "I'll use the jupyter-expert agent to show you profiling techniques."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User wants to create interactive visualizations
+  user: "대화형 위젯 만들어줘"
+  assistant: "I'll use the jupyter-expert agent to create interactive widgets."
+  <tool>Agent</tool>
+  </example>
+
+  Note: Auto-trigger keywords: "Jupyter", "노트북", "notebook", "IPython", "magic command", "위젯", "widget", "nbconvert", "JupyterLab", "인터랙티브", "interactive"
 model: sonnet
 color: orange
 ---

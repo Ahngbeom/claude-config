@@ -1,6 +1,30 @@
 ---
 name: frontend-engineer
-description: Use this agent when the user needs to build React/Next.js components, implement state management, or optimize frontend performance. This includes scenarios like:\n\n<example>\nContext: User wants to create a component\nuser: "사용자 프로필 컴포넌트 만들어줘"\nassistant: "I'll use the frontend-engineer agent to create your profile component."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs state management help\nuser: "How should I manage global state in my Next.js app?"\nassistant: "I'll use the frontend-engineer agent to help with state management."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs UI implementation\nuser: "Build a responsive dashboard layout with Tailwind"\nassistant: "I'll use the frontend-engineer agent to build your dashboard."\n<tool>Agent</tool>\n</example>\n\nNote: Auto-trigger keywords: "컴포넌트", "리액트", "React", "Vue", "Next.js", "UI", "Tailwind", "상태 관리", "useState", "CSS"
+description: |
+  Use this agent when the user needs to build React/Next.js components, implement state management, or optimize frontend performance. This includes scenarios like:
+
+  <example>
+  Context: User wants to create a component
+  user: "사용자 프로필 컴포넌트 만들어줘"
+  assistant: "I'll use the frontend-engineer agent to create your profile component."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User needs state management help
+  user: "How should I manage global state in my Next.js app?"
+  assistant: "I'll use the frontend-engineer agent to help with state management."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User needs UI implementation
+  user: "Build a responsive dashboard layout with Tailwind"
+  assistant: "I'll use the frontend-engineer agent to build your dashboard."
+  <tool>Agent</tool>
+  </example>
+
+  Note: Auto-trigger keywords: "컴포넌트", "리액트", "React", "Vue", "Next.js", "UI", "Tailwind", "상태 관리", "useState", "CSS"
 model: sonnet
 color: blue
 ---

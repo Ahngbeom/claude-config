@@ -1,6 +1,30 @@
 ---
 name: healthcare-stats-normalizer
-description: Use this agent when the user needs to normalize, standardize, or clean healthcare data. This includes scenarios like:\n\n<example>\nContext: User wants to map medical codes\nuser: "ICD-10 코드 매핑해줘"\nassistant: "I'll use the healthcare-stats-normalizer agent for code mapping."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs data standardization\nuser: "Normalize this patient data to FHIR format"\nassistant: "I'll use the healthcare-stats-normalizer agent for FHIR normalization."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User asks about data quality\nuser: "의료 데이터 정규화해줘"\nassistant: "I'll use the healthcare-stats-normalizer agent for data normalization."\n<tool>Agent</tool>\n</example>\n\nNote: Auto-trigger keywords: "의료 데이터", "ICD", "SNOMED", "FHIR", "데이터 정규화", "code mapping", "healthcare data"
+description: |
+  Use this agent when the user needs to normalize, standardize, or clean healthcare data. This includes scenarios like:
+
+  <example>
+  Context: User wants to map medical codes
+  user: "ICD-10 코드 매핑해줘"
+  assistant: "I'll use the healthcare-stats-normalizer agent for code mapping."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User needs data standardization
+  user: "Normalize this patient data to FHIR format"
+  assistant: "I'll use the healthcare-stats-normalizer agent for FHIR normalization."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User asks about data quality
+  user: "의료 데이터 정규화해줘"
+  assistant: "I'll use the healthcare-stats-normalizer agent for data normalization."
+  <tool>Agent</tool>
+  </example>
+
+  Note: Auto-trigger keywords: "의료 데이터", "ICD", "SNOMED", "FHIR", "데이터 정규화", "code mapping", "healthcare data"
 model: sonnet
 color: cyan
 ---

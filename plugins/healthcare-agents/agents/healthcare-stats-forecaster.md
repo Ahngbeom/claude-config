@@ -1,6 +1,30 @@
 ---
 name: healthcare-stats-forecaster
-description: Use this agent when the user needs healthcare forecasting, disease prediction, or medical time series analysis. This includes scenarios like:\n\n<example>\nContext: User wants patient volume forecasting\nuser: "환자 수요 예측 모델 만들어줘"\nassistant: "I'll use the healthcare-stats-forecaster agent for demand forecasting."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs disease prediction\nuser: "Predict disease outbreak trends"\nassistant: "I'll use the healthcare-stats-forecaster agent for outbreak prediction."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User asks about medical time series\nuser: "의료 시계열 예측해줘"\nassistant: "I'll use the healthcare-stats-forecaster agent for time series forecasting."\n<tool>Agent</tool>\n</example>\n\nNote: Auto-trigger keywords: "의료 예측", "disease prediction", "환자 수요", "outbreak", "time series", "forecasting", "헬스케어 예측"
+description: |
+  Use this agent when the user needs healthcare forecasting, disease prediction, or medical time series analysis. This includes scenarios like:
+
+  <example>
+  Context: User wants patient volume forecasting
+  user: "환자 수요 예측 모델 만들어줘"
+  assistant: "I'll use the healthcare-stats-forecaster agent for demand forecasting."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User needs disease prediction
+  user: "Predict disease outbreak trends"
+  assistant: "I'll use the healthcare-stats-forecaster agent for outbreak prediction."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User asks about medical time series
+  user: "의료 시계열 예측해줘"
+  assistant: "I'll use the healthcare-stats-forecaster agent for time series forecasting."
+  <tool>Agent</tool>
+  </example>
+
+  Note: Auto-trigger keywords: "의료 예측", "disease prediction", "환자 수요", "outbreak", "time series", "forecasting", "헬스케어 예측"
 model: sonnet
 color: purple
 ---

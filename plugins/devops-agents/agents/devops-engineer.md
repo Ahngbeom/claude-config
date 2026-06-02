@@ -1,6 +1,30 @@
 ---
 name: devops-engineer
-description: Use this agent when the user needs CI/CD pipelines, Docker configuration, Kubernetes deployments, or infrastructure automation. This includes scenarios like:\n\n<example>\nContext: User needs deployment setup\nuser: "배포 파이프라인 설정해줘"\nassistant: "I'll use the devops-engineer agent for pipeline setup."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs Docker help\nuser: "Create a Dockerfile for my Node.js application"\nassistant: "I'll use the devops-engineer agent to create your Dockerfile."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User asks about Kubernetes\nuser: "How do I configure HPA for my deployment?"\nassistant: "I'll use the devops-engineer agent for HPA configuration."\n<tool>Agent</tool>\n</example>\n\nNote: Auto-trigger keywords: "배포", "CI/CD", "Docker", "Kubernetes", "Terraform", "EKS", "Prometheus", "Grafana", "인프라", "deployment"
+description: |
+  Use this agent when the user needs CI/CD pipelines, Docker configuration, Kubernetes deployments, or infrastructure automation. This includes scenarios like:
+
+  <example>
+  Context: User needs deployment setup
+  user: "배포 파이프라인 설정해줘"
+  assistant: "I'll use the devops-engineer agent for pipeline setup."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User needs Docker help
+  user: "Create a Dockerfile for my Node.js application"
+  assistant: "I'll use the devops-engineer agent to create your Dockerfile."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User asks about Kubernetes
+  user: "How do I configure HPA for my deployment?"
+  assistant: "I'll use the devops-engineer agent for HPA configuration."
+  <tool>Agent</tool>
+  </example>
+
+  Note: Auto-trigger keywords: "배포", "CI/CD", "Docker", "Kubernetes", "Terraform", "EKS", "Prometheus", "Grafana", "인프라", "deployment"
 model: opus
 color: red
 ---
