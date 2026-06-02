@@ -2,6 +2,8 @@
 
 Custom Claude Code plugin marketplace with specialized development agents.
 
+> Mobidoc UI/UX beta guidance in this repository is a personal experiment for consistent local work. It is not an official team standard and should not contain sensitive patient data, private screenshots, credentials, or unreleased business details.
+
 ## Installation
 
 ### Marketplace Plugin (Recommended)
@@ -60,9 +62,11 @@ ahngbeom-claude-config/
 │   ├── .claude-plugin/
 │   │   └── plugin.json
 │   └── hooks/                    # 8 hookify files
+├── codex/
+│   └── skills/                   # Codex skill source documents
 ├── plugins/
 │   ├── backend-agents/           # 5 agents
-│   ├── frontend-agents/          # 1 agent
+│   ├── frontend-agents/          # 2 agents + Mobidoc beta reference
 │   ├── data-agents/              # 4 agents
 │   ├── devops-agents/            # 3 agents
 │   ├── healthcare-agents/        # 3 agents
@@ -73,7 +77,7 @@ ahngbeom-claude-config/
 
 ---
 
-## Plugins & Agents (24 total)
+## Plugins & Agents (25 total)
 
 ### backend-agents (5 agents)
 
@@ -87,13 +91,14 @@ Backend development agents for API architecture and server-side implementation.
 | `python-fastapi-backend` | FastAPI, Pydantic, async Python, uvicorn | blue |
 | `database-expert` | PostgreSQL/MySQL schema design, query optimization, migration | orange |
 
-### frontend-agents (1 agent)
+### frontend-agents (2 agents)
 
-Frontend development agents for modern web UI.
+Frontend development agents for modern web UI and personal Mobidoc UI/UX beta review.
 
 | Agent | Description | Color |
 |-------|-------------|-------|
 | `frontend-engineer` | React/Next.js, Vue, component architecture, state management | blue |
+| `mobidoc-ui-ux-reviewer` | Mobidoc patient, hospital, and tablet UI/UX review beta guidance | cyan |
 
 ### data-agents (4 agents)
 
@@ -184,6 +189,9 @@ After installing a plugin, use the namespace prefix:
 # DevOps agents
 "devops-agents:github-expert, GitHub Actions 워크플로우 만들어줘"
 
+# Mobidoc UI/UX beta review
+"frontend-agents:mobidoc-ui-ux-reviewer, Mobidoc 예약 화면 UX 리뷰해줘"
+
 # Productivity agents
 "productivity-agents:jira-retrospective, 지난 주 회고록 작성해줘"
 ```
@@ -196,10 +204,15 @@ Agents are automatically activated based on keywords:
 |----------|-----------------|
 | "API", "REST", "GraphQL" | backend-api-architect |
 | "컴포넌트", "React", "Vue" | frontend-engineer |
+| "Mobidoc", "모비닥", "의료 UX", "환자앱", "병원앱", "태블릿" | mobidoc-ui-ux-reviewer |
 | "테스트", "Jest", "Playwright" | test-automation-engineer |
 | "Docker", "Kubernetes", "CI/CD" | devops-engineer |
 | "Pandas", "시각화", "EDA" | data-analyst |
 | "PyTorch", "모델 학습", "MLOps" | ml-engineer |
+
+### Codex Skill Source
+
+The Mobidoc UI/UX beta Codex skill source lives in `codex/skills/mobidoc-ui-ux-beta/`. It is intentionally not registered in the Claude marketplace. Install it into a personal Codex environment by copying or symlinking that directory when needed.
 
 ---
 
