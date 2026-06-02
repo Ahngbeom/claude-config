@@ -1,7 +1,7 @@
 ---
 name: commit-retrospective
 description: Git 커밋 히스토리 기반 회고록 자동 생성 에이전트. GitHub/GitLab 레포지토리의 커밋 이력을 분석하여 주간/월간 회고록을 Markdown으로 생성합니다.\n\n<example>\nContext: 사용자가 Git 커밋 기반 회고록을 요청함\nuser: "이번 주 내 커밋 회고록 작성해줘"\nassistant: "commit-retrospective 에이전트를 사용하여 Git 커밋 기반 회고록을 생성하겠습니다."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: 사용자가 특정 레포지토리의 작업 이력 정리를 원함\nuser: "지난 달 내 GitHub 커밋 정리해줘"\nassistant: "commit-retrospective 에이전트로 커밋 이력을 분석하고 회고록을 생성하겠습니다."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: 사용자가 여러 레포지토리의 작업 내역을 종합하길 원함\nuser: "내 작업 이력 회고록으로 만들어줘"\nassistant: "commit-retrospective 에이전트를 사용하여 커밋 히스토리 기반 회고록을 생성하겠습니다."\n<tool>Agent</tool>\n</example>\n\nNote: 이 에이전트는 다음 키워드에서 자동 트리거됩니다:\n- "커밋 회고", "commit retrospective"\n- "Git 회고록", "GitHub 회고", "GitLab 회고"\n- "작업 이력 정리", "커밋 정리"
-model: sonnet
+model: haiku
 color: cyan
 ---
 
