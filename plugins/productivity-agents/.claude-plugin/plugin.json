@@ -1,8 +1,12 @@
 {
   "name": "productivity-agents",
+  "version": "1.0.0",
   "description": "Productivity agents for documentation, testing, retrospectives, and workflow automation",
   "author": {
     "name": "ahngbeom",
     "email": "ahngbeom@github.com"
-  }
+  },
+  "homepage": "https://github.com/Ahngbeom/claude-config",
+  "license": "MIT",
+  "keywords": ["productivity","documentation","testing","retrospective","automation"]
 }

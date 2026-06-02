@@ -1,8 +1,12 @@
 {
   "name": "frontend-agents",
+  "version": "1.0.0",
   "description": "Frontend development agents for React, Vue, modern web UI development, and Mobidoc UI/UX beta review",
   "author": {
     "name": "ahngbeom",
     "email": "ahngbeom@github.com"
-  }
+  },
+  "homepage": "https://github.com/Ahngbeom/claude-config",
+  "license": "MIT",
+  "keywords": ["frontend","react","vue","nuxt","ui","ux","mobidoc"]
 }

@@ -1,8 +1,12 @@
 {
   "name": "backend-agents",
+  "version": "1.0.0",
   "description": "Backend development agents for API architecture, Node.js, Spring Boot, FastAPI, and database design",
   "author": {
     "name": "ahngbeom",
     "email": "ahngbeom@github.com"
-  }
+  },
+  "homepage": "https://github.com/Ahngbeom/claude-config",
+  "license": "MIT",
+  "keywords": ["backend","api","rest","graphql","nodejs","spring-boot","fastapi","database"]
 }
