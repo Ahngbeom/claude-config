@@ -1,8 +1,6 @@
 ---
-name: write-tests
 description: 테스트 코드 자동 생성 (Jest/Vitest/Playwright/pytest)
 argument-hint: "[file path or feature description]"
-context: fork
 ---
 
 # Test Automation Skill

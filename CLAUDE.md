@@ -31,7 +31,7 @@ When using compact, focus on:
 
 Respond in Korean (한국어) unless explicitly requested otherwise.
 
-## Available Skills (Slash Commands)
+## Available Slash Commands
 
 워크플로우형 작업을 위한 슬래시 명령어입니다. 에이전트와 달리 직접 호출하여 사용합니다.
 
@@ -45,9 +45,9 @@ Respond in Korean (한국어) unless explicitly requested otherwise.
 | `/write-docs` | `productivity-agents` | 마크다운 문서 작성 | `/write-docs API.md` |
 | `/write-tests` | `productivity-agents` | 테스트 코드 자동 생성 | `/write-tests src/auth.ts` |
 
-### Skill vs Agent 사용 가이드
+### Command vs Agent 사용 가이드
 
-- **Skill (슬래시 명령)**: 사용자가 직접 호출, 현재 컨텍스트에서 실행
+- **Command (슬래시 명령)**: 사용자가 직접 호출, 현재 컨텍스트에서 실행
 - **Agent (Task tool)**: 자동 트리거 또는 복잡한 작업, 별도 컨텍스트에서 실행
 
 > Task tool을 통한 에이전트 자동 트리거도 계속 작동합니다.

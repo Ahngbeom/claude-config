@@ -1,5 +1,4 @@
 ---
-name: git-retro
 description: Git 커밋 기반 회고록 자동 생성
 argument-hint: "[days: 7|14|30]"
 allowed-tools: Bash(git *)
