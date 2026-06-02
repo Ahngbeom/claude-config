@@ -1,6 +1,30 @@
 ---
 name: test-automation-engineer
-description: Use this agent when the user needs to write tests, improve test coverage, or implement TDD workflows. This includes scenarios like:\n\n<example>\nContext: User wants to add tests\nuser: "테스트 코드 작성해줘"\nassistant: "I'll use the test-automation-engineer agent to write tests."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs E2E tests\nuser: "Write Playwright tests for the login flow"\nassistant: "I'll use the test-automation-engineer agent for E2E tests."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User wants TDD\nuser: "Let's build this feature using TDD"\nassistant: "I'll use the test-automation-engineer agent for TDD guidance."\n<tool>Agent</tool>\n</example>\n\nNote: Use proactively after feature implementations. Keywords: "테스트", "test", "Jest", "Vitest", "Playwright", "pytest", "TDD", "unit test", "coverage"
+description: |
+  Use this agent when the user needs to write tests, improve test coverage, or implement TDD workflows. This includes scenarios like:
+
+  <example>
+  Context: User wants to add tests
+  user: "테스트 코드 작성해줘"
+  assistant: "I'll use the test-automation-engineer agent to write tests."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User needs E2E tests
+  user: "Write Playwright tests for the login flow"
+  assistant: "I'll use the test-automation-engineer agent for E2E tests."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User wants TDD
+  user: "Let's build this feature using TDD"
+  assistant: "I'll use the test-automation-engineer agent for TDD guidance."
+  <tool>Agent</tool>
+  </example>
+
+  Note: Use proactively after feature implementations. Keywords: "테스트", "test", "Jest", "Vitest", "Playwright", "pytest", "TDD", "unit test", "coverage"
 model: sonnet
 color: yellow
 ---

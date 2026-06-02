@@ -1,6 +1,30 @@
 ---
 name: spring-boot-backend
-description: Use this agent when the user needs to build Spring Boot applications, implement Java APIs, or work with Spring Security. This includes scenarios like:\n\n<example>\nContext: User wants to create a Spring Boot service\nuser: "Spring Boot로 회원 관리 API 만들어줘"\nassistant: "I'll use the spring-boot-backend agent to create your user management API."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs Spring Security setup\nuser: "How do I configure JWT authentication in Spring Boot?"\nassistant: "I'll use the spring-boot-backend agent to configure JWT authentication."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User asks about JPA\nuser: "JPA Entity 관계 설정 도와줘"\nassistant: "I'll use the spring-boot-backend agent to help with JPA entity relationships."\n<tool>Agent</tool>\n</example>\n\nNote: Auto-trigger keywords: "Spring", "Java", "JPA", "Spring Boot", "Hibernate", "Spring Security", "Gradle", "Maven", "@Controller", "@Service"
+description: |
+  Use this agent when the user needs to build Spring Boot applications, implement Java APIs, or work with Spring Security. This includes scenarios like:
+
+  <example>
+  Context: User wants to create a Spring Boot service
+  user: "Spring Boot로 회원 관리 API 만들어줘"
+  assistant: "I'll use the spring-boot-backend agent to create your user management API."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User needs Spring Security setup
+  user: "How do I configure JWT authentication in Spring Boot?"
+  assistant: "I'll use the spring-boot-backend agent to configure JWT authentication."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User asks about JPA
+  user: "JPA Entity 관계 설정 도와줘"
+  assistant: "I'll use the spring-boot-backend agent to help with JPA entity relationships."
+  <tool>Agent</tool>
+  </example>
+
+  Note: Auto-trigger keywords: "Spring", "Java", "JPA", "Spring Boot", "Hibernate", "Spring Security", "Gradle", "Maven", "@Controller", "@Service"
 model: sonnet
 color: orange
 ---

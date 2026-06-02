@@ -1,6 +1,30 @@
 ---
 name: mobile-app-developer
-description: Use this agent when the user needs to build iOS/Android mobile apps using React Native, Flutter, or native development. This includes scenarios like:\n\n<example>\nContext: User wants to create a mobile app\nuser: "React Native로 모바일 앱 만들어줘"\nassistant: "I'll use the mobile-app-developer agent to create your React Native app."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs Flutter development\nuser: "Build a Flutter app with navigation"\nassistant: "I'll use the mobile-app-developer agent to build your Flutter app."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User asks about native iOS\nuser: "SwiftUI 화면 구현해줘"\nassistant: "I'll use the mobile-app-developer agent for SwiftUI implementation."\n<tool>Agent</tool>\n</example>\n\nNote: Auto-trigger keywords: "React Native", "Flutter", "iOS", "Android", "모바일 앱", "Swift", "Kotlin", "Expo", "mobile app"
+description: |
+  Use this agent when the user needs to build iOS/Android mobile apps using React Native, Flutter, or native development. This includes scenarios like:
+
+  <example>
+  Context: User wants to create a mobile app
+  user: "React Native로 모바일 앱 만들어줘"
+  assistant: "I'll use the mobile-app-developer agent to create your React Native app."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User needs Flutter development
+  user: "Build a Flutter app with navigation"
+  assistant: "I'll use the mobile-app-developer agent to build your Flutter app."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User asks about native iOS
+  user: "SwiftUI 화면 구현해줘"
+  assistant: "I'll use the mobile-app-developer agent for SwiftUI implementation."
+  <tool>Agent</tool>
+  </example>
+
+  Note: Auto-trigger keywords: "React Native", "Flutter", "iOS", "Android", "모바일 앱", "Swift", "Kotlin", "Expo", "mobile app"
 model: sonnet
 color: cyan
 ---

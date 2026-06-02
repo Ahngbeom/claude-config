@@ -1,8 +1,6 @@
 ---
-name: railway-setup
 description: Railway 프로젝트 초기 설정 가이드 (프로젝트 구조, 환경변수, 서비스 연결)
 argument-hint: "[project description or type]"
-context: fork
 ---
 
 # Railway Setup Skill

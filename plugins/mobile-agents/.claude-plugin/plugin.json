@@ -1,8 +1,12 @@
 {
   "name": "mobile-agents",
+  "version": "1.0.0",
   "description": "Mobile and desktop application agents for React Native, Flutter, AR/VR, Electron, and Tauri",
   "author": {
     "name": "ahngbeom",
     "email": "ahngbeom@github.com"
-  }
+  },
+  "homepage": "https://github.com/Ahngbeom/claude-config",
+  "license": "MIT",
+  "keywords": ["mobile","react-native","flutter","ar","arkit","arcore","electron","tauri"]
 }

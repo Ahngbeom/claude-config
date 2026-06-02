@@ -1,6 +1,30 @@
 ---
 name: nodejs-backend
-description: Use this agent when the user needs to build Node.js/Express backend services, implement middleware, or work with TypeScript backend code. This includes scenarios like:\n\n<example>\nContext: User wants to create Express middleware\nuser: "Express 인증 미들웨어 만들어줘"\nassistant: "I'll use the nodejs-backend agent to create the authentication middleware."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs Node.js API implementation\nuser: "Build a REST API with Express and TypeScript"\nassistant: "I'll use the nodejs-backend agent to implement your Express API."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User asks about async patterns\nuser: "How should I handle async errors in Express?"\nassistant: "I'll use the nodejs-backend agent to help with async error handling."\n<tool>Agent</tool>\n</example>\n\nNote: Auto-trigger keywords: "Express", "Node.js", "미들웨어", "middleware", "NestJS", "TypeScript backend", "async", "npm"
+description: |
+  Use this agent when the user needs to build Node.js/Express backend services, implement middleware, or work with TypeScript backend code. This includes scenarios like:
+
+  <example>
+  Context: User wants to create Express middleware
+  user: "Express 인증 미들웨어 만들어줘"
+  assistant: "I'll use the nodejs-backend agent to create the authentication middleware."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User needs Node.js API implementation
+  user: "Build a REST API with Express and TypeScript"
+  assistant: "I'll use the nodejs-backend agent to implement your Express API."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User asks about async patterns
+  user: "How should I handle async errors in Express?"
+  assistant: "I'll use the nodejs-backend agent to help with async error handling."
+  <tool>Agent</tool>
+  </example>
+
+  Note: Auto-trigger keywords: "Express", "Node.js", "미들웨어", "middleware", "NestJS", "TypeScript backend", "async", "npm"
 model: sonnet
 color: green
 ---

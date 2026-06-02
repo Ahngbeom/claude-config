@@ -2,6 +2,8 @@
 
 Custom Claude Code plugin marketplace with specialized development agents.
 
+> Mobidoc UI/UX beta guidance in this repository is a personal experiment for consistent local work. It is not an official team standard and should not contain sensitive patient data, private screenshots, credentials, or unreleased business details.
+
 ## Installation
 
 ### Marketplace Plugin (Recommended)
@@ -56,20 +58,37 @@ This marketplace follows the [anthropics/claude-plugins-official](https://github
 ahngbeom-claude-config/
 ├── .claude-plugin/
 │   └── marketplace.json          # Marketplace metadata
+├── .github/
+│   └── workflows/
+│       └── validate.yml          # CI validation
+├── codex/
+│   └── skills/                   # Codex skill source documents
+├── docs/
+│   ├── COMPACT-STRATEGY.md
+│   ├── PROJECT-SETTINGS.md
+│   ├── settings.example.json
+│   └── superpowers/
 ├── plugins/
 │   ├── backend-agents/           # 5 agents
-│   ├── frontend-agents/          # 1 agent
-│   ├── data-agents/              # 4 agents
-│   ├── devops-agents/            # 3 agents
+│   ├── frontend-agents/          # 2 agents
+│   ├── data-agents/              # 5 agents
+│   ├── devops-agents/            # 4 agents (incl. railway-expert) + 2 commands
 │   ├── healthcare-agents/        # 3 agents
 │   ├── mobile-agents/            # 3 agents
-│   └── productivity-agents/      # 4 agents
+│   └── productivity-agents/      # 5 agents + 4 commands
+├── scripts/
+│   ├── notify.sh
+│   ├── stop-hook.sh
+│   ├── sync-shared.sh
+│   └── validate.sh               # Local & CI validation
+├── shared/
+│   └── references/               # Canonical shared assets
 └── README.md
 ```
 
 ---
 
-## Plugins & Agents (24 total)
+## Plugins & Agents (27 total)
 
 ### backend-agents (5 agents)
 
@@ -83,34 +102,39 @@ Backend development agents for API architecture and server-side implementation.
 | `python-fastapi-backend` | FastAPI, Pydantic, async Python, uvicorn | blue |
 | `database-expert` | PostgreSQL/MySQL schema design, query optimization, migration | orange |
 
-### frontend-agents (1 agent)
+### frontend-agents (2 agents)
 
-Frontend development agents for modern web UI.
+Frontend development agents for modern web UI and personal Mobidoc UI/UX beta review.
 
 | Agent | Description | Color |
 |-------|-------------|-------|
 | `frontend-engineer` | React/Next.js, Vue, component architecture, state management | blue |
+| `mobidoc-ui-ux-reviewer` | Mobidoc patient, hospital, and tablet UI/UX review beta guidance | cyan |
 
-### data-agents (4 agents)
+### data-agents (5 agents)
 
 Data science and machine learning agents.
 
 | Agent | Description | Color |
 |-------|-------------|-------|
-| `data-analyst` | Pandas, SQL, visualization, statistical analysis, EDA | teal |
-| `data-engineer` | Data pipelines, ETL/ELT, Spark, Airflow, data warehouse | indigo |
+| `data-analyst` | Pandas, SQL, visualization, statistical analysis, EDA | cyan |
+| `data-engineer` | Data pipelines, ETL/ELT, Spark, Airflow, data warehouse | blue |
 | `ml-engineer` | PyTorch, TensorFlow, model training, MLOps, LLM | pink |
-| `computer-vision-engineer` | MediaPipe, OpenCV, face recognition, AR filters | cyan |
+| `computer-vision-engineer` | MediaPipe, OpenCV, face recognition, AR filters | purple |
+| `jupyter-expert` | Jupyter Notebooks, JupyterLab, IPython, Voila dashboards, widgets | green |
 
-### devops-agents (3 agents)
+### devops-agents (4 agents + 2 commands)
 
-DevOps and CI/CD workflow automation agents.
+DevOps and CI/CD workflow automation agents. Slash commands live in `commands/`.
 
 | Agent | Description | Color |
 |-------|-------------|-------|
 | `devops-engineer` | Kubernetes, CI/CD, Terraform, cloud infrastructure | red |
-| `github-expert` | GitHub Actions workflow design, CI/CD pipeline configuration | gray |
+| `github-expert` | GitHub Actions workflow design, CI/CD pipeline configuration | blue |
 | `gitlab-expert` | GitLab CI/CD pipeline design, .gitlab-ci.yml configuration | orange |
+| `railway-expert` | Railway platform deployment, service management, database provisioning | purple |
+
+Slash commands: `/railway-deploy`, `/railway-setup` (defined in `commands/`)
 
 > **Note**: Git 커밋/푸시 작업은 공식 `commit-commands` 플러그인의 `/commit`, `/commit-push-pr` 명령을 사용하세요.
 
@@ -131,12 +155,12 @@ Mobile and desktop application development agents.
 | Agent | Description | Color |
 |-------|-------------|-------|
 | `mobile-app-developer` | React Native, Flutter, Swift, Kotlin for iOS/Android | cyan |
-| `ar-mobile-developer` | ARCore, ARKit, AR filters, Face Mesh, augmented reality | magenta |
+| `ar-mobile-developer` | ARCore, ARKit, AR filters, Face Mesh, augmented reality | green |
 | `desktop-app-developer` | Electron, Tauri for cross-platform desktop apps | yellow |
 
-### productivity-agents (4 agents)
+### productivity-agents (5 agents + 4 commands)
 
-Documentation, testing, and workflow automation agents.
+Documentation, testing, and workflow automation agents. Slash commands live in `commands/`.
 
 | Agent | Description | Color |
 |-------|-------------|-------|
@@ -144,6 +168,9 @@ Documentation, testing, and workflow automation agents.
 | `test-automation-engineer` | Jest/Vitest, React Testing Library, Playwright, pytest | yellow |
 | `commit-retrospective` | Git commit history-based retrospective generation | cyan |
 | `jira-retrospective` | Jira issue-based retrospective generation | blue |
+| `retrospective-validator` | Auto-detection and validation of retrospective files | green |
+
+Slash commands: `/git-retro`, `/jira-retro`, `/write-docs`, `/write-tests` (defined in `commands/`)
 
 ### claude-hookify (8 hooks)
 
@@ -166,6 +193,18 @@ claude plugin install https://github.com/Ahngbeom/claude-hookify
 
 ---
 
+## Validation
+
+Run the local validation script to verify the plugin structure is correct:
+
+```bash
+scripts/validate.sh
+```
+
+This same script is used by `.github/workflows/validate.yml` for CI checks.
+
+---
+
 ## Usage
 
 ### Using Plugin Namespace
@@ -184,6 +223,9 @@ After installing a plugin, use the namespace prefix:
 # DevOps agents
 "devops-agents:github-expert, GitHub Actions 워크플로우 만들어줘"
 
+# Mobidoc UI/UX beta review
+"frontend-agents:mobidoc-ui-ux-reviewer, Mobidoc 예약 화면 UX 리뷰해줘"
+
 # Productivity agents
 "productivity-agents:jira-retrospective, 지난 주 회고록 작성해줘"
 ```
@@ -196,10 +238,15 @@ Agents are automatically activated based on keywords:
 |----------|-----------------|
 | "API", "REST", "GraphQL" | backend-api-architect |
 | "컴포넌트", "React", "Vue" | frontend-engineer |
+| "Mobidoc", "모비닥", "의료 UX", "환자앱", "병원앱", "태블릿" | mobidoc-ui-ux-reviewer |
 | "테스트", "Jest", "Playwright" | test-automation-engineer |
 | "Docker", "Kubernetes", "CI/CD" | devops-engineer |
 | "Pandas", "시각화", "EDA" | data-analyst |
 | "PyTorch", "모델 학습", "MLOps" | ml-engineer |
+
+### Codex Skill Source
+
+The Mobidoc UI/UX beta Codex skill source lives in `codex/skills/mobidoc-ui-ux-beta/`. It is intentionally not registered in the Claude marketplace. Install it into a personal Codex environment by copying or symlinking that directory when needed.
 
 ---
 

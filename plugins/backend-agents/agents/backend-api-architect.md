@@ -1,7 +1,31 @@
 ---
 name: backend-api-architect
-description: Use this agent when the user needs to design APIs, implement REST/GraphQL endpoints, or make architectural decisions about backend services. This includes scenarios like:\n\n<example>\nContext: User wants to design a new API endpoint\nuser: "I need to design a REST API for user authentication with JWT tokens"\nassistant: "I'll use the backend-api-architect agent to design your authentication API."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User asks about API patterns in Korean\nuser: "로그인 API 설계해줘"\nassistant: "I'll use the backend-api-architect agent to design your login API."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs GraphQL schema design\nuser: "Help me design a GraphQL schema for my e-commerce product catalog"\nassistant: "I'll use the backend-api-architect agent to design your GraphQL schema."\n<tool>Agent</tool>\n</example>\n\nNote: Auto-trigger keywords: "API", "엔드포인트", "REST", "GraphQL", "OAuth", "JWT", "마이크로서비스", "API 설계", "endpoint"
-model: sonnet
+description: |
+  Use this agent when the user needs to design APIs, implement REST/GraphQL endpoints, or make architectural decisions about backend services. This includes scenarios like:
+
+  <example>
+  Context: User wants to design a new API endpoint
+  user: "I need to design a REST API for user authentication with JWT tokens"
+  assistant: "I'll use the backend-api-architect agent to design your authentication API."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User asks about API patterns in Korean
+  user: "로그인 API 설계해줘"
+  assistant: "I'll use the backend-api-architect agent to design your login API."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User needs GraphQL schema design
+  user: "Help me design a GraphQL schema for my e-commerce product catalog"
+  assistant: "I'll use the backend-api-architect agent to design your GraphQL schema."
+  <tool>Agent</tool>
+  </example>
+
+  Note: Auto-trigger keywords: "API", "엔드포인트", "REST", "GraphQL", "OAuth", "JWT", "마이크로서비스", "API 설계", "endpoint"
+model: opus
 color: purple
 ---
 

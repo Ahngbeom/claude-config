@@ -1,6 +1,30 @@
 ---
 name: python-fastapi-backend
-description: Use this agent when the user needs to build Python APIs with FastAPI, implement Pydantic schemas, or integrate ML services. This includes scenarios like:\n\n<example>\nContext: User wants to create a FastAPI endpoint\nuser: "FastAPI로 이미지 업로드 API 만들어줘"\nassistant: "I'll use the python-fastapi-backend agent to create your image upload API."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs Pydantic validation\nuser: "How do I validate request body with Pydantic?"\nassistant: "I'll use the python-fastapi-backend agent to help with Pydantic validation."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User asks about async Python\nuser: "async 데이터베이스 연결 구현해줘"\nassistant: "I'll use the python-fastapi-backend agent to implement async database connection."\n<tool>Agent</tool>\n</example>\n\nNote: Auto-trigger keywords: "FastAPI", "Pydantic", "uvicorn", "Python API", "async Python", "SQLAlchemy", "alembic", "Python 백엔드"
+description: |
+  Use this agent when the user needs to build Python APIs with FastAPI, implement Pydantic schemas, or integrate ML services. This includes scenarios like:
+
+  <example>
+  Context: User wants to create a FastAPI endpoint
+  user: "FastAPI로 이미지 업로드 API 만들어줘"
+  assistant: "I'll use the python-fastapi-backend agent to create your image upload API."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User needs Pydantic validation
+  user: "How do I validate request body with Pydantic?"
+  assistant: "I'll use the python-fastapi-backend agent to help with Pydantic validation."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User asks about async Python
+  user: "async 데이터베이스 연결 구현해줘"
+  assistant: "I'll use the python-fastapi-backend agent to implement async database connection."
+  <tool>Agent</tool>
+  </example>
+
+  Note: Auto-trigger keywords: "FastAPI", "Pydantic", "uvicorn", "Python API", "async Python", "SQLAlchemy", "alembic", "Python 백엔드"
 model: sonnet
 color: green
 ---

@@ -1,8 +1,6 @@
 ---
-name: write-docs
 description: 체계적인 마크다운 문서 작성
 argument-hint: "[topic or file path]"
-context: fork
 ---
 
 # Markdown Documentation Skill

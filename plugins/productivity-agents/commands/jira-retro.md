@@ -1,5 +1,4 @@
 ---
-name: jira-retro
 description: Jira 이슈 기반 회고록 자동 생성 (주간/월간)
 argument-hint: "[period: 1w|2w|1m] [assignee-email]"
 allowed-tools: mcp__plugin_atlassian_atlassian__*

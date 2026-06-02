@@ -31,7 +31,7 @@ When using compact, focus on:
 
 Respond in Korean (한국어) unless explicitly requested otherwise.
 
-## Available Skills (Slash Commands)
+## Available Slash Commands
 
 워크플로우형 작업을 위한 슬래시 명령어입니다. 에이전트와 달리 직접 호출하여 사용합니다.
 
@@ -47,9 +47,9 @@ Respond in Korean (한국어) unless explicitly requested otherwise.
 | `/railway-deploy` | `devops-agents` | Railway 배포 설정 생성 | `/railway-deploy fastapi` |
 | `/railway-setup` | `devops-agents` | Railway 프로젝트 초기 설정 | `/railway-setup "Node.js + PostgreSQL"` |
 
-### Skill vs Agent 사용 가이드
+### Command vs Agent 사용 가이드
 
-- **Skill (슬래시 명령)**: 사용자가 직접 호출, 현재 컨텍스트에서 실행
+- **Command (슬래시 명령)**: 사용자가 직접 호출, 현재 컨텍스트에서 실행
 - **Agent (Task tool)**: 자동 트리거 또는 복잡한 작업, 별도 컨텍스트에서 실행
 
 > Task tool을 통한 에이전트 자동 트리거도 계속 작동합니다.
@@ -64,12 +64,12 @@ This marketplace contains 7 agent plugins:
 | Plugin | Agents | Category |
 |--------|--------|----------|
 | `backend-agents` | 5 | development |
-| `frontend-agents` | 1 | development |
+| `frontend-agents` | 2 | development |
 | `data-agents` | 5 | development |
 | `devops-agents` | 4 | productivity |
 | `healthcare-agents` | 3 | development |
 | `mobile-agents` | 3 | development |
-| `productivity-agents` | 4 | productivity |
+| `productivity-agents` | 5 | productivity |
 
 > **Hookify**: 에이전트 자동 라우팅 훅은 별도 레포로 분리됨 → `claude plugin install https://github.com/Ahngbeom/claude-hookify`
 
@@ -83,6 +83,7 @@ This marketplace contains 7 agent plugins:
 | Task Type | Plugin:Agent | Auto-Trigger Keywords |
 |-----------|--------------|----------------------|
 | **Frontend/React** | `frontend-agents:frontend-engineer` | "컴포넌트", "리액트", "Vue", "UI", component architecture |
+| **Mobidoc UI/UX** | `frontend-agents:mobidoc-ui-ux-reviewer` | "Mobidoc", "모비닥", "의료 UX", "환자앱", "병원앱", "태블릿" |
 | **Backend API** | `backend-agents:backend-api-architect` | "API", "엔드포인트", "REST", "GraphQL" |
 | **Node.js Backend** | `backend-agents:nodejs-backend` | "Express", "Node.js", "미들웨어" |
 | **Spring Boot** | `backend-agents:spring-boot-backend` | "Spring", "Java", "JPA" |
@@ -105,6 +106,7 @@ This marketplace contains 7 agent plugins:
 | **Healthcare Stats** | `healthcare-agents:healthcare-stats-*` | "의료 데이터", "ICD", "SNOMED", "임상 통계", "헬스케어" |
 | **Jira 회고록** | `productivity-agents:jira-retrospective` | "회고록", "회고", "retrospective", "주간 정리", "Jira 이슈 정리" |
 | **Git 커밋 회고록** | `productivity-agents:commit-retrospective` | "커밋 회고", "Git 회고", "GitHub 회고", "GitLab 회고", "작업 이력 정리" |
+| **회고 검증** | `productivity-agents:retrospective-validator` | "회고 검증", "retrospective 감지", "회고 자동화" |
 
 ### Mandatory Agent Usage
 

@@ -1,6 +1,25 @@
 ---
 name: gitlab-expert
-description: Use this agent when the user needs **GitLab CI/CD pipeline design and `.gitlab-ci.yml` configuration**. This agent specializes in pipeline YAML authoring and Runner setup, not GitLab API operations.\n\n**Role scope**: CI/CD 파이프라인 설계 전문. GitLab API/Issue/MR 조작은 공식 `gitlab` 플러그인(MCP)을 사용하세요.\n\n<example>\nContext: User wants a GitLab pipeline\nuser: "GitLab CI 파이프라인 설정해줘"\nassistant: "I'll use the gitlab-expert agent for pipeline configuration."\n<tool>Agent</tool>\n</example>\n\n<example>\nContext: User needs .gitlab-ci.yml help\nuser: "Write a .gitlab-ci.yml for my Node.js project"\nassistant: "I'll use the gitlab-expert agent to create your .gitlab-ci.yml."\n<tool>Agent</tool>\n</example>\n\nNote: Auto-trigger keywords: "GitLab CI", ".gitlab-ci.yml", "GitLab Runner", "GitLab pipeline". For GitLab API/Issue/MR operations, use the official `gitlab` external plugin instead.
+description: |
+  Use this agent when the user needs **GitLab CI/CD pipeline design and `.gitlab-ci.yml` configuration**. This agent specializes in pipeline YAML authoring and Runner setup, not GitLab API operations.
+
+  **Role scope**: CI/CD 파이프라인 설계 전문. GitLab API/Issue/MR 조작은 공식 `gitlab` 플러그인(MCP)을 사용하세요.
+
+  <example>
+  Context: User wants a GitLab pipeline
+  user: "GitLab CI 파이프라인 설정해줘"
+  assistant: "I'll use the gitlab-expert agent for pipeline configuration."
+  <tool>Agent</tool>
+  </example>
+
+  <example>
+  Context: User needs .gitlab-ci.yml help
+  user: "Write a .gitlab-ci.yml for my Node.js project"
+  assistant: "I'll use the gitlab-expert agent to create your .gitlab-ci.yml."
+  <tool>Agent</tool>
+  </example>
+
+  Note: Auto-trigger keywords: "GitLab CI", ".gitlab-ci.yml", "GitLab Runner", "GitLab pipeline". For GitLab API/Issue/MR operations, use the official `gitlab` external plugin instead.
 model: sonnet
 color: orange
 ---

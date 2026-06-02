@@ -1,6 +1,34 @@
 ---
 name: markdown-document-writer
-description: Use this agent when the user requests documentation, notes, guides, or any content to be organized and written in markdown format. Examples:\n\n<example>\nContext: User wants to document a new feature they just implemented.\nuser: "Can you help me create documentation for the authentication system I just built?"\nassistant: "I'll use the Task tool to launch the markdown-document-writer agent to create comprehensive documentation for your authentication system."\n<commentary>\nThe user is requesting documentation to be written, which is exactly what the markdown-document-writer agent specializes in.\n</commentary>\n</example>\n\n<example>\nContext: User wants to organize meeting notes.\nuser: "I need to organize these meeting notes into a clear markdown document: [meeting notes content]"\nassistant: "Let me use the markdown-document-writer agent to transform these notes into a well-structured markdown document."\n<commentary>\nThe user explicitly wants content organized into markdown format, triggering the markdown-document-writer agent.\n</commentary>\n</example>\n\n<example>\nContext: User wants a guide created.\nuser: "Please create a guide on how to set up the development environment"\nassistant: "I'll use the Task tool to launch the markdown-document-writer agent to create a comprehensive setup guide in markdown format."\n<commentary>\nCreating a guide is a documentation task that should be handled by the markdown-document-writer agent.\n</commentary>\n</example>
+description: |
+  Use this agent when the user requests documentation, notes, guides, or any content to be organized and written in markdown format. Examples:
+
+  <example>
+  Context: User wants to document a new feature they just implemented.
+  user: "Can you help me create documentation for the authentication system I just built?"
+  assistant: "I'll use the Task tool to launch the markdown-document-writer agent to create comprehensive documentation for your authentication system."
+  <commentary>
+  The user is requesting documentation to be written, which is exactly what the markdown-document-writer agent specializes in.
+  </commentary>
+  </example>
+
+  <example>
+  Context: User wants to organize meeting notes.
+  user: "I need to organize these meeting notes into a clear markdown document: [meeting notes content]"
+  assistant: "Let me use the markdown-document-writer agent to transform these notes into a well-structured markdown document."
+  <commentary>
+  The user explicitly wants content organized into markdown format, triggering the markdown-document-writer agent.
+  </commentary>
+  </example>
+
+  <example>
+  Context: User wants a guide created.
+  user: "Please create a guide on how to set up the development environment"
+  assistant: "I'll use the Task tool to launch the markdown-document-writer agent to create a comprehensive setup guide in markdown format."
+  <commentary>
+  Creating a guide is a documentation task that should be handled by the markdown-document-writer agent.
+  </commentary>
+  </example>
 model: haiku
 color: cyan
 ---

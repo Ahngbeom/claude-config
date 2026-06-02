@@ -1,8 +1,6 @@
 ---
-name: railway-deploy
 description: Railway 프로젝트 배포 설정 생성 (railway.json, Nixpacks, Dockerfile)
 argument-hint: "[project type or file path]"
-context: fork
 ---
 
 # Railway Deploy Skill

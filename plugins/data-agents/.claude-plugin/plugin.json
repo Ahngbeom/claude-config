@@ -1,8 +1,12 @@
 {
   "name": "data-agents",
+  "version": "1.0.0",
   "description": "Data science and ML agents for data analysis, engineering, machine learning, and computer vision",
   "author": {
     "name": "ahngbeom",
     "email": "ahngbeom@github.com"
-  }
+  },
+  "homepage": "https://github.com/Ahngbeom/claude-config",
+  "license": "MIT",
+  "keywords": ["data-science","machine-learning","etl","computer-vision","jupyter","pandas"]
 }
