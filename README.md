@@ -58,23 +58,38 @@ This marketplace follows the [anthropics/claude-plugins-official](https://github
 ahngbeom-claude-config/
 ├── .claude-plugin/
 │   └── marketplace.json          # Marketplace metadata
+├── .github/
+│   └── workflows/
+│       └── validate.yml          # CI validation
 ├── codex/
 │   └── skills/                   # Codex skill source documents
+├── docs/
+│   ├── COMPACT-STRATEGY.md
+│   ├── PROJECT-SETTINGS.md
+│   ├── settings.example.json
+│   └── superpowers/
 ├── plugins/
 │   ├── backend-agents/           # 5 agents
-│   ├── frontend-agents/          # 2 agents + Mobidoc beta reference
-│   ├── data-agents/              # 4 agents
+│   ├── frontend-agents/          # 2 agents
+│   ├── data-agents/              # 5 agents
 │   ├── devops-agents/            # 3 agents
 │   ├── healthcare-agents/        # 3 agents
 │   ├── mobile-agents/            # 3 agents
-│   ├── productivity-agents/      # 4 agents
+│   ├── productivity-agents/      # 5 agents + 4 commands
 │   └── claude-hookify/           # Agent preference hooks (optional)
+├── scripts/
+│   ├── notify.sh
+│   ├── stop-hook.sh
+│   ├── sync-shared.sh
+│   └── validate.sh               # Local & CI validation
+├── shared/
+│   └── references/               # Canonical shared assets
 └── README.md
 ```
 
 ---
 
-## Plugins & Agents (25 total)
+## Plugins & Agents (26 total)
 
 ### backend-agents (5 agents)
 
@@ -97,7 +112,7 @@ Frontend development agents for modern web UI and personal Mobidoc UI/UX beta re
 | `frontend-engineer` | React/Next.js, Vue, component architecture, state management | blue |
 | `mobidoc-ui-ux-reviewer` | Mobidoc patient, hospital, and tablet UI/UX review beta guidance | cyan |
 
-### data-agents (4 agents)
+### data-agents (5 agents)
 
 Data science and machine learning agents.
 
@@ -107,6 +122,7 @@ Data science and machine learning agents.
 | `data-engineer` | Data pipelines, ETL/ELT, Spark, Airflow, data warehouse | indigo |
 | `ml-engineer` | PyTorch, TensorFlow, model training, MLOps, LLM | pink |
 | `computer-vision-engineer` | MediaPipe, OpenCV, face recognition, AR filters | cyan |
+| `jupyter-expert` | Jupyter Notebooks, JupyterLab, IPython, Voila dashboards, widgets | green |
 
 ### devops-agents (3 agents)
 
@@ -140,9 +156,9 @@ Mobile and desktop application development agents.
 | `ar-mobile-developer` | ARCore, ARKit, AR filters, Face Mesh, augmented reality | magenta |
 | `desktop-app-developer` | Electron, Tauri for cross-platform desktop apps | yellow |
 
-### productivity-agents (4 agents)
+### productivity-agents (5 agents + 4 commands)
 
-Documentation, testing, and workflow automation agents.
+Documentation, testing, and workflow automation agents. Slash commands live in `commands/`.
 
 | Agent | Description | Color |
 |-------|-------------|-------|
@@ -150,6 +166,9 @@ Documentation, testing, and workflow automation agents.
 | `test-automation-engineer` | Jest/Vitest, React Testing Library, Playwright, pytest | yellow |
 | `commit-retrospective` | Git commit history-based retrospective generation | cyan |
 | `jira-retrospective` | Jira issue-based retrospective generation | blue |
+| `retrospective-validator` | Auto-detection and validation of retrospective files | green |
+
+Slash commands: `/git-retro`, `/jira-retro`, `/write-docs`, `/write-tests` (defined in `commands/`)
 
 ### claude-hookify (8 hooks)
 
@@ -165,6 +184,18 @@ Agent preference hooks that recommend specialized agents based on file and comma
 | `prefer-markdown-writer` | Markdown document files | markdown-document-writer |
 | `prefer-jira-retrospective` | Retrospective keywords | jira-retrospective |
 | `prefer-commit-retrospective` | Commit retrospective keywords | commit-retrospective |
+
+---
+
+## Validation
+
+Run the local validation script to verify the plugin structure is correct:
+
+```bash
+scripts/validate.sh
+```
+
+This same script is used by `.github/workflows/validate.yml` for CI checks.
 
 ---
 

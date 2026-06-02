@@ -62,12 +62,12 @@ This marketplace contains 8 plugins (7 agent plugins + 1 hooks plugin):
 | Plugin | Agents | Category |
 |--------|--------|----------|
 | `backend-agents` | 5 | development |
-| `frontend-agents` | 1 | development |
+| `frontend-agents` | 2 | development |
 | `data-agents` | 5 | development |
 | `devops-agents` | 3 | productivity |
 | `healthcare-agents` | 3 | development |
 | `mobile-agents` | 3 | development |
-| `productivity-agents` | 4 | productivity |
+| `productivity-agents` | 5 | productivity |
 | `claude-hookify` | 0 (hooks only) | productivity |
 
 ## Agent Activation Rules
@@ -80,6 +80,7 @@ This marketplace contains 8 plugins (7 agent plugins + 1 hooks plugin):
 | Task Type | Plugin:Agent | Auto-Trigger Keywords |
 |-----------|--------------|----------------------|
 | **Frontend/React** | `frontend-agents:frontend-engineer` | "컴포넌트", "리액트", "Vue", "UI", component architecture |
+| **Mobidoc UI/UX** | `frontend-agents:mobidoc-ui-ux-reviewer` | "Mobidoc", "모비닥", "의료 UX", "환자앱", "병원앱", "태블릿" |
 | **Backend API** | `backend-agents:backend-api-architect` | "API", "엔드포인트", "REST", "GraphQL" |
 | **Node.js Backend** | `backend-agents:nodejs-backend` | "Express", "Node.js", "미들웨어" |
 | **Spring Boot** | `backend-agents:spring-boot-backend` | "Spring", "Java", "JPA" |
@@ -101,6 +102,7 @@ This marketplace contains 8 plugins (7 agent plugins + 1 hooks plugin):
 | **Healthcare Stats** | `healthcare-agents:healthcare-stats-*` | "의료 데이터", "ICD", "SNOMED", "임상 통계", "헬스케어" |
 | **Jira 회고록** | `productivity-agents:jira-retrospective` | "회고록", "회고", "retrospective", "주간 정리", "Jira 이슈 정리" |
 | **Git 커밋 회고록** | `productivity-agents:commit-retrospective` | "커밋 회고", "Git 회고", "GitHub 회고", "GitLab 회고", "작업 이력 정리" |
+| **회고 검증** | `productivity-agents:retrospective-validator` | "회고 검증", "retrospective 감지", "회고 자동화" |
 
 ### Mandatory Agent Usage
 
