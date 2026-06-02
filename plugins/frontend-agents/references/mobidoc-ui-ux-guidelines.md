@@ -1,6 +1,8 @@
+<!-- AUTO-GENERATED from shared/references/mobidoc-ui-ux-guidelines.md. DO NOT EDIT. Run scripts/sync-shared.sh. -->
+<!-- CANONICAL SOURCE. Edit here only. Run scripts/sync-shared.sh to propagate. -->
 # Mobidoc UI/UX Beta Guidelines
 
-These guidelines are a personal beta reference for Mobidoc frontend design and review. They are not an official team standard and must not include private patient data, internal screen captures, credentials, or unreleased business details.
+These guidelines are a personal beta reference for Mobidoc frontend design and review. They are not an official team standard and must not include private patient data, internal screen captures, credentials, or unreleased business details in prompts, notes, commits, or generated documentation.
 
 ## Scope
 
@@ -36,9 +38,9 @@ Use this reference when reviewing or shaping Mobidoc frontend screens, especiall
 
 - Fixed-format controls such as tabs, toolbar buttons, appointment slots, counters, and table cells need stable dimensions.
 - Dynamic text must not resize controls in a way that shifts adjacent content.
-- Long Korean labels, names, hospital names, and status text should wrap, truncate, or use responsive constraints deliberately.
+- Long Korean labels, names, hospital names, appointment times, badges, and status text should wrap, truncate, or use responsive constraints deliberately.
 - Avoid nested cards and decorative section cards for operational screens.
-- Keep dense views calm: aligned columns, predictable spacing, and restrained emphasis.
+- Keep dense views calm: aligned columns, predictable spacing, restrained emphasis, and predictable hierarchy.
 
 ## Readability And Visibility
 
@@ -46,7 +48,7 @@ Use this reference when reviewing or shaping Mobidoc frontend screens, especiall
 - Important status should not rely on color alone.
 - Use font sizes appropriate to the surface: dashboard panels and tables need compact but readable type, not hero-scale headings.
 - Keep touch targets large enough for tablet and patient-facing flows.
-- Make loading, disabled, selected, active, and error states visually distinct.
+- Make loading, disabled, selected, active, error, and success states visually distinct.
 
 ## Review Checklist
 

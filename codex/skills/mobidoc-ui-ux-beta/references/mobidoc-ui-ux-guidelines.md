@@ -1,56 +1,64 @@
+<!-- AUTO-GENERATED from shared/references/mobidoc-ui-ux-guidelines.md. DO NOT EDIT. Run scripts/sync-shared.sh. -->
+<!-- CANONICAL SOURCE. Edit here only. Run scripts/sync-shared.sh to propagate. -->
 # Mobidoc UI/UX Beta Guidelines
 
-This is a personal beta reference for Mobidoc frontend UI/UX work. It is not an official team guideline. Do not include private patient data, internal screen captures, credentials, or unreleased business details in prompts, notes, commits, or generated documentation.
+These guidelines are a personal beta reference for Mobidoc frontend design and review. They are not an official team standard and must not include private patient data, internal screen captures, credentials, or unreleased business details in prompts, notes, commits, or generated documentation.
 
-## Principles
+## Scope
+
+Use this reference when reviewing or shaping Mobidoc frontend screens, especially Vue/Nuxt patient, hospital, or tablet flows. Treat it as a UX review lens, not a replacement for product requirements, accessibility checks, or code review.
+
+## Product Principles
 
 - Design for healthcare users who may not be comfortable with IT tools.
-- Let navigation, screen state, and visible controls explain the workflow before adding text.
-- Keep layouts stable, predictable, and easy to scan.
-- Use cautious healthcare copy. Guide actions without implying diagnosis or clinical authority.
-- Hide implementation details and raw system terms from end users.
+- Make the next action clear from navigation, screen state, and visible controls instead of explanatory prose.
+- Prefer stable, predictable layouts over visually clever compositions.
+- Keep clinical and operational information easy to scan, compare, and confirm.
+- Use cautious language for medical workflows. UI copy should guide actions, not imply diagnosis or clinical authority.
+- Avoid exposing implementation details, system jargon, or raw API terms to end users.
 
-## Navigation
+## Navigation-Centered UX
 
-- Make location, next action, and return path clear.
-- Keep primary actions discoverable.
-- Make cancel, close, back, and destructive actions distinct.
-- Avoid burying critical choices in low-visibility menus.
+- Every screen should answer: where am I, what can I do next, and how do I return?
+- Primary actions should be visually discoverable without reading long instructions.
+- Back, cancel, close, and destructive actions should be distinct and consistent.
+- Avoid hiding critical workflow choices inside low-visibility menus.
 - Keep tab, drawer, modal, and stepper behavior consistent across patient, hospital, and tablet builds.
 
-## UX Writing
+## Text And UX Writing
 
-- Use short labels and clear button verbs.
-- Add helper text only when it prevents likely mistakes or explains real constraints.
-- Error messages should state the problem and recoverable next action.
-- Empty states should explain the state and expose the next useful action when one exists.
+- Prefer short labels, explicit state names, and clear button verbs.
+- Do not add visible teaching text for obvious controls.
+- Use helper text only when it prevents a likely mistake or explains a real constraint.
+- Error messages should identify the problem and the next recoverable action.
+- Empty states should explain the current state and expose the next useful action when one exists.
 - Confirmation text should name the object or action being confirmed.
 
 ## Layout Stability
 
-- Give fixed-format controls stable dimensions.
-- Plan for long Korean labels, names, hospital names, appointment times, badges, and status text.
-- Dynamic text should wrap, truncate, or fit within explicit responsive constraints.
-- Avoid nested cards and decorative section cards in operational screens.
-- Use restrained spacing, aligned columns, and predictable hierarchy for dense views.
+- Fixed-format controls such as tabs, toolbar buttons, appointment slots, counters, and table cells need stable dimensions.
+- Dynamic text must not resize controls in a way that shifts adjacent content.
+- Long Korean labels, names, hospital names, appointment times, badges, and status text should wrap, truncate, or use responsive constraints deliberately.
+- Avoid nested cards and decorative section cards for operational screens.
+- Keep dense views calm: aligned columns, predictable spacing, restrained emphasis, and predictable hierarchy.
 
-## Readability And States
+## Readability And Visibility
 
-- Check contrast for text, icons, badges, status colors, and disabled states.
-- Do not rely on color alone for important status.
-- Keep touch targets large enough for patient and tablet flows.
-- Make loading, disabled, selected, active, error, and success states distinct.
-- Match type scale to the surface. Tables, dashboards, and panels need compact readable headings.
+- Check contrast for text, icons, disabled states, badges, and status colors.
+- Important status should not rely on color alone.
+- Use font sizes appropriate to the surface: dashboard panels and tables need compact but readable type, not hero-scale headings.
+- Keep touch targets large enough for tablet and patient-facing flows.
+- Make loading, disabled, selected, active, error, and success states visually distinct.
 
-## PR Checklist
+## Review Checklist
 
-- The target user and task are clear.
-- The most likely next action is visible.
+- The main user and primary task of the screen are identifiable.
+- The most likely next action is visible without reading instructions.
 - Navigation and escape paths are clear.
-- Button labels use action verbs.
+- Button labels use action verbs and avoid ambiguous text.
 - Empty, loading, error, disabled, selected, and success states are handled.
-- Variable data does not overlap or cause layout shift.
-- Text hierarchy matches the screen density.
-- Status has non-color cues.
+- Long labels and variable data do not overlap or cause layout shift.
+- Text hierarchy matches the density and purpose of the surface.
+- Status information has non-color cues.
 - Patient-facing copy avoids medical overclaiming and internal jargon.
-- Relevant build targets and viewport sizes were checked.
+- The change is verified in the relevant build targets and viewport sizes.
