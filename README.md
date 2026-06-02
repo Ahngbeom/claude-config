@@ -36,8 +36,8 @@ claude plugin install mobile-agents@ahngbeom-claude-config
 # Productivity tools
 claude plugin install productivity-agents@ahngbeom-claude-config
 
-# Agent preference hooks (optional)
-claude plugin install claude-hookify@ahngbeom-claude-config
+# Agent preference hooks (optional, separate install)
+claude plugin install https://github.com/Ahngbeom/claude-hookify
 ```
 
 ### Direct Installation
@@ -72,11 +72,10 @@ ahngbeom-claude-config/
 │   ├── backend-agents/           # 5 agents
 │   ├── frontend-agents/          # 2 agents
 │   ├── data-agents/              # 5 agents
-│   ├── devops-agents/            # 3 agents
+│   ├── devops-agents/            # 4 agents (incl. railway-expert) + 2 commands
 │   ├── healthcare-agents/        # 3 agents
 │   ├── mobile-agents/            # 3 agents
-│   ├── productivity-agents/      # 5 agents + 4 commands
-│   └── claude-hookify/           # Agent preference hooks (optional)
+│   └── productivity-agents/      # 5 agents + 4 commands
 ├── scripts/
 │   ├── notify.sh
 │   ├── stop-hook.sh
@@ -89,7 +88,7 @@ ahngbeom-claude-config/
 
 ---
 
-## Plugins & Agents (26 total)
+## Plugins & Agents (27 total)
 
 ### backend-agents (5 agents)
 
@@ -118,21 +117,24 @@ Data science and machine learning agents.
 
 | Agent | Description | Color |
 |-------|-------------|-------|
-| `data-analyst` | Pandas, SQL, visualization, statistical analysis, EDA | teal |
-| `data-engineer` | Data pipelines, ETL/ELT, Spark, Airflow, data warehouse | indigo |
+| `data-analyst` | Pandas, SQL, visualization, statistical analysis, EDA | cyan |
+| `data-engineer` | Data pipelines, ETL/ELT, Spark, Airflow, data warehouse | blue |
 | `ml-engineer` | PyTorch, TensorFlow, model training, MLOps, LLM | pink |
-| `computer-vision-engineer` | MediaPipe, OpenCV, face recognition, AR filters | cyan |
+| `computer-vision-engineer` | MediaPipe, OpenCV, face recognition, AR filters | purple |
 | `jupyter-expert` | Jupyter Notebooks, JupyterLab, IPython, Voila dashboards, widgets | green |
 
-### devops-agents (3 agents)
+### devops-agents (4 agents + 2 commands)
 
-DevOps and CI/CD workflow automation agents.
+DevOps and CI/CD workflow automation agents. Slash commands live in `commands/`.
 
 | Agent | Description | Color |
 |-------|-------------|-------|
 | `devops-engineer` | Kubernetes, CI/CD, Terraform, cloud infrastructure | red |
-| `github-expert` | GitHub Actions workflow design, CI/CD pipeline configuration | gray |
+| `github-expert` | GitHub Actions workflow design, CI/CD pipeline configuration | blue |
 | `gitlab-expert` | GitLab CI/CD pipeline design, .gitlab-ci.yml configuration | orange |
+| `railway-expert` | Railway platform deployment, service management, database provisioning | purple |
+
+Slash commands: `/railway-deploy`, `/railway-setup` (defined in `commands/`)
 
 > **Note**: Git 커밋/푸시 작업은 공식 `commit-commands` 플러그인의 `/commit`, `/commit-push-pr` 명령을 사용하세요.
 
@@ -153,7 +155,7 @@ Mobile and desktop application development agents.
 | Agent | Description | Color |
 |-------|-------------|-------|
 | `mobile-app-developer` | React Native, Flutter, Swift, Kotlin for iOS/Android | cyan |
-| `ar-mobile-developer` | ARCore, ARKit, AR filters, Face Mesh, augmented reality | magenta |
+| `ar-mobile-developer` | ARCore, ARKit, AR filters, Face Mesh, augmented reality | green |
 | `desktop-app-developer` | Electron, Tauri for cross-platform desktop apps | yellow |
 
 ### productivity-agents (5 agents + 4 commands)
@@ -172,7 +174,11 @@ Slash commands: `/git-retro`, `/jira-retro`, `/write-docs`, `/write-tests` (defi
 
 ### claude-hookify (8 hooks)
 
-Agent preference hooks that recommend specialized agents based on file and command patterns. Install separately to enable.
+Agent preference hooks that recommend specialized agents based on file and command patterns. Maintained in a **separate repository**: https://github.com/Ahngbeom/claude-hookify
+
+```bash
+claude plugin install https://github.com/Ahngbeom/claude-hookify
+```
 
 | Hook | Trigger | Recommended Agent |
 |------|---------|-------------------|
