@@ -83,7 +83,7 @@
       "author": {
         "name": "ahngbeom"
       },
-      "source": "./claude-hookify",
+      "source": "./plugins/claude-hookify",
       "category": "productivity",
       "homepage": "https://github.com/Ahngbeom/claude-config"
     }

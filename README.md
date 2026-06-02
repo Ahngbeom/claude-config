@@ -58,10 +58,6 @@ This marketplace follows the [anthropics/claude-plugins-official](https://github
 ahngbeom-claude-config/
 ├── .claude-plugin/
 │   └── marketplace.json          # Marketplace metadata
-├── claude-hookify/               # Agent preference hooks (optional)
-│   ├── .claude-plugin/
-│   │   └── plugin.json
-│   └── hooks/                    # 8 hookify files
 ├── codex/
 │   └── skills/                   # Codex skill source documents
 ├── plugins/
@@ -71,7 +67,8 @@ ahngbeom-claude-config/
 │   ├── devops-agents/            # 3 agents
 │   ├── healthcare-agents/        # 3 agents
 │   ├── mobile-agents/            # 3 agents
-│   └── productivity-agents/      # 4 agents
+│   ├── productivity-agents/      # 4 agents
+│   └── claude-hookify/           # Agent preference hooks (optional)
 └── README.md
 ```
 
