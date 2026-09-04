@@ -40,13 +40,25 @@ claude plugin install productivity-agents@ahngbeom-claude-config
 claude plugin install https://github.com/Ahngbeom/claude-hookify
 ```
 
-### Direct Installation
+### Global Configuration (`~/.claude`)
+
+The global instruction file and the scripts it references are tracked under `global/` and installed with the sync script:
 
 ```bash
 git clone https://github.com/ahngbeom/claude-config
 cd claude-config
-./install.sh
+scripts/sync-global.sh push     # global/ -> ~/.claude (backs up any file it overwrites)
+scripts/sync-global.sh check    # report drift between the two
+scripts/sync-global.sh pull     # ~/.claude -> global/ after editing the live file
 ```
+
+| File | Installed to | Purpose |
+|------|--------------|---------|
+| `global/CLAUDE.md` | `~/.claude/CLAUDE.md` | Global instructions applied to every project |
+| `global/hooks/guard-k8s.py` | `~/.claude/hooks/guard-k8s.py` | `PreToolUse` hook that blocks cluster-mutating `kubectl`/`helm`/`argocd` commands |
+| `global/cleanup.sh` | `~/.claude/cleanup.sh` | `~/.claude` housekeeping, run by the `SessionStart` hook and `/cleanup` |
+
+Hook registration is not synced; add the entries from `docs/settings.example.json` to `~/.claude/settings.json`.
 
 ---
 
@@ -68,6 +80,10 @@ ahngbeom-claude-config/
 │   ├── PROJECT-SETTINGS.md
 │   ├── settings.example.json
 │   └── superpowers/
+├── global/                       # Tracked ~/.claude files (see Global Configuration)
+│   ├── CLAUDE.md
+│   ├── cleanup.sh
+│   └── hooks/guard-k8s.py
 ├── plugins/
 │   ├── backend-agents/           # 5 agents
 │   ├── frontend-agents/          # 2 agents
@@ -79,6 +95,7 @@ ahngbeom-claude-config/
 ├── scripts/
 │   ├── notify.sh
 │   ├── stop-hook.sh
+│   ├── sync-global.sh            # global/ <-> ~/.claude
 │   ├── sync-shared.sh
 │   └── validate.sh               # Local & CI validation
 ├── shared/
@@ -158,7 +175,7 @@ Mobile and desktop application development agents.
 | `ar-mobile-developer` | ARCore, ARKit, AR filters, Face Mesh, augmented reality | green |
 | `desktop-app-developer` | Electron, Tauri for cross-platform desktop apps | yellow |
 
-### productivity-agents (5 agents + 4 commands)
+### productivity-agents (5 agents + 5 commands)
 
 Documentation, testing, and workflow automation agents. Slash commands live in `commands/`.
 
@@ -170,7 +187,7 @@ Documentation, testing, and workflow automation agents. Slash commands live in `
 | `jira-retrospective` | Jira issue-based retrospective generation | blue |
 | `retrospective-validator` | Auto-detection and validation of retrospective files | green |
 
-Slash commands: `/git-retro`, `/jira-retro`, `/write-docs`, `/write-tests` (defined in `commands/`)
+Slash commands: `/git-retro`, `/jira-retro`, `/write-docs`, `/write-tests`, `/cleanup` (defined in `commands/`)
 
 ### claude-hookify (8 hooks)
 
@@ -230,19 +247,69 @@ After installing a plugin, use the namespace prefix:
 "productivity-agents:jira-retrospective, 지난 주 회고록 작성해줘"
 ```
 
-### Auto-Trigger Keywords
+### Slash Commands
 
-Agents are automatically activated based on keywords:
+| Command | Plugin | Description | Example |
+|---------|--------|-------------|---------|
+| `/commit` | `commit-commands` (official) | Analyze changes and create a commit in the repo's style | `/commit` |
+| `/commit-push-pr` | `commit-commands` (official) | Commit, push, and open a PR in one step | `/commit-push-pr` |
+| `/clean_gone` | `commit-commands` (official) | Delete local branches whose remote is gone | `/clean_gone` |
+| `/jira-retro` | `productivity-agents` | Retrospective from Jira issues | `/jira-retro 2w` |
+| `/git-retro` | `productivity-agents` | Retrospective from git commits | `/git-retro 14` |
+| `/write-docs` | `productivity-agents` | Write a markdown document | `/write-docs API.md` |
+| `/write-tests` | `productivity-agents` | Generate tests for a file | `/write-tests src/auth.ts` |
+| `/cleanup` | `productivity-agents` | Reclaim disk space under `~/.claude` | `/cleanup dry-run` |
+| `/railway-deploy` | `devops-agents` | Generate Railway deployment config | `/railway-deploy fastapi` |
+| `/railway-setup` | `devops-agents` | Initialize a Railway project | `/railway-setup "Node.js + PostgreSQL"` |
 
-| Keywords | Activated Agent |
-|----------|-----------------|
-| "API", "REST", "GraphQL" | backend-api-architect |
-| "컴포넌트", "React", "Vue" | frontend-engineer |
-| "Mobidoc", "모비닥", "의료 UX", "환자앱", "병원앱", "태블릿" | mobidoc-ui-ux-reviewer |
-| "테스트", "Jest", "Playwright" | test-automation-engineer |
-| "Docker", "Kubernetes", "CI/CD" | devops-engineer |
-| "Pandas", "시각화", "EDA" | data-analyst |
-| "PyTorch", "모델 학습", "MLOps" | ml-engineer |
+### Agent Routing
+
+Applies only where the plugin is installed and enabled (`~/.claude/plugins/installed_plugins.json`, `enabledPlugins` in `~/.claude/settings.json`).
+
+| Task Type | Plugin:Agent | Trigger Keywords |
+|-----------|--------------|------------------|
+| Frontend/React | `frontend-agents:frontend-engineer` | "컴포넌트", "리액트", "Vue", "UI", component architecture |
+| Mobidoc UI/UX | `frontend-agents:mobidoc-ui-ux-reviewer` | "Mobidoc", "모비닥", "의료 UX", "환자앱", "병원앱", "태블릿" |
+| Backend API | `backend-agents:backend-api-architect` | "API", "엔드포인트", "REST", "GraphQL" |
+| Node.js Backend | `backend-agents:nodejs-backend` | "Express", "Node.js", "미들웨어" |
+| Spring Boot | `backend-agents:spring-boot-backend` | "Spring", "Java", "JPA" |
+| Python/FastAPI | `backend-agents:python-fastapi-backend` | "FastAPI", "Pydantic", "uvicorn", "Python API", "async Python" |
+| Database | `backend-agents:database-expert` | "스키마", "쿼리", "migration", "인덱스", "DB" |
+| Testing | `productivity-agents:test-automation-engineer` | "테스트", "test", "Jest", "Playwright", "pytest" |
+| Documentation | `productivity-agents:markdown-document-writer` | "문서 작성", "README", "가이드" |
+| Data Analysis | `data-agents:data-analyst` | "데이터 분석", "통계", "Pandas", "시각화" |
+| Data Engineering | `data-agents:data-engineer` | "ETL", "파이프라인", "Spark", "Airflow", "데이터 웨어하우스" |
+| ML/AI | `data-agents:ml-engineer` | "모델 학습", "PyTorch", "TensorFlow", "MLOps", "LLM" |
+| Computer Vision | `data-agents:computer-vision-engineer` | "얼굴 인식", "MediaPipe", "OpenCV", "face_recognition", "랜드마크", "AR 필터" |
+| Jupyter/Notebooks | `data-agents:jupyter-expert` | "Jupyter", "노트북", "notebook", "IPython", "widget", "nbconvert", "JupyterLab" |
+| DevOps | `devops-agents:devops-engineer` | "배포", "CI/CD", "Docker", "Kubernetes", "Terraform" |
+| GitHub CI/CD | `devops-agents:github-expert` | "GitHub Actions", "workflow", ".github/workflows" (workflow design; API work uses the official `github` plugin) |
+| GitLab CI/CD | `devops-agents:gitlab-expert` | "GitLab CI", ".gitlab-ci.yml", "GitLab Runner" (pipeline design; API work uses the official `gitlab` plugin) |
+| Railway | `devops-agents:railway-expert` | "Railway", "railway.json", "Nixpacks", "Railway 배포" |
+| Mobile App | `mobile-agents:mobile-app-developer` | "React Native", "Flutter", "iOS", "Android", "모바일 앱" |
+| AR Mobile | `mobile-agents:ar-mobile-developer` | "ARCore", "ARKit", "AR 필터", "얼굴 필터", "증강현실", "Face Mesh" |
+| Desktop App | `mobile-agents:desktop-app-developer` | "Electron", "Tauri", "데스크톱 앱" |
+| Healthcare Stats | `healthcare-agents:healthcare-stats-*` | "의료 데이터", "ICD", "SNOMED", "임상 통계", "헬스케어" |
+| Jira Retrospective | `productivity-agents:jira-retrospective` | "회고록", "회고", "retrospective", "주간 정리", "Jira 이슈 정리" |
+| Commit Retrospective | `productivity-agents:commit-retrospective` | "커밋 회고", "Git 회고", "GitHub 회고", "GitLab 회고", "작업 이력 정리" |
+| Retrospective Validation | `productivity-agents:retrospective-validator` | "회고 검증", "retrospective 감지", "회고 자동화" |
+
+### Official vs Local Plugins
+
+| Task | Official plugin (`claude-plugins-official`) | Local agent |
+|------|---------------------------------------------|-------------|
+| Git commit/push/PR | `/commit`, `/commit-push-pr`, `/clean_gone` (`commit-commands`) | - |
+| Code review | `code-review`, `pr-review-toolkit` | - |
+| Feature workflow | `feature-dev` (generic 7-step workflow) | Domain agents (backend, frontend, data, ...) |
+| GitHub API / issues / PRs | `github` (MCP) | - |
+| GitHub Actions workflow design | - | `devops-agents:github-expert` |
+| GitLab API | `gitlab` (MCP) | - |
+| GitLab CI/CD pipeline design | - | `devops-agents:gitlab-expert` |
+| Frontend design aesthetics | `frontend-design` | - |
+| React/Next.js engineering | - | `frontend-agents:frontend-engineer` |
+| Playwright browser automation | `playwright` (MCP) | - |
+| Test writing | - | `productivity-agents:test-automation-engineer`, `/write-tests` |
+| Railway deploy/manage | - | `devops-agents:railway-expert`, `/railway-deploy`, `/railway-setup` |
 
 ### Codex Skill Source
 
