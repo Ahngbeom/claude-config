@@ -226,4 +226,4 @@ CLAUDE.md                    # 프로젝트 컨벤션
 
 ---
 
-*위치: ~/.claude/PROJECT-SETTINGS.md*
+*위치: docs/PROJECT-SETTINGS.md*

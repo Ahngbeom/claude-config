@@ -83,5 +83,9 @@ done
 # 7. shared sync drift
 scripts/sync-shared.sh --check || err "shared references drift"
 
+# 8. script syntax (global/ + scripts/)
+for f in global/cleanup.sh scripts/*.sh; do bash -n "$f" 2>/dev/null || err "bash syntax: $f"; done
+for f in global/hooks/*.py; do python3 -c 'import ast,sys; ast.parse(open(sys.argv[1]).read())' "$f" 2>/dev/null || err "python syntax: $f"; done
+
 [ "$fail" = 0 ] && echo "VALIDATION PASSED" || echo "VALIDATION FAILED"
 exit $fail
