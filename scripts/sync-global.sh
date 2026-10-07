@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Sync tracked ~/.claude files between global/ and the live ~/.claude directory.
+# Sync tracked ~/.claude files and directories between global/ and the live ~/.claude directory.
 # Usage: scripts/sync-global.sh push     # global/ -> ~/.claude (backs up files it overwrites)
 #        scripts/sync-global.sh pull     # ~/.claude -> global/
 #        scripts/sync-global.sh check    # verify in sync, nonzero on drift (local only)
@@ -11,6 +11,9 @@ FILES=(
   "CLAUDE.md"
   "hooks/guard-k8s.py"
   "cleanup.sh"
+)
+DIRS=(
+  "skills/korean-docs"
 )
 
 mode="${1:-check}"
@@ -32,6 +35,25 @@ for f in "${FILES[@]}"; do
     check)
       if [ ! -f "$dst" ]; then echo "MISSING: $dst"; rc=1
       elif ! cmp -s "$src" "$dst"; then echo "DRIFT: $dst differs from $src"; rc=1
+      fi ;;
+  esac
+done
+for d in "${DIRS[@]}"; do
+  src="global/$d"; dst="$CLAUDE_DIR/$d"
+  case "$mode" in
+    push)
+      if [ -d "$dst" ] && ! diff -rq "$src" "$dst" >/dev/null 2>&1; then
+        # Backups must stay outside skills/: Claude Code loads every dir there as a skill.
+        bak="$CLAUDE_DIR/backups/$d-$(date +%Y%m%d-%H%M%S)"
+        mkdir -p "$(dirname "$bak")"; cp -Rp "$dst" "$bak"
+      fi
+      mkdir -p "$dst"; rsync -a --delete "$src/" "$dst/"; echo "pushed: $dst/" ;;
+    pull)
+      if [ -d "$dst" ]; then mkdir -p "$src"; rsync -a --delete "$dst/" "$src/"; echo "pulled: $src/"
+      else echo "MISSING: $dst"; rc=1; fi ;;
+    check)
+      if [ ! -d "$dst" ]; then echo "MISSING: $dst"; rc=1
+      elif ! diff -rq "$src" "$dst" >/dev/null 2>&1; then echo "DRIFT: $dst differs from $src"; rc=1
       fi ;;
   esac
 done
