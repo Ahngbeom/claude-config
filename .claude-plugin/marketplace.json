@@ -69,7 +69,7 @@
     },
     {
       "name": "productivity-agents",
-      "description": "Productivity agents for documentation, testing, Jira/Git retrospectives, and workflow automation",
+      "description": "Productivity agents for testing, Jira/Git retrospectives, and workflow automation",
       "author": {
         "name": "ahngbeom"
       },
