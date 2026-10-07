@@ -57,6 +57,7 @@ scripts/sync-global.sh pull     # ~/.claude -> global/ after editing the live fi
 | `global/CLAUDE.md` | `~/.claude/CLAUDE.md` | Global instructions applied to every project |
 | `global/hooks/guard-k8s.py` | `~/.claude/hooks/guard-k8s.py` | `PreToolUse` hook that blocks cluster-mutating `kubectl`/`helm`/`argocd` commands |
 | `global/cleanup.sh` | `~/.claude/cleanup.sh` | `~/.claude` housekeeping, run by the `SessionStart` hook and `/cleanup` |
+| `global/skills/korean-docs/` | `~/.claude/skills/korean-docs/` | Korean writing skill: channel templates (MR/PR, Jira, reports, tech docs), style, and review checklist |
 
 Hook registration is not synced; add the entries from `docs/settings.example.json` to `~/.claude/settings.json`.
 
@@ -83,7 +84,8 @@ ahngbeom-claude-config/
 ├── global/                       # Tracked ~/.claude files (see Global Configuration)
 │   ├── CLAUDE.md
 │   ├── cleanup.sh
-│   └── hooks/guard-k8s.py
+│   ├── hooks/guard-k8s.py
+│   └── skills/korean-docs/       # Global Korean writing skill
 ├── plugins/
 │   ├── backend-agents/           # 5 agents
 │   ├── frontend-agents/          # 2 agents
@@ -91,7 +93,7 @@ ahngbeom-claude-config/
 │   ├── devops-agents/            # 4 agents (incl. railway-expert) + 2 commands
 │   ├── healthcare-agents/        # 3 agents
 │   ├── mobile-agents/            # 3 agents
-│   └── productivity-agents/      # 5 agents + 4 commands
+│   └── productivity-agents/      # 4 agents + 4 commands
 ├── scripts/
 │   ├── notify.sh
 │   ├── stop-hook.sh
@@ -175,19 +177,18 @@ Mobile and desktop application development agents.
 | `ar-mobile-developer` | ARCore, ARKit, AR filters, Face Mesh, augmented reality | green |
 | `desktop-app-developer` | Electron, Tauri for cross-platform desktop apps | yellow |
 
-### productivity-agents (5 agents + 5 commands)
+### productivity-agents (4 agents + 4 commands)
 
-Documentation, testing, and workflow automation agents. Slash commands live in `commands/`.
+Testing, retrospective, and workflow automation agents. Slash commands live in `commands/`.
 
 | Agent | Description | Color |
 |-------|-------------|-------|
-| `markdown-document-writer` | Documentation writing in markdown format | cyan |
 | `test-automation-engineer` | Jest/Vitest, React Testing Library, Playwright, pytest | yellow |
 | `commit-retrospective` | Git commit history-based retrospective generation | cyan |
 | `jira-retrospective` | Jira issue-based retrospective generation | blue |
 | `retrospective-validator` | Auto-detection and validation of retrospective files | green |
 
-Slash commands: `/git-retro`, `/jira-retro`, `/write-docs`, `/write-tests`, `/cleanup` (defined in `commands/`)
+Slash commands: `/git-retro`, `/jira-retro`, `/write-tests`, `/cleanup` (defined in `commands/`)
 
 ### claude-hookify (8 hooks)
 
@@ -204,9 +205,10 @@ claude plugin install https://github.com/Ahngbeom/claude-hookify
 | `prefer-frontend-engineer` | Frontend component files (.tsx, .vue, .jsx) | frontend-engineer |
 | `prefer-commit-commands` | `git commit/push` commands | /commit, /commit-push-pr |
 | `prefer-test-automation` | Test files (.test.ts, .spec.js) | test-automation-engineer |
-| `prefer-markdown-writer` | Markdown document files | markdown-document-writer |
 | `prefer-jira-retrospective` | Retrospective keywords | jira-retrospective |
 | `prefer-commit-retrospective` | Commit retrospective keywords | commit-retrospective |
+
+`prefer-markdown-writer` was removed with `markdown-document-writer`; delete it from the claude-hookify repo as well.
 
 ---
 
@@ -256,7 +258,6 @@ After installing a plugin, use the namespace prefix:
 | `/clean_gone` | `commit-commands` (official) | Delete local branches whose remote is gone | `/clean_gone` |
 | `/jira-retro` | `productivity-agents` | Retrospective from Jira issues | `/jira-retro 2w` |
 | `/git-retro` | `productivity-agents` | Retrospective from git commits | `/git-retro 14` |
-| `/write-docs` | `productivity-agents` | Write a markdown document | `/write-docs API.md` |
 | `/write-tests` | `productivity-agents` | Generate tests for a file | `/write-tests src/auth.ts` |
 | `/cleanup` | `productivity-agents` | Reclaim disk space under `~/.claude` | `/cleanup dry-run` |
 | `/railway-deploy` | `devops-agents` | Generate Railway deployment config | `/railway-deploy fastapi` |
@@ -276,7 +277,6 @@ Applies only where the plugin is installed and enabled (`~/.claude/plugins/insta
 | Python/FastAPI | `backend-agents:python-fastapi-backend` | "FastAPI", "Pydantic", "uvicorn", "Python API", "async Python" |
 | Database | `backend-agents:database-expert` | "스키마", "쿼리", "migration", "인덱스", "DB" |
 | Testing | `productivity-agents:test-automation-engineer` | "테스트", "test", "Jest", "Playwright", "pytest" |
-| Documentation | `productivity-agents:markdown-document-writer` | "문서 작성", "README", "가이드" |
 | Data Analysis | `data-agents:data-analyst` | "데이터 분석", "통계", "Pandas", "시각화" |
 | Data Engineering | `data-agents:data-engineer` | "ETL", "파이프라인", "Spark", "Airflow", "데이터 웨어하우스" |
 | ML/AI | `data-agents:ml-engineer` | "모델 학습", "PyTorch", "TensorFlow", "MLOps", "LLM" |

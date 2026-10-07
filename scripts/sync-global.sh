@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Sync tracked ~/.claude files between global/ and the live ~/.claude directory.
+# Sync tracked ~/.claude files and directories between global/ and the live ~/.claude directory.
 # Usage: scripts/sync-global.sh push     # global/ -> ~/.claude (backs up files it overwrites)
 #        scripts/sync-global.sh pull     # ~/.claude -> global/
 #        scripts/sync-global.sh check    # verify in sync, nonzero on drift (local only)
@@ -11,6 +11,9 @@ FILES=(
   "CLAUDE.md"
   "hooks/guard-k8s.py"
   "cleanup.sh"
+)
+DIRS=(
+  "skills/korean-docs"
 )
 
 mode="${1:-check}"
@@ -32,6 +35,28 @@ for f in "${FILES[@]}"; do
     check)
       if [ ! -f "$dst" ]; then echo "MISSING: $dst"; rc=1
       elif ! cmp -s "$src" "$dst"; then echo "DRIFT: $dst differs from $src"; rc=1
+      fi ;;
+  esac
+done
+for d in "${DIRS[@]}"; do
+  src="global/$d"; dst="$CLAUDE_DIR/$d"
+  case "$mode" in
+    push)
+      if [ -d "$dst" ] && ! diff -rq "$src" "$dst" >/dev/null 2>&1; then
+        # Not skills/ (loaded as a skill) and not backups/ (cleanup.sh keeps only its newest entry).
+        mkdir -p "$CLAUDE_DIR/sync-global-backups/$(dirname "$d")"
+        bak=$(mktemp -d "$CLAUDE_DIR/sync-global-backups/$d-$(date +%Y%m%d-%H%M%S)-XXXXXX")
+        cp -Rp "$dst/." "$bak/"
+      fi
+      mkdir -p "$dst"; rsync -a --delete "$src/" "$dst/"; echo "pushed: $dst/" ;;
+    pull)
+      if [ ! -d "$dst" ]; then echo "MISSING: $dst"; rc=1
+      elif [ -n "$(git status --porcelain -- "$src" 2>/dev/null)" ]; then
+        echo "REFUSED: $src has uncommitted changes; commit or stash them before pull" >&2; rc=1
+      else mkdir -p "$src"; rsync -a --delete "$dst/" "$src/"; echo "pulled: $src/"; fi ;;
+    check)
+      if [ ! -d "$dst" ]; then echo "MISSING: $dst"; rc=1
+      elif ! diff -rq "$src" "$dst" >/dev/null 2>&1; then echo "DRIFT: $dst differs from $src"; rc=1
       fi ;;
   esac
 done
