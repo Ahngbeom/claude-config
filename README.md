@@ -190,7 +190,7 @@ Testing, retrospective, and workflow automation agents. Slash commands live in `
 
 Slash commands: `/git-retro`, `/jira-retro`, `/write-tests`, `/cleanup` (defined in `commands/`)
 
-### claude-hookify (8 hooks)
+### claude-hookify (7 hooks)
 
 Agent preference hooks that recommend specialized agents based on file and command patterns. Maintained in a **separate repository**: https://github.com/Ahngbeom/claude-hookify
 
@@ -207,8 +207,6 @@ claude plugin install https://github.com/Ahngbeom/claude-hookify
 | `prefer-test-automation` | Test files (.test.ts, .spec.js) | test-automation-engineer |
 | `prefer-jira-retrospective` | Retrospective keywords | jira-retrospective |
 | `prefer-commit-retrospective` | Commit retrospective keywords | commit-retrospective |
-
-`prefer-markdown-writer` was removed with `markdown-document-writer`; delete it from the claude-hookify repo as well.
 
 ---
 
