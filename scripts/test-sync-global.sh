@@ -42,6 +42,16 @@ scripts/sync-global.sh push >/dev/null
 after=$(ls -d "$BAK"/korean-docs-* | wc -l)
 [ "$before" = "$after" ] && ok "F identical push makes no backup" || bad "F identical push made a backup"
 
+# F2. differing pushes within the same second keep separate, flat backups
+rm -rf "$BAK"
+echo one >> "$tmp/$DIR/SKILL.md"; scripts/sync-global.sh push >/dev/null
+echo two >> "$tmp/$DIR/SKILL.md"; scripts/sync-global.sh push >/dev/null
+echo three >> "$tmp/$DIR/SKILL.md"; scripts/sync-global.sh push >/dev/null
+n=$(ls -d "$BAK"/korean-docs-* | wc -l | tr -d ' ')
+[ "$n" = 3 ] && ok "F2 three pushes keep three backups" || bad "F2 expected 3 backups, got $n"
+grep -rlq three "$BAK" && ok "F2 latest edit preserved" || bad "F2 latest edit lost"
+find "$BAK" -mindepth 2 -type d -name korean-docs | grep -q . && bad "F2 nested backup copy" || ok "F2 no nested copies"
+
 # G. check reports a missing directory
 rm -rf "$tmp/$DIR"
 scripts/sync-global.sh check >/dev/null && bad "G missing dir not detected" || ok "G missing dir detected"

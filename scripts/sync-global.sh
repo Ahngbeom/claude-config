@@ -44,8 +44,9 @@ for d in "${DIRS[@]}"; do
     push)
       if [ -d "$dst" ] && ! diff -rq "$src" "$dst" >/dev/null 2>&1; then
         # Not skills/ (loaded as a skill) and not backups/ (cleanup.sh keeps only its newest entry).
-        bak="$CLAUDE_DIR/sync-global-backups/$d-$(date +%Y%m%d-%H%M%S)"
-        mkdir -p "$(dirname "$bak")"; cp -Rp "$dst" "$bak"
+        mkdir -p "$CLAUDE_DIR/sync-global-backups/$(dirname "$d")"
+        bak=$(mktemp -d "$CLAUDE_DIR/sync-global-backups/$d-$(date +%Y%m%d-%H%M%S)-XXXXXX")
+        cp -Rp "$dst/." "$bak/"
       fi
       mkdir -p "$dst"; rsync -a --delete "$src/" "$dst/"; echo "pushed: $dst/" ;;
     pull)
