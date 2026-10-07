@@ -132,7 +132,7 @@ global/skills/korean-docs/
 ### 6.1 `scripts/sync-global.sh`
 
 - `FILES` 배열 옆에 `DIRS=("skills/korean-docs")`를 추가한다.
-- `push`: 대상 디렉터리에 다른 내용이 있으면 디렉터리 전체를 `.bak-<timestamp>`로 백업한 뒤 `rsync -a --delete` 수준의 미러링(`rsync` 없으면 `rm -rf` 후 `cp -Rp`).
+- `push`: 대상 디렉터리에 다른 내용이 있으면 `~/.claude/backups/<dir>-<timestamp>`로 백업한 뒤 `rsync -a --delete`로 미러링. 백업을 `skills/` 안에 두면 같은 이름 스킬이 중복 로드되므로 밖에 둔다. `rsync`는 macOS·CI 기본 설치라 필수 의존성으로 둔다.
 - `pull`: 역방향 미러링. 대상이 없으면 `MISSING`.
 - `check`: `diff -r`로 drift 검출.
 - `DIRS`는 명시 목록이다. `~/.claude/skills/` 전체를 동기화하지 않는다(다른 도구가 설치한 스킬이 섞여 있다).
