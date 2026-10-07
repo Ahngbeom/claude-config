@@ -32,13 +32,14 @@ refresh token이 만료됐을 때 로그인 API가 500 대신 401을 반환하�
 
 ## 먼저 볼 곳
 - `TokenService.refresh()`의 만료 예외 처리: 예외를 401로 바꾸는 지점
+- `AuthController`의 오류 응답 매핑: `TOKEN_EXPIRED` 코드를 추가한 곳
 
 ## 변경 사항
 - 만료된 refresh token 요청에 401과 `TOKEN_EXPIRED` 코드 반환
 - 만료 외 검증 실패는 기존대로 400 유지
 
 ## 검증 방법
-- 단위 테스트 2개 추가: 만료 토큰 → 401, 위조 토큰 → 400
+- 단위 테스트 2개 추가, `./gradlew test` 통과: 만료 토큰 → 401, 위조 토큰 → 400
 - 스테이징에서 만료 토큰으로 `/auth/refresh` 호출, 401 확인
 
 ## 배포 순서·리스크

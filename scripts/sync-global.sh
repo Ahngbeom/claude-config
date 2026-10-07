@@ -43,14 +43,16 @@ for d in "${DIRS[@]}"; do
   case "$mode" in
     push)
       if [ -d "$dst" ] && ! diff -rq "$src" "$dst" >/dev/null 2>&1; then
-        # Backups must stay outside skills/: Claude Code loads every dir there as a skill.
-        bak="$CLAUDE_DIR/backups/$d-$(date +%Y%m%d-%H%M%S)"
+        # Not skills/ (loaded as a skill) and not backups/ (cleanup.sh keeps only its newest entry).
+        bak="$CLAUDE_DIR/sync-global-backups/$d-$(date +%Y%m%d-%H%M%S)"
         mkdir -p "$(dirname "$bak")"; cp -Rp "$dst" "$bak"
       fi
       mkdir -p "$dst"; rsync -a --delete "$src/" "$dst/"; echo "pushed: $dst/" ;;
     pull)
-      if [ -d "$dst" ]; then mkdir -p "$src"; rsync -a --delete "$dst/" "$src/"; echo "pulled: $src/"
-      else echo "MISSING: $dst"; rc=1; fi ;;
+      if [ ! -d "$dst" ]; then echo "MISSING: $dst"; rc=1
+      elif [ -n "$(git status --porcelain -- "$src" 2>/dev/null)" ]; then
+        echo "REFUSED: $src has uncommitted changes; commit or stash them before pull" >&2; rc=1
+      else mkdir -p "$src"; rsync -a --delete "$dst/" "$src/"; echo "pulled: $src/"; fi ;;
     check)
       if [ ! -d "$dst" ]; then echo "MISSING: $dst"; rc=1
       elif ! diff -rq "$src" "$dst" >/dev/null 2>&1; then echo "DRIFT: $dst differs from $src"; rc=1

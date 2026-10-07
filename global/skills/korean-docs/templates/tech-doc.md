@@ -73,12 +73,12 @@
 
 ````markdown
 ## 절차
-1. 현재 배포 버전을 확인한다.
+1. 현재 배포 버전 확인
    ```bash
    kubectl -n booking get deploy booking-api -o jsonpath='{.spec.template.spec.containers[0].image}'
    ```
    기대 출력: `registry.example.com/booking-api:<버전>`
-2. 직전 버전 태그를 배포 기록에서 찾는다.
+2. 배포 기록에서 직전 버전 태그 확인
 ````
 
 ## 빈 섹션
