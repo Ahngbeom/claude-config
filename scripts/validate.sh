@@ -74,10 +74,16 @@ for f in $(find plugins -path '*/commands/*.md' 2>/dev/null); do
   grep -qE '^(name|context):' "$f" && err "command has non-standard field: $f"
 done
 
-# 6. skill frontmatter (codex + any plugin skills)
+# 6. skill frontmatter + name/dir + referenced files (codex + global + any plugin skills)
 for f in $(find . -name SKILL.md -not -path './.git/*'); do
-  [ -n "$(fm "$f" name)" ] || err "skill no name: $f"
+  dir=$(dirname "$f")
+  name=$(fm "$f" name)
+  [ -n "$name" ] || err "skill no name: $f"
+  [ "$name" = "$(basename "$dir")" ] || err "skill name!=dir ($name): $f"
   fm_exists "$f" description || err "skill no description: $f"
+  for ref in $(grep -oE '`(references|templates)/[A-Za-z0-9._-]+\.md`' "$f" | tr -d '`' | sort -u); do
+    [ -f "$dir/$ref" ] || err "skill ref missing ($ref): $f"
+  done
 done
 
 # 7. shared sync drift
@@ -86,6 +92,9 @@ scripts/sync-shared.sh --check || err "shared references drift"
 # 8. script syntax (global/ + scripts/)
 for f in global/cleanup.sh scripts/*.sh; do bash -n "$f" 2>/dev/null || err "bash syntax: $f"; done
 for f in global/hooks/*.py; do python3 -c 'import ast,sys; ast.parse(open(sys.argv[1]).read())' "$f" 2>/dev/null || err "python syntax: $f"; done
+
+# 9. sync-global behavior against a throwaway CLAUDE_DIR
+bash scripts/test-sync-global.sh >/dev/null || err "sync-global regression tests"
 
 [ "$fail" = 0 ] && echo "VALIDATION PASSED" || echo "VALIDATION FAILED"
 exit $fail
