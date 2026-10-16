@@ -19,12 +19,12 @@ scripts/sync-global.sh check >/dev/null && ok "A check in sync" || bad "A check 
 echo "edit" >> "$tmp/$DIR/SKILL.md"
 scripts/sync-global.sh check >/dev/null && bad "B modified file not detected" || ok "B modified file detected"
 
-# C. push backs up the differing dir outside skills/ and outside cleanup.sh's pruned backups/
+# C. push backs up the differing dir outside skills/ and outside Claude Code's backups/
 BAK="$tmp/sync-global-backups/skills"
 scripts/sync-global.sh push >/dev/null
 ls -d "$BAK"/korean-docs-* >/dev/null 2>&1 && ok "C backup under sync-global-backups/" || bad "C no backup under sync-global-backups/skills/"
 [ "$(ls "$tmp/skills")" = "korean-docs" ] && ok "C nothing leaked into skills/" || bad "C extra entries in skills/: $(ls "$tmp/skills" | tr '\n' ' ')"
-[ -e "$tmp/backups" ] && bad "C backup written to cleanup-pruned backups/" || ok "C backups/ untouched"
+[ -e "$tmp/backups" ] && bad "C backup written to Claude Code backups/" || ok "C backups/ untouched"
 
 # D. push removes files that no longer exist in the repo
 touch "$tmp/$DIR/stale.md"

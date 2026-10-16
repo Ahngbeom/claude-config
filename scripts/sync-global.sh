@@ -43,7 +43,7 @@ for d in "${DIRS[@]}"; do
   case "$mode" in
     push)
       if [ -d "$dst" ] && ! diff -rq "$src" "$dst" >/dev/null 2>&1; then
-        # Not skills/ (loaded as a skill) and not backups/ (cleanup.sh keeps only its newest entry).
+        # Not skills/ (loaded as a skill) and not backups/ (Claude Code's own backups).
         mkdir -p "$CLAUDE_DIR/sync-global-backups/$(dirname "$d")"
         bak=$(mktemp -d "$CLAUDE_DIR/sync-global-backups/$d-$(date +%Y%m%d-%H%M%S)-XXXXXX")
         cp -Rp "$dst/." "$bak/"
