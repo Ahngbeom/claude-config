@@ -77,8 +77,6 @@ ahngbeom-claude-config/
 ├── codex/
 │   └── skills/                   # Codex skill source documents
 ├── docs/
-│   ├── COMPACT-STRATEGY.md
-│   ├── PROJECT-SETTINGS.md
 │   ├── settings.example.json
 │   └── superpowers/
 ├── global/                       # Tracked ~/.claude files (see Global Configuration)
@@ -96,7 +94,6 @@ ahngbeom-claude-config/
 │   └── productivity-agents/      # 4 agents + 4 commands
 ├── scripts/
 │   ├── notify.sh
-│   ├── stop-hook.sh
 │   ├── sync-global.sh            # global/ <-> ~/.claude
 │   ├── sync-shared.sh
 │   └── validate.sh               # Local & CI validation

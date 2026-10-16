@@ -1,73 +1,25 @@
 ---
-description: Claude Code 디렉터리 (~/.claude) 정리 및 디스크 공간 확보
-argument-hint: "[auto|deep|status|dry-run]"
+description: Claude Code 디렉터리 (~/.claude) 캐시·로그 정리
+argument-hint: "[run|status|dry-run]"
 allowed-tools:
   - Bash(~/.claude/cleanup.sh *)
-  - Bash(du *)
-  - Bash(ls *)
-  - Read
 ---
 
-# ~/.claude 정리 스킬
+# ~/.claude 정리
 
-`$ARGUMENTS` 인수로 모드를 선택합니다. 인수가 없으면 `status → deep` 순서로 실행합니다.
+`$ARGUMENTS`로 모드를 고른다. 인수가 없으면 `status`와 `dry-run`을 보여 준 뒤, 사용자가 확인하면 `run`을 실행한다.
 
-## 모드
-
-| 모드 | 설명 |
+| 모드 | 동작 |
 |------|------|
-| `status` | 디스크 사용량 및 마지막 정리 정보 표시 |
-| `dry-run` | 삭제 대상 목록만 표시 (실제 삭제 없음) |
-| `auto` | 24시간 주기 체크 후 경량 정리 |
-| `deep` | auto + 비활성 프로젝트 / 고아 캐시 정리 |
+| `status` | `~/.claude`와 주요 하위 디렉터리 크기, 마지막 정리 시각 |
+| `dry-run` | 삭제 대상과 크기만 출력 |
+| `run` | 즉시 정리 |
+| `auto` | SessionStart 훅용. 24시간에 한 번만 조용히 실행 |
 
-## 워크플로우
+실행: `~/.claude/cleanup.sh <mode>`
 
-### 인수 없이 `/cleanup` 호출 시
+정리 대상은 재생성 가능한 캐시뿐이다: `debug/`, `paste-cache/`, `telemetry/`, 최신 3개를 뺀 `shell-snapshots/`, 빈 `session-env/` 하위 디렉터리, 빈 `todos/` 파일, `security_warnings_state_*.json`, `.DS_Store`, 중첩된 `~/.claude/.claude/`.
 
-1. **현재 상태 확인**
-   ```
-   ~/.claude/cleanup.sh status
-   ```
+세션 기록, `file-history/`(/rewind 체크포인트), `tasks/`, `plans/`, `backups/`, `plugins/`, `projects/`는 지우지 않는다. 오래된 세션 기록은 settings의 `cleanupPeriodDays`로 Claude Code가 정리한다.
 
-2. **사용자에게 실행 모드 확인**
-   - `dry-run`: 삭제 대상만 미리 확인
-   - `deep`: 전체 정리 실행
-
-3. **선택한 모드 실행**
-   ```
-   ~/.claude/cleanup.sh <mode>
-   ```
-
-4. **결과 리포트** — 해제된 공간, 삭제 항목 수 요약
-
-### `/cleanup status`
-```
-~/.claude/cleanup.sh status
-```
-현재 디스크 사용량과 마지막 정리 시간을 표시합니다.
-
-### `/cleanup dry-run`
-```
-~/.claude/cleanup.sh dry-run
-```
-삭제될 파일/디렉터리를 미리 보여줍니다. 실제 삭제는 없습니다.
-
-### `/cleanup deep`
-```
-~/.claude/cleanup.sh deep
-```
-전체 정리를 실행합니다. 비활성 프로젝트(디스크에서 삭제된 경로)와 고아 캐시도 정리합니다.
-
-### `/cleanup auto`
-```
-~/.claude/cleanup.sh auto
-```
-24시간 주기 자동 정리를 수동으로 트리거합니다.
-
-## 보호 파일 (절대 삭제 안 됨)
-
-- `settings.json`, `.env`, `CLAUDE.md`, `history.jsonl`
-- `plugins/marketplaces/`, `retrospectives/`
-- `projects/*/memory/` (회고록 및 메모리 파일)
-- `cleanup.sh`, `statusline.sh`, `stats-cache.json`
+결과는 해제 용량과 삭제 항목 수로 요약한다.

@@ -7,7 +7,7 @@ Global Claude Code guidance for `~/.claude`. Repository-local `CLAUDE.md` files 
 - Default to the loop: inspect real state -> plan or clarify -> set test criteria -> implement narrowly -> verify -> summarize.
 - Ground conclusions in files, diffs, logs, commands, and tests. Do not infer repository shape from memory when the workspace can answer it.
 - For feature or bugfix work, prefer test-first or test-near implementation. Add focused regression coverage where behavior could break again.
-- For review requests, use a code-review stance: findings first, ordered by severity, with file/line references and test gaps.
+- For review requests, use a code-review stance: findings first, ordered by severity, with file/line references and test gaps. Do not rewrite the code unless asked, and put bugs, regressions, unsafe assumptions, and missing tests before style.
 - Keep implementations pragmatic. Add abstractions only when they remove real complexity, encode meaningful domain rules, or match an existing local pattern.
 
 ## Comments vs. Other Channels
@@ -69,24 +69,21 @@ The same change reads differently in each channel because each has a different r
 - Before committing, run `git log --oneline -10` and decide whether the change belongs to a commit already on this branch rather than to a new one.
 - If it extends the previous unpushed commit, use `git commit --amend`. If it belongs to an earlier unpushed commit, propose `git commit --fixup=<sha>` and run `git rebase --autosquash <base>` only after explicit approval, never as a side effect of committing.
 - Never rewrite a commit that is already pushed or on a shared branch. Add a new commit instead.
-- Interactive git flows (`git rebase -i`, `git add -i`) do not run in this environment. When history needs work beyond amend or autosquash, state the exact commands and let the human run them.
+- Do not use interactive git flows (`git rebase -i`, `git add -i`). When history needs work beyond amend or autosquash, state the exact commands and let the human run them.
 
 ## Tool Use
 
-- Use `rg` and `rg --files` first for search. Fall back only when unavailable.
-- Run focused tests before broad suites when possible, then broaden verification if the touched surface is shared or risky.
+- Run focused tests before broad suites when possible, then broaden verification if the touched surface is shared or risky. Use browser verification for visible UI behavior. For CI or infrastructure work, validate syntax and config locally and say which remote checks could not be run.
 - Prefer dry-run modes before commands that rewrite notes, generated files, migrations, workspace state, or automation outputs.
 - Check `git status --short` before and after meaningful work in repositories with existing user changes.
 - Prefer project-native tools and documented plugin commands. If slash commands, skills, hooks, or plugin behavior are relevant, inspect the owning plugin documentation before relying on remembered behavior.
-- Bound output at the source: `git log --oneline -N`, `git diff --stat` before a full diff, `| head`, quiet or summary test reporters. Read file ranges (`sed -n`, `rg -n -C`) instead of whole large files.
+- Bound output at the source: `git log --oneline -N`, `git diff --stat` before a full diff, `| head`, quiet or summary test reporters. Read file ranges instead of whole large files.
 - Delegate broad multi-file sweeps to a search subagent and keep only its conclusion. A subagent's reads are discarded; the main thread's are not.
 
 ## Planning & Reviews
 
 - If the task is ambiguous but discoverable, inspect the repo before asking. Ask only for product intent, risk tradeoffs, or missing information that cannot be derived locally.
 - Plans should be implementation-ready: goal, exact scope, behavior changes, edge cases, verification, and assumptions.
-- During implementation, keep updates short and concrete: what is being inspected, what was learned, and what will be changed next.
-- For code reviews, do not rewrite the code unless asked. Identify bugs, regressions, unsafe assumptions, and missing tests before style comments.
 - For receiving review feedback, verify the feedback against the code before accepting it as true.
 
 ## Repository Safety
@@ -95,7 +92,7 @@ The same change reads differently in each channel because each has a different r
 - Keep edits scoped to the requested behavior and the local patterns already present in the repository.
 - Avoid broad formatting or generated churn unless it is part of the requested task or required by verification.
 - Do not expose secrets in Markdown, logs, commits, or final responses. Environment variable names are acceptable; token values are not.
-- Prefer non-destructive git commands. Avoid interactive git flows when a non-interactive equivalent is available.
+- Prefer non-destructive git commands.
 - Stating a principle at the top of a file is not the same as the file honoring it. When you write one, verify the actual column list, body, or output separately.
 
 ## Kubernetes / External Infrastructure Safety
@@ -108,28 +105,16 @@ The same change reads differently in each channel because each has a different r
 
 ## Scope Boundaries
 
-- Repository/workspace-specific rules belong in local `AGENTS.md`, local `CLAUDE.md`, or task-specific skills.
-- Repository-specific automation should be governed by repo-local instruction files and available task-specific skills.
-- Keep global guidance focused on always-applicable collaboration, safety, git, and verification principles.
+- Repository-specific rules and automation belong in local `AGENTS.md`, local `CLAUDE.md`, or task-specific skills. Keep this file to always-applicable collaboration, safety, git, and verification principles.
 - When reviewing or changing AI instruction files, check every rule against three tests: it is executable in this environment, it points at something that actually exists, and it belongs at this level rather than in a repo-local file.
-
-## Verification Defaults
-
-- Backend/Spring work: run the narrow Gradle test or module task first, then broader checks when shared behavior changed.
-- Frontend work: run the focused unit/integration suite or type/build check tied to the touched component. Use browser verification for visible UI behavior.
-- Automation or content-generation work: run the relevant script in dry-run mode when available, then targeted tests for changed behavior.
-- CI or infrastructure work: validate syntax/config locally where possible and document any remote checks that could not be run.
 
 ## Claude Code Notes
 
 - Read active settings, registered marketplaces, and installed plugins from `~/.claude/settings.json`, `~/.claude/plugins/known_marketplaces.json`, and `~/.claude/plugins/installed_plugins.json` rather than from memory.
 - For custom agent routing and plugin-specific workflows, inspect `~/.claude/plugins/marketplaces/ahngbeom-claude-config/README.md`. The global files themselves are tracked in that repo under `global/` and synced with `scripts/sync-global.sh`.
-- For productivity setup scripts, inspect `~/.claude/plugins/marketplaces/ahngbeom-claude-config/plugins/productivity-agents/setup/`.
 - Do not duplicate plugin inventories, credential examples, command catalogs, or generated runtime snapshots in this global guidance file.
 - `MEMORY.md` is loaded into every session. Keep it to one line per memory, and delete a superseded entry in the same edit that adds its replacement.
 
 ## Final Responses
 
 - Keep final answers concise and factual. Mention changed files, verification performed, and risks or skipped checks.
-- Do not paste large command outputs; summarize the important lines.
-- Do not end by asking whether to proceed when the requested work is already complete.
