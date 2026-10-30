@@ -56,10 +56,13 @@ scripts/sync-global.sh pull     # ~/.claude -> global/ after editing the live fi
 |------|--------------|---------|
 | `global/CLAUDE.md` | `~/.claude/CLAUDE.md` | Global instructions applied to every project |
 | `global/hooks/guard-k8s.py` | `~/.claude/hooks/guard-k8s.py` | `PreToolUse` hook that blocks cluster-mutating `kubectl`/`helm`/`argocd` commands |
+| `global/hooks/canonical_pin.py` | `~/.claude/hooks/canonical_pin.py` | git `reference-transaction` hook that keeps each `~/work` canonical checkout on its pinned branch (no detach, switch, rewind, or delete) |
+| `global/hooks/install-canonical-pin.sh` | `~/.claude/hooks/install-canonical-pin.sh` | Links `canonical_pin.py` into every `~/work/*` checkout; `--check` reports status only |
+| `global/hooks/tests/canonical_pin_test.py` | `~/.claude/hooks/tests/canonical_pin_test.py` | Tests for `canonical_pin.py` against real git commands, run by `scripts/validate.sh` |
 | `global/cleanup.sh` | `~/.claude/cleanup.sh` | `~/.claude` housekeeping, run by the `SessionStart` hook and `/cleanup` |
 | `global/skills/korean-docs/` | `~/.claude/skills/korean-docs/` | Korean writing skill: channel templates (MR/PR, Jira, reports, tech docs), style, and review checklist |
 
-Hook registration is not synced; add the entries from `docs/settings.example.json` to `~/.claude/settings.json`.
+Hook registration is not synced; add the entries from `docs/settings.example.json` to `~/.claude/settings.json`. `canonical_pin.py` is a git hook, not a Claude Code hook: run `~/.claude/hooks/install-canonical-pin.sh` after pushing.
 
 ---
 
@@ -82,7 +85,7 @@ ahngbeom-claude-config/
 ├── global/                       # Tracked ~/.claude files (see Global Configuration)
 │   ├── CLAUDE.md
 │   ├── cleanup.sh
-│   ├── hooks/guard-k8s.py
+│   ├── hooks/                    # guard-k8s.py, canonical_pin.py + installer and tests
 │   └── skills/korean-docs/       # Global Korean writing skill
 ├── plugins/
 │   ├── backend-agents/           # 5 agents
