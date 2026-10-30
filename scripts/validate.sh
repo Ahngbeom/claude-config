@@ -94,7 +94,7 @@ for f in global/cleanup.sh global/hooks/*.sh scripts/*.sh; do bash -n "$f" 2>/de
 for f in global/hooks/*.py; do python3 -c 'import ast,sys; ast.parse(open(sys.argv[1]).read())' "$f" 2>/dev/null || err "python syntax: $f"; done
 
 # 9. hook behavior against real git repositories
-python3 -B global/hooks/tests/canonical_pin_test.py >/dev/null 2>&1 || err "canonical_pin hook tests"
+out=$(python3 -B global/hooks/tests/canonical_pin_test.py 2>&1) || { echo "$out" >&2; err "canonical_pin hook tests"; }
 
 # 10. sync-global behavior against a throwaway CLAUDE_DIR
 bash scripts/test-sync-global.sh >/dev/null || err "sync-global regression tests"

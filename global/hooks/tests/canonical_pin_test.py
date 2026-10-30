@@ -6,6 +6,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 HOOKS = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HOOKS))
@@ -34,16 +35,22 @@ class ReferenceTransactionHookTest(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         root = Path(self.tmp.name)
+        home = mock.patch.dict(ENV, HOME=str(root))
+        home.start()
+        self.addCleanup(home.stop)
         ok("init", "-q", "--bare", "-b", "develop", "origin.git", cwd=root)
         seed = root / "seed"
         ok("clone", "-q", "origin.git", "seed", cwd=root)
         ok("commit", "-q", "--allow-empty", "-m", "a", cwd=seed)
         ok("push", "-q", "origin", "develop", "develop:feat/r", cwd=seed)
-        ok("clone", "-q", "origin.git", "repo", cwd=root)
-        self.repo = root / "repo"
+        ok("clone", "-q", "origin.git", "work/repo", cwd=root)
+        ok("clone", "-q", "origin.git", "other", cwd=root)
+        self.repo = root / "work/repo"
+        self.other = root / "other"
         self.tree = root / "tree"
-        hook = Path(ok("rev-parse", "--path-format=absolute", "--git-path", "hooks", cwd=self.repo)) / "reference-transaction"
-        hook.symlink_to(HOOKS / "canonical_pin.py")
+        for top in (self.repo, self.other):
+            hook = Path(ok("rev-parse", "--path-format=absolute", "--git-path", "hooks", cwd=top)) / "reference-transaction"
+            hook.symlink_to(HOOKS / "canonical_pin.py")
         ok("commit", "-q", "--allow-empty", "-m", "b", cwd=seed)
         ok("push", "-q", "origin", "develop", cwd=seed)
 
@@ -60,6 +67,12 @@ class ReferenceTransactionHookTest(unittest.TestCase):
         ok("pull", "-q", "--ff-only", cwd=self.repo)
         ok("commit", "-q", "--allow-empty", "-m", "c", cwd=self.repo)
         ok("stash", "list", cwd=self.repo)
+
+    def test_repo_outside_work_is_not_guarded(self):
+        ok("pull", "-q", "--ff-only", cwd=self.other)
+        ok("reset", "-q", "--hard", "HEAD~1", cwd=self.other)
+        ok("checkout", "-q", "--detach", cwd=self.other)
+        ok("update-ref", "-d", "refs/heads/develop", cwd=self.other)
 
     def test_pack_refs_is_allowed(self):
         ok("pull", "-q", "--ff-only", cwd=self.repo)

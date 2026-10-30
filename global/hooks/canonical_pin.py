@@ -3,7 +3,8 @@
 
 고정 브랜치는 `origin/HEAD`, 원격이 없으면 `main`·`master`다.
 install-canonical-pin.sh가 이 파일을 원본마다 `reference-transaction` 훅으로 링크한다.
-훅은 prepared 단계에서 아래 갱신이 있으면 트랜잭션 전체를 거부한다.
+훅은 `~/work/<이름>/.git`을 쓰는 저장소(원본과 그 worktree)만 검사한다. 공유 `core.hooksPath`에
+링크돼도 다른 저장소는 통과한다. prepared 단계에서 아래 갱신이 있으면 트랜잭션 전체를 거부한다.
 
 - 원본(main worktree)의 HEAD를 고정 브랜치 밖으로 옮기는 갱신: detach, 다른 브랜치로의 전환
 - 고정 브랜치의 삭제와 fast-forward가 아닌 이동(`reset --hard` 되감기, `branch -f`).
@@ -24,6 +25,14 @@ ZERO = re.compile(r"^0+$")
 def git_out(top, *args):
     r = subprocess.run(["git", "-C", str(top), *args], capture_output=True, text=True, timeout=5)
     return r.stdout.strip() if r.returncode == 0 else None
+
+
+def guarded(common_dir):
+    if not common_dir:
+        return False
+    git_dir = os.path.realpath(common_dir)
+    work = os.path.realpath(os.path.join(os.path.expanduser("~"), "work"))
+    return os.path.basename(git_dir) == ".git" and os.path.dirname(os.path.dirname(git_dir)) == work
 
 
 def has_origin(top):
@@ -95,9 +104,11 @@ def main():
     updates = [tuple(line.split()) for line in stdin.splitlines() if len(line.split()) == 3]
     top = os.getcwd()
     common_dir = git_out(top, "rev-parse", "--path-format=absolute", "--git-common-dir")
+    if not guarded(common_dir):
+        return
     # git 2.46+의 `worktree add`는 새 worktree의 HEAD도 원본 프로세스에서 `HEAD`로 넘긴다.
     # prepared 단계에는 갱신 대상 ref가 잠겨 있으므로 원본 HEAD의 잠금 파일로 구분한다(files 백엔드)
-    main_head = common_dir is not None and os.path.exists(os.path.join(common_dir, "HEAD.lock"))
+    main_head = os.path.exists(os.path.join(common_dir, "HEAD.lock"))
     found = violations(updates, top, main_head)
     if not found:
         return
