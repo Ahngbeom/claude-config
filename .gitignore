@@ -10,6 +10,7 @@ plugins/known_marketplaces.json
 
 # 캐시 및 히스토리
 cache/
+__pycache__/
 debug/
 file-history/
 history.jsonl

@@ -13,6 +13,8 @@ FILES=(
   "hooks/canonical_pin.py"
   "hooks/install-canonical-pin.sh"
   "hooks/tests/canonical_pin_test.py"
+  "hooks/guard-work-checkout.py"
+  "hooks/tests/guard_work_checkout_test.py"
   "cleanup.sh"
 )
 DIRS=(
