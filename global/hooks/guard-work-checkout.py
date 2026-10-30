@@ -6,7 +6,9 @@
 원본의 고정 브랜치는 `origin/HEAD`, 원격이 없으면 `main`·`master`다.
 
 - Edit/Write/NotebookEdit: 대상 경로가 원본 checkout 안이면 차단
-- Bash: `cd`와 `git -C`를 따라가며 원본 checkout에서 실행되는 git 변경 하위명령을 차단.
+- 경로는 심볼릭 링크를 푼 실제 위치로 판별
+- Bash: `cd`·`git -C`·`--git-dir`·`--work-tree`·`GIT_DIR`·`GIT_WORK_TREE`를 따라가며
+  원본 checkout을 대상으로 하는 git 변경 하위명령을 차단.
   셸 리다이렉트·`sed -i` 같은 일반 쓰기는 잡지 않는다
 - 예외(추적 파일이 깨끗할 때): 고정 브랜치에서의 `git pull --ff-only`·`git merge --ff-only`
   동기화, 고정 브랜치로 되돌리는 `git switch`·`git checkout`.
@@ -33,7 +35,9 @@ MUTATING_GIT = {
 }
 READ_ONLY_SUBACTIONS = {"stash": {"list", "show"}, "submodule": {"status", "summary"}}
 # git 전역 옵션 중 값을 다음 토큰으로 받는 것
-GIT_OPTS_WITH_VALUE = {"-c", "--git-dir", "--work-tree", "--namespace", "--exec-path"}
+GIT_OPTS_WITH_VALUE = {"-c", "--namespace", "--exec-path"}
+GIT_TARGET_OPTS = {"--git-dir", "--work-tree"}
+GIT_TARGET_ENV = {"GIT_DIR", "GIT_WORK_TREE"}
 QUIET_FLAGS = {"-q", "--quiet"}
 BRANCH_MOVE_FLAGS = {"-", "-b", "-B", "-c", "-C", "--orphan", "--detach", "-d"}
 
@@ -50,30 +54,43 @@ def resolve(path, base):
 
 
 def main_checkout_of(path):
+    work = Path(os.path.realpath(WORK))
     try:
-        rel = path.relative_to(WORK)
+        rel = Path(os.path.realpath(path)).relative_to(work)
     except ValueError:
         return None
     if not rel.parts or rel.parts[0].startswith("."):
         return None
-    top = WORK / rel.parts[0]
+    top = work / rel.parts[0]
     return top if (top / ".git").is_dir() else None
 
 
 def git_mutation(tokens, cwd):
-    """git 변경 하위명령이면 (하위명령, 실행 디렉터리, 인자, 전역 옵션 사용 여부), 아니면 None."""
+    """git 변경 하위명령이면 (하위명령, 대상 경로 목록, 인자, 전역 옵션 사용 여부), 아니면 None.
+
+    대상 경로는 실행 디렉터리와 `--git-dir`·`--work-tree`·`GIT_DIR`·`GIT_WORK_TREE`가 가리키는 곳이다.
+    """
     i = 0
+    targets = []
     while i < len(tokens) and ENV_ASSIGN.match(tokens[i]):
+        name, _, value = tokens[i].partition("=")
+        if name in GIT_TARGET_ENV:
+            targets.append(value)
         i += 1
     if i >= len(tokens) or os.path.basename(tokens[i]) != "git":
         return None
     i += 1
     run_dir = cwd
-    overridden = False
+    overridden = bool(targets)
     while i < len(tokens) and tokens[i].startswith("-"):
+        opt, eq, value = tokens[i].partition("=")
         if tokens[i] == "-C" and i + 1 < len(tokens):
             run_dir = resolve(tokens[i + 1], run_dir)
             i += 2
+        elif opt in GIT_TARGET_OPTS and (eq or i + 1 < len(tokens)):
+            targets.append(value if eq else tokens[i + 1])
+            overridden = True
+            i += 1 if eq else 2
         elif tokens[i] in GIT_OPTS_WITH_VALUE:
             overridden = True
             i += 2
@@ -86,7 +103,8 @@ def git_mutation(tokens, cwd):
     action = tokens[i + 1] if i + 1 < len(tokens) else None
     if action in READ_ONLY_SUBACTIONS.get(sub, ()):
         return None
-    return sub, run_dir, tokens[i + 1:], overridden
+    # git은 상대 경로의 --git-dir·GIT_DIR을 -C로 옮긴 디렉터리 기준으로 푼다
+    return sub, [run_dir] + [resolve(t, run_dir) for t in targets], tokens[i + 1:], overridden
 
 
 def split_args(args):
@@ -164,8 +182,8 @@ def bash_block_reason(command, cwd, override=False):
         hit = git_mutation(tokens, run_dir)
         if not hit:
             continue
-        sub, git_dir, args, overridden = hit
-        top = main_checkout_of(git_dir)
+        sub, paths, args, overridden = hit
+        top = next(filter(None, map(main_checkout_of, paths)), None)
         if not top:
             continue
         if override:

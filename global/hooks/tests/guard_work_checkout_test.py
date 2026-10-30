@@ -74,6 +74,30 @@ class GuardWorkCheckoutTest(unittest.TestCase):
         self.assertIsNotNone(self.bash(f"cd {self.repo} && git checkout main", cwd=self.tree))
         self.assertIsNotNone(self.bash(f"git status; git -C {self.repo}/sub add a", cwd=self.tree))
 
+    def test_symlink_into_main_checkout_is_blocked(self):
+        link = Path(self.tmp.name) / "repo-link"
+        link.symlink_to(self.repo)
+        self.assertIsNotNone(self.edit(f"{link}/a.py", cwd=self.tree))
+        self.assertIsNotNone(self.bash(f"cd {link} && git commit -m x", cwd=self.tree))
+        self.assertIsNotNone(self.bash(f"git -C {link} add a", cwd=self.tree))
+
+    def test_git_dir_and_work_tree_target_main_checkout(self):
+        git_dir = f"{self.repo}/.git"
+        outside = Path(self.tmp.name) / "outside"
+        for cmd in [
+            f"git --git-dir={git_dir} --work-tree={self.repo} add a",
+            f"git --git-dir {git_dir} commit -m x",
+            f"git --git-dir={git_dir} --work-tree={outside} add a",
+            f"git --work-tree {self.repo} add a",
+            f"cd {self.work} && git --git-dir=repo/.git commit -m x",
+            f"GIT_DIR={git_dir} git commit -m x",
+            f"GIT_WORK_TREE={self.repo} git add a",
+        ]:
+            with self.subTest(cmd=cmd):
+                self.assertIsNotNone(self.bash(cmd, cwd=self.tree))
+        self.assertIsNone(self.bash(f"git --git-dir={outside}/.git --work-tree={outside} commit -m x", cwd=self.tree))
+        self.assertIsNone(self.bash(f"GIT_DIR={outside}/.git git commit -m x", cwd=self.tree))
+
     def test_read_only_and_worktree_git_is_allowed_in_main_checkout(self):
         for cmd in [
             "git status --short",
