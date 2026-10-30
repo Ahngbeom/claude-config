@@ -90,10 +90,13 @@ done
 scripts/sync-shared.sh --check || err "shared references drift"
 
 # 8. script syntax (global/ + scripts/)
-for f in global/cleanup.sh scripts/*.sh; do bash -n "$f" 2>/dev/null || err "bash syntax: $f"; done
+for f in global/cleanup.sh global/hooks/*.sh scripts/*.sh; do bash -n "$f" 2>/dev/null || err "bash syntax: $f"; done
 for f in global/hooks/*.py; do python3 -c 'import ast,sys; ast.parse(open(sys.argv[1]).read())' "$f" 2>/dev/null || err "python syntax: $f"; done
 
-# 9. sync-global behavior against a throwaway CLAUDE_DIR
+# 9. hook behavior against real git repositories
+python3 -B global/hooks/tests/canonical_pin_test.py >/dev/null 2>&1 || err "canonical_pin hook tests"
+
+# 10. sync-global behavior against a throwaway CLAUDE_DIR
 bash scripts/test-sync-global.sh >/dev/null || err "sync-global regression tests"
 
 [ "$fail" = 0 ] && echo "VALIDATION PASSED" || echo "VALIDATION FAILED"
