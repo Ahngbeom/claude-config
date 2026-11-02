@@ -158,6 +158,12 @@ class GuardWorkCheckoutTest(unittest.TestCase):
             with self.subTest(cmd=cmd):
                 self.assertIsNotNone(self.bash(cmd, cwd=self.tree))
 
+    def test_cd_inside_subshell_does_not_leak_out(self):
+        for cmd in ["(cd /tmp); git commit -m x", "echo $(cd /tmp); git reset --hard", "(cd /tmp && (cd /); true); git add ."]:
+            with self.subTest(cmd=cmd):
+                self.assertIsNotNone(self.bash(cmd))
+        self.assertIsNone(self.bash(f"(cd {self.tree} && git commit -m x)"))
+
     def test_shell_wrappers_without_main_checkout_git_are_allowed(self):
         for cmd in [
             "bash -c 'echo git commit'",
@@ -276,6 +282,7 @@ class FastForwardUpdateTest(RepoFixture):
             with self.subTest(cmd=cmd):
                 self.assertIsNone(self.bash(cmd, self.work if cmd.startswith("git -C") else self.remote))
         self.assertIsNotNone(self.bash("git pull --ff-only origin feat/r 2>&1", self.remote))
+        self.assertIsNotNone(self.bash("git pull --ff-only origin 123 > /tmp/pull.log", self.remote))
 
     def test_ff_pull_needs_pinned_branch_and_clean_tree(self):
         git("checkout", "-q", "feat/r", cwd=self.remote)

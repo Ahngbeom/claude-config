@@ -50,6 +50,8 @@ PREFIX_CMDS = {"env", "command", "exec", "nohup", "builtin", "time"}
 ENV_OPTS_WITH_VALUE = {"-u", "--unset", "-C", "--chdir", "-S", "--split-string"}
 SHELL_OPTS_WITH_VALUE = {"-o", "+o", "-O", "+O", "--rcfile", "--init-file"}
 RESERVED = {"{", "}", "!", "if", "then", "else", "elif", "do", "while", "until"}
+# `2>&1`의 2처럼 리다이렉트에 붙은 fd 번호. shlex는 붙어 있는지 띄어 있는지를 잃으므로 먼저 지운다
+FD_PREFIX = re.compile(r"(?<![^\s;&|()])\d+(?=[<>])")
 
 
 def resolve(path, base):
@@ -171,8 +173,11 @@ def sets_pin_escape(tokens):
 
 
 def segments(command):
-    """명령줄을 따옴표를 지키며 단순 명령마다 토큰 목록으로 나눈다. 리다이렉트와 그 대상은 버린다."""
-    lex = shlex.shlex(command.replace("\n", ";"), posix=True, punctuation_chars=True)
+    """명령줄을 따옴표를 지키며 단순 명령마다 토큰 목록으로 나눈다. 리다이렉트와 그 대상은 버린다.
+
+    서브셸·명령 치환의 `(`와 `)`는 토큰 목록 사이에 그 글자 그대로 끼워 돌려준다.
+    """
+    lex = shlex.shlex(FD_PREFIX.sub("", command.replace("\n", ";")), posix=True, punctuation_chars=True)
     lex.whitespace_split, lex.commenters = True, ""
     try:
         words = list(lex)
@@ -189,12 +194,11 @@ def segments(command):
             skip = False
         elif w and set(w) <= set("();<>|&"):
             if set(w) & set("<>"):
-                if seg and seg[-1].isdigit():  # 2>&1 의 2
-                    seg.pop()
                 skip = True
             else:
                 yield seg
                 seg = []
+                yield from (c for c in w if c in "()")
         else:
             seg.append(w)
     yield seg
@@ -246,8 +250,14 @@ def unwrap(tokens):
 
 
 def bash_block_reason(command, cwd, override=False, depth=0):
-    run_dir = Path(cwd)
+    run_dir, outer = Path(cwd), []
     for tokens in segments(command or ""):
+        if tokens == "(":
+            outer.append(run_dir)
+            continue
+        if tokens == ")":
+            run_dir = outer.pop() if outer else run_dir
+            continue
         if not tokens:
             continue
         if sets_pin_escape(tokens):
