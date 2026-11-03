@@ -111,7 +111,7 @@ The same change reads differently in each channel because each has a different r
 ## Claude Code Notes
 
 - Read active settings, registered marketplaces, and installed plugins from `~/.claude/settings.json`, `~/.claude/plugins/known_marketplaces.json`, and `~/.claude/plugins/installed_plugins.json` rather than from memory.
-- For custom agent routing and plugin-specific workflows, inspect `~/.claude/plugins/marketplaces/ahngbeom-claude-config/README.md`. The global files themselves are tracked in that repo under `global/` and synced with `scripts/sync-global.sh`.
+- For custom agent routing and plugin-specific workflows, inspect `README.md` of the `ahngbeom-claude-config` repo: `~/.claude/plugins/marketplaces/ahngbeom-claude-config/` where it is installed as a marketplace, otherwise the clone at `~/ahngbeom/claude-config/`. The global files themselves are tracked in that repo under `global/` and synced with `scripts/sync-global.sh`.
 - Do not duplicate plugin inventories, credential examples, command catalogs, or generated runtime snapshots in this global guidance file.
 - `MEMORY.md` is loaded into every session. Keep it to one line per memory, and delete a superseded entry in the same edit that adds its replacement.
 
