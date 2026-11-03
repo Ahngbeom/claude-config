@@ -137,6 +137,44 @@ class GuardWorkCheckoutTest(unittest.TestCase):
             with self.subTest(cmd=cmd):
                 self.assertIsNone(guard.find_block_reason("Bash", {"command": cmd}, "/tmp"))
 
+    def test_git_inside_shell_wrappers_and_compound_commands_is_blocked(self):
+        r = self.repo
+        for cmd in [
+            f"bash -c 'git -C {r} commit -m x'",
+            f"sh -c 'cd {r}; git commit -m x'",
+            f'bash -lc "cd {r} && git add ."',
+            f"bash -o pipefail -c 'git -C {r} reset --hard'",
+            f"eval git -C {r} commit -m x",
+            f"env -C {r} git commit -m x",
+            f"env -S 'git -C {r} commit -m x'",
+            f"env A=1 command git -C {r} commit -m x",
+            f"nohup git -C {r} stash",
+            f"(cd {r} && git commit -m x)",
+            f"true & git -C {r} commit -m x",
+            f"echo $(git -C {r} commit -m x)",
+            f"if true; then git -C {r} commit -m x; fi",
+            f"bash -c \"sh -c 'git -C {r} commit -m x'\"",
+        ]:
+            with self.subTest(cmd=cmd):
+                self.assertIsNotNone(self.bash(cmd, cwd=self.tree))
+
+    def test_cd_inside_subshell_does_not_leak_out(self):
+        for cmd in ["(cd /tmp); git commit -m x", "echo $(cd /tmp); git reset --hard", "(cd /tmp && (cd /); true); git add ."]:
+            with self.subTest(cmd=cmd):
+                self.assertIsNotNone(self.bash(cmd))
+        self.assertIsNone(self.bash(f"(cd {self.tree} && git commit -m x)"))
+
+    def test_shell_wrappers_without_main_checkout_git_are_allowed(self):
+        for cmd in [
+            "bash -c 'echo git commit'",
+            f"bash -c 'git -C {self.tree} commit -m x'",
+            "sh -c 'git status --short'",
+            "bash script.sh",
+            "git log --format='%h;%s' -3",
+        ]:
+            with self.subTest(cmd=cmd):
+                self.assertIsNone(self.bash(cmd))
+
     def test_unparseable_or_non_git_command_is_allowed(self):
         self.assertIsNone(self.bash("echo 'unterminated"))
         self.assertIsNone(self.bash("grep -r commit ."))
@@ -233,6 +271,18 @@ class FastForwardUpdateTest(RepoFixture):
             with self.subTest(cmd=cmd):
                 self.assertIsNone(self.bash(cmd, self.remote))
         self.assertIsNone(self.bash(f"git -C {self.remote} pull --ff-only", self.work))
+
+    def test_redirects_do_not_count_as_refs(self):
+        for cmd in [
+            f"git -C {self.remote} pull --ff-only 2>&1 | tail -3",
+            "git pull --ff-only >/dev/null 2>&1",
+            "git merge --ff-only origin/develop 2> err.log",
+            "git pull --ff-only &> /tmp/pull.log",
+        ]:
+            with self.subTest(cmd=cmd):
+                self.assertIsNone(self.bash(cmd, self.work if cmd.startswith("git -C") else self.remote))
+        self.assertIsNotNone(self.bash("git pull --ff-only origin feat/r 2>&1", self.remote))
+        self.assertIsNotNone(self.bash("git pull --ff-only origin 123 > /tmp/pull.log", self.remote))
 
     def test_ff_pull_needs_pinned_branch_and_clean_tree(self):
         git("checkout", "-q", "feat/r", cwd=self.remote)

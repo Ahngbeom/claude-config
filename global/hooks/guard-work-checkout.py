@@ -8,7 +8,8 @@
 - Edit/Write/NotebookEdit: 대상 경로가 원본 checkout 안이면 차단
 - 경로는 심볼릭 링크를 푼 실제 위치로 판별
 - Bash: `cd`·`git -C`·`--git-dir`·`--work-tree`·`GIT_DIR`·`GIT_WORK_TREE`를 따라가며
-  원본 checkout을 대상으로 하는 git 변경 하위명령을 차단.
+  원본 checkout을 대상으로 하는 git 변경 하위명령을 차단. `bash -c`·`sh -c`·`eval`과
+  `env`·`command`·`exec` 같은 앞붙이 안쪽도 같은 규칙으로 본다.
   셸 리다이렉트·`sed -i` 같은 일반 쓰기는 잡지 않는다
 - 예외(추적 파일이 깨끗할 때): 고정 브랜치에서의 `git pull --ff-only`·`git merge --ff-only`
   동기화, 고정 브랜치로 되돌리는 `git switch`·`git checkout`.
@@ -41,9 +42,16 @@ GIT_TARGET_ENV = {"GIT_DIR", "GIT_WORK_TREE"}
 QUIET_FLAGS = {"-q", "--quiet"}
 BRANCH_MOVE_FLAGS = {"-", "-b", "-B", "-c", "-C", "--orphan", "--detach", "-d"}
 
-SEGMENT_SPLIT = re.compile(r"&&|\|\||[;|\n]")
+SEGMENT_SPLIT = re.compile(r"&&|\|\||[;|&\n]")
 ENV_ASSIGN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*=")
 ENV_SETTERS = {"export", "env", "declare", "readonly", "-x"}
+SHELLS = {"bash", "sh", "zsh", "dash", "ksh"}
+PREFIX_CMDS = {"env", "command", "exec", "nohup", "builtin", "time"}
+ENV_OPTS_WITH_VALUE = {"-u", "--unset", "-C", "--chdir", "-S", "--split-string"}
+SHELL_OPTS_WITH_VALUE = {"-o", "+o", "-O", "+O", "--rcfile", "--init-file"}
+RESERVED = {"{", "}", "!", "if", "then", "else", "elif", "do", "while", "until"}
+# `2>&1`의 2처럼 리다이렉트에 붙은 fd 번호. shlex는 붙어 있는지 띄어 있는지를 잃으므로 먼저 지운다
+FD_PREFIX = re.compile(r"(?<![^\s;&|()])\d+(?=[<>])")
 
 
 def resolve(path, base):
@@ -164,18 +172,107 @@ def sets_pin_escape(tokens):
     return False
 
 
-def bash_block_reason(command, cwd, override=False):
-    run_dir = Path(cwd)
-    for segment in SEGMENT_SPLIT.split(command or ""):
-        try:
-            tokens = shlex.split(segment)
-        except ValueError:
-            tokens = segment.split()
+def segments(command):
+    """명령줄을 따옴표를 지키며 단순 명령마다 토큰 목록으로 나눈다. 리다이렉트와 그 대상은 버린다.
+
+    서브셸·명령 치환의 `(`와 `)`는 토큰 목록 사이에 그 글자 그대로 끼워 돌려준다.
+    """
+    lex = shlex.shlex(FD_PREFIX.sub("", command.replace("\n", ";")), posix=True, punctuation_chars=True)
+    lex.whitespace_split, lex.commenters = True, ""
+    try:
+        words = list(lex)
+    except ValueError:  # 따옴표가 닫히지 않은 명령은 구분자로 자른 조각마다 나눈다
+        for seg in SEGMENT_SPLIT.split(command):
+            try:
+                yield shlex.split(seg)
+            except ValueError:
+                yield seg.split()
+        return
+    seg, skip = [], False
+    for w in words:
+        if skip:
+            skip = False
+        elif w and set(w) <= set("();<>|&"):
+            if set(w) & set("<>"):
+                skip = True
+            else:
+                yield seg
+                seg = []
+                yield from (c for c in w if c in "()")
+        else:
+            seg.append(w)
+    yield seg
+
+
+def unwrap(tokens):
+    """앞붙이·예약어를 걷어 낸 토큰과, 따로 검사할 스크립트(없으면 None).
+
+    스크립트는 `bash -c`·`eval`·`env -S`의 인자다. `env -C <디렉터리>`는 그 디렉터리로 `cd`한 뒤의 나머지 명령으로 본다.
+    """
+    assigns = []
+    while tokens:
+        t = tokens[0]
+        if t in RESERVED:
+            tokens = tokens[1:]
+        elif ENV_ASSIGN.match(t):
+            assigns.append(t)
+            tokens = tokens[1:]
+        elif os.path.basename(t) in PREFIX_CMDS:
+            env = os.path.basename(t) == "env"
+            tokens = tokens[1:]
+            while tokens and tokens[0].startswith("-"):
+                opt, eq, val = tokens[0].partition("=")
+                n = 2 if env and opt in ENV_OPTS_WITH_VALUE and not eq else 1
+                if n == 2:
+                    val = tokens[1] if len(tokens) > 1 else ""
+                tokens = tokens[n:]
+                if env and opt in ("-S", "--split-string"):
+                    return [], " ".join([*assigns, val, *map(shlex.quote, tokens)])
+                if env and opt in ("-C", "--chdir"):
+                    return [], f"cd {shlex.quote(val)}; " + shlex.join(assigns + tokens)
+        else:
+            break
+    if not tokens:
+        return assigns, None
+    name = os.path.basename(tokens[0])
+    if name == "eval":
+        return assigns + tokens, " ".join(tokens[1:])
+    if name in SHELLS:
+        i = 1
+        while i < len(tokens) and tokens[i][:1] in ("-", "+") and tokens[i] != "--":
+            if tokens[i] in SHELL_OPTS_WITH_VALUE:
+                i += 2
+                continue
+            if not tokens[i].startswith("--") and "c" in tokens[i][1:]:
+                return assigns + tokens, tokens[i + 1] if i + 1 < len(tokens) else ""
+            i += 1
+    return assigns + tokens, None
+
+
+def bash_block_reason(command, cwd, override=False, depth=0):
+    run_dir, outer = Path(cwd), []
+    for tokens in segments(command or ""):
+        if tokens == "(":
+            outer.append(run_dir)
+            continue
+        if tokens == ")":
+            run_dir = outer.pop() if outer else run_dir
+            continue
         if not tokens:
             continue
         if sets_pin_escape(tokens):
             return f"`{ALLOW_ENV}`로 원본 고정 브랜치 보호를 우회하는 명령"
-        if tokens[0] == "cd":
+        tokens, script = unwrap(tokens)
+        if script is not None:
+            if depth >= 5:
+                return "셸 래퍼가 너무 깊이 겹친 명령"
+            reason = bash_block_reason(script, run_dir, override, depth + 1)
+            if reason:
+                return reason
+            continue
+        if not tokens:
+            continue
+        if tokens[0] in ("cd", "pushd"):
             if len(tokens) > 1 and tokens[1] != "-":
                 run_dir = resolve(tokens[1], run_dir)
             continue
