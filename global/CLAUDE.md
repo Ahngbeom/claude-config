@@ -79,6 +79,7 @@ The same change reads differently in each channel because each has a different r
 - Prefer project-native tools and documented plugin commands. If slash commands, skills, hooks, or plugin behavior are relevant, inspect the owning plugin documentation before relying on remembered behavior.
 - Bound output at the source: `git log --oneline -N`, `git diff --stat` before a full diff, `| head`, quiet or summary test reporters. Read file ranges instead of whole large files.
 - Delegate broad multi-file sweeps to a search subagent and keep only its conclusion. A subagent's reads are discarded; the main thread's are not.
+- In `Workflow` scripts, pass `model: 'sonnet'` to agents that only read, search, or extract. Keep agents that verify, judge, synthesize, or write code on the session model.
 
 ## Planning & Reviews
 
