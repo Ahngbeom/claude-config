@@ -19,7 +19,8 @@ Respond in Korean (한국어) unless explicitly requested otherwise.
 
 ## Conventions
 
-- Agent file: `name` equals the filename; `description` is a YAML block scalar carrying the `<example>` triggers; `model` is haiku, sonnet, or opus; `color` is red, blue, green, yellow, purple, orange, pink, or cyan. No `tools` restriction.
+- Agent file: `name` equals the filename; `description` is a YAML block scalar carrying the `<example>` triggers; `model` is haiku, sonnet, opus, fable, inherit, or a full `claude-*` ID; `color` is red, blue, green, yellow, purple, orange, pink, or cyan. Agents that only read or review set `disallowedTools: Write, Edit, NotebookEdit`; others leave tools unrestricted. Avoid a `tools` allowlist: background runs drop listed tools without an error. Plugin agents ignore `hooks`, `mcpServers`, `permissionMode`, and `initialPrompt`, so `validate.sh` rejects those and any field outside the subagent frontmatter reference.
+- Agents run as subagents: no `AskUserQuestion`, the caller's working directory, and the plugin-scoped name. Take inputs from the delegation prompt and return what is missing instead of asking, reference bundled files as `${CLAUDE_PLUGIN_ROOT}/<path>`, and call another agent with `subagent_type="<plugin>:<name>"`.
 - Command file: `description` is required, `argument-hint` and `allowed-tools` are optional. No `name` or `context` field; the filename is the command name.
 - Skill vs command: user-invoked `/name` goes in `commands/`, model-invoked goes in `skills/<name>/SKILL.md`. Plugins ship commands only; model-invoked skills live under `global/skills/`.
 - Plugin metadata: `version` is semver and `license` matches the root `LICENSE`.
