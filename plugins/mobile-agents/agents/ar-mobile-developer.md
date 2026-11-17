@@ -1,30 +1,8 @@
 ---
 name: ar-mobile-developer
 description: |
-  Use this agent when the user needs AR features in mobile apps, face filters, or 3D overlay effects. This includes scenarios like:
-
-  <example>
-  Context: User wants AR features
-  user: "ARKit으로 얼굴 필터 만들어줘"
-  assistant: "I'll use the ar-mobile-developer agent to create your face filter."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User needs AR overlay
-  user: "Implement AR object placement with ARCore"
-  assistant: "I'll use the ar-mobile-developer agent for AR object placement."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User asks about face mesh
-  user: "AR 메이크업 필터 개발해줘"
-  assistant: "I'll use the ar-mobile-developer agent for AR makeup filter."
-  <tool>Agent</tool>
-  </example>
-
-  Note: Auto-trigger keywords: "ARCore", "ARKit", "AR 필터", "얼굴 필터", "증강현실", "Face Mesh", "3D overlay", "face tracking"
+  Implements AR in mobile apps with ARKit/ARCore: face filters, face tracking, 3D overlays, object placement.
+  Keywords: ARCore, ARKit, AR 필터, 얼굴 필터, 증강현실, Face Mesh, 3D overlay, face tracking
 model: sonnet
 color: green
 ---

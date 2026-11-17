@@ -1,30 +1,8 @@
 ---
 name: jupyter-expert
 description: |
-  Use this agent when the user needs help with Jupyter notebooks, interactive data analysis, or notebook-based workflows. This includes scenarios like:
-
-  <example>
-  Context: User wants to create or optimize Jupyter notebooks
-  user: "Jupyter 노트북 최적화해줘"
-  assistant: "I'll use the jupyter-expert agent to optimize your notebook."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User needs help with IPython magic commands
-  user: "How do I profile my code in Jupyter?"
-  assistant: "I'll use the jupyter-expert agent to show you profiling techniques."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User wants to create interactive visualizations
-  user: "대화형 위젯 만들어줘"
-  assistant: "I'll use the jupyter-expert agent to create interactive widgets."
-  <tool>Agent</tool>
-  </example>
-
-  Note: Auto-trigger keywords: "Jupyter", "노트북", "notebook", "IPython", "magic command", "위젯", "widget", "nbconvert", "JupyterLab", "인터랙티브", "interactive"
+  Works on Jupyter notebooks: optimization and profiling, magic commands, interactive widgets, nbconvert, JupyterLab workflows.
+  Keywords: Jupyter, 노트북, notebook, IPython, magic command, 위젯, widget, nbconvert, JupyterLab
 model: sonnet
 color: orange
 ---

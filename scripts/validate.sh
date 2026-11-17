@@ -8,6 +8,8 @@ err() { echo "FAIL: $*"; fail=1; }
 MODEL_RE='^(haiku|sonnet|opus|fable|inherit|claude-[a-z0-9.-]+)$'
 AGENT_KEYS="name description tools disallowedTools model effort maxTurns autoCompactWindow skills memory background omitClaudeMd isolation color experimental"
 PLUGIN_IGNORED_KEYS="hooks mcpServers permissionMode initialPrompt"
+# Every enabled agent's description is loaded into each session.
+DESC_MAX=300
 VALID_COLORS="red blue green yellow purple orange pink cyan"
 
 # 1. JSON validity
@@ -59,6 +61,17 @@ fm_exists() {
   ' "$file"
 }
 
+# helper: print the description value (inline, or the block scalar body without its indent)
+fm_desc() {
+  awk '
+    /^---$/ { n++; next }
+    n != 1  { next }
+    /^description:/ { sub("^description:[ \t]*[|>]?[ \t]*",""); if ($0 != "") print; block=1; next }
+    block && /^[^ \t]/ { exit }
+    block { sub("^[ \t]+",""); print }
+  ' "$1"
+}
+
 # helper: top-level frontmatter keys
 fm_keys() { awk '/^---$/{n++; next} n==1 && /^[A-Za-z][A-Za-z0-9_-]*:/{sub(":.*",""); print}' "$1"; }
 
@@ -84,6 +97,10 @@ for f in $(find plugins -path '*/agents/*.md'); do
   [ -n "$name" ] || err "agent no name: $f"
   [ "$name" = "$base" ] || err "agent name!=filename ($name/$base): $f"
   fm_exists "$f" description || err "agent no description: $f"
+  desc=$(fm_desc "$f")
+  case "$desc" in *"<example>"*) err "agent description has <example> (keep triggers to one Keywords line): $f" ;; esac
+  len=$(printf %s "$desc" | python3 -c 'import sys; print(len(sys.stdin.read()))')
+  [ "$len" -le "$DESC_MAX" ] || err "agent description is $len chars (max $DESC_MAX): $f"
   echo "$model" | grep -qE "$MODEL_RE" || err "agent bad model ($model): $f"
   echo "$VALID_COLORS" | grep -qw "$color" || err "agent bad color ($color): $f"
 done
@@ -109,16 +126,19 @@ done
 # 7. shared sync drift
 scripts/sync-shared.sh --check || err "shared references drift"
 
-# 8. script syntax (global/ + scripts/)
-for f in global/cleanup.sh global/hooks/*.sh scripts/*.sh; do bash -n "$f" 2>/dev/null || err "bash syntax: $f"; done
-for f in global/hooks/*.py; do python3 -c 'import ast,sys; ast.parse(open(sys.argv[1]).read())' "$f" 2>/dev/null || err "python syntax: $f"; done
+# 8. README catalog vs plugins/
+python3 scripts/check-readme.py || err "README catalog drift"
 
-# 9. hook tests (global/hooks/tests)
+# 9. script syntax (global/ + scripts/)
+for f in global/cleanup.sh global/hooks/*.sh scripts/*.sh; do bash -n "$f" 2>/dev/null || err "bash syntax: $f"; done
+for f in global/hooks/*.py scripts/*.py; do python3 -c 'import ast,sys; ast.parse(open(sys.argv[1]).read())' "$f" 2>/dev/null || err "python syntax: $f"; done
+
+# 10. hook tests (global/hooks/tests)
 for t in global/hooks/tests/*_test.py; do
   out=$(PYTHONDONTWRITEBYTECODE=1 python3 "$t" 2>&1) || { echo "$out" >&2; err "hook tests: $t"; }
 done
 
-# 10. sync-global behavior against a throwaway CLAUDE_DIR
+# 11. sync-global behavior against a throwaway CLAUDE_DIR
 bash scripts/test-sync-global.sh >/dev/null || err "sync-global regression tests"
 
 [ "$fail" = 0 ] && echo "VALIDATION PASSED" || echo "VALIDATION FAILED"

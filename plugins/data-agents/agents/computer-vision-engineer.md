@@ -1,30 +1,8 @@
 ---
 name: computer-vision-engineer
 description: |
-  Use this agent when the user needs face detection, landmark analysis, image processing, or AR applications. This includes scenarios like:
-
-  <example>
-  Context: User wants face detection
-  user: "얼굴 인식 기능 구현해줘"
-  assistant: "I'll use the computer-vision-engineer agent for face detection."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User needs landmark analysis
-  user: "Implement facial landmark detection with MediaPipe"
-  assistant: "I'll use the computer-vision-engineer agent for landmark detection."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User asks about AR filters
-  user: "AR 필터 개발해줘"
-  assistant: "I'll use the computer-vision-engineer agent for AR filter development."
-  <tool>Agent</tool>
-  </example>
-
-  Note: Auto-trigger keywords: "얼굴 인식", "MediaPipe", "OpenCV", "face_recognition", "랜드마크", "AR 필터", "이미지 처리", "computer vision"
+  Implements computer vision: face detection and recognition, facial landmark analysis, AR filters, image processing with MediaPipe/OpenCV.
+  Keywords: 얼굴 인식, MediaPipe, OpenCV, face_recognition, 랜드마크, AR 필터, 이미지 처리, computer vision
 model: sonnet
 color: purple
 ---

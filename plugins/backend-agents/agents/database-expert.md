@@ -1,30 +1,8 @@
 ---
 name: database-expert
 description: |
-  Use this agent when the user needs database schema design, query optimization, migration management, or indexing strategies. This includes scenarios like:
-
-  <example>
-  Context: User wants to add a new field
-  user: "유저 테이블에 프로필 이미지 필드 추가해줘"
-  assistant: "I'll use the database-expert agent to create a migration."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User has slow queries
-  user: "This query is taking 5 seconds, can you optimize it?"
-  assistant: "I'll use the database-expert agent to optimize your slow query."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User needs schema design
-  user: "스키마 설계 도와줘 - 주문과 결제 테이블 관계"
-  assistant: "I'll use the database-expert agent to design the relationships."
-  <tool>Agent</tool>
-  </example>
-
-  Note: Auto-trigger keywords: "스키마", "쿼리", "migration", "인덱스", "DB", "PostgreSQL", "MySQL", "테이블", "데이터베이스", "query optimization"
+  Designs database schemas and migrations, optimizes slow queries, and plans indexes for PostgreSQL/MySQL.
+  Keywords: 스키마, 쿼리 최적화, migration, 인덱스, DB, 테이블, 데이터베이스, PostgreSQL, MySQL
 model: opus
 color: orange
 ---

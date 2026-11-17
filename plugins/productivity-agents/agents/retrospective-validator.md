@@ -1,6 +1,7 @@
 ---
 name: retrospective-validator
-description: 회고록 파일의 민감정보를 자동 검증하는 내부 도우미 에이전트
+description: |
+  회고록 Markdown 파일에서 민감정보(Jira 키, 이메일, 병원명, 개인정보)를 찾아 보고한다. 회고 에이전트가 저장 직후 호출하며 파일은 고치지 않는다.
 model: haiku
 color: red
 disallowedTools: Write, Edit, NotebookEdit
