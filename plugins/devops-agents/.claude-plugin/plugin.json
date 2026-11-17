@@ -1,12 +1,12 @@
 {
   "name": "devops-agents",
-  "version": "1.0.1",
-  "description": "DevOps and Git workflow agents for CI/CD, Docker, Kubernetes, Railway, and version control",
+  "version": "2.0.0",
+  "description": "Railway slash commands for project setup and deployment configuration",
   "author": {
     "name": "ahngbeom",
     "email": "ahngbeom@github.com"
   },
   "homepage": "https://github.com/Ahngbeom/claude-config",
   "license": "MIT",
-  "keywords": ["devops", "ci-cd", "docker", "kubernetes", "railway", "github-actions", "gitlab-ci"]
+  "keywords": ["devops", "railway", "deployment"]
 }

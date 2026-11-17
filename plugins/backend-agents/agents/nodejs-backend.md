@@ -391,14 +391,8 @@ const posts = await postRepository.find(query, {
 
 ---
 
-## Collaboration Scenarios
+## Frontend Integration
 
-### With `database-expert`
-- **ORM Configuration**: Prisma, TypeORM, or Drizzle setup
-- **Query Optimization**: N+1 query solutions
-- **Transaction Boundaries**: Define where transactions start/end
-
-### With `frontend-engineer`
 - **Shared Types**: Export TypeScript types for API responses
 - **CORS Configuration**: Ensure frontend can access API
 - **WebSocket Protocol**: Define real-time message formats

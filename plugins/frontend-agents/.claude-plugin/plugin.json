@@ -1,12 +1,12 @@
 {
   "name": "frontend-agents",
-  "version": "1.0.2",
-  "description": "Frontend development agents for React, Vue, modern web UI development, and Mobidoc UI/UX beta review",
+  "version": "2.0.0",
+  "description": "Mobidoc UI/UX beta review agent for Vue/Nuxt patient, hospital, and tablet screens",
   "author": {
     "name": "ahngbeom",
     "email": "ahngbeom@github.com"
   },
   "homepage": "https://github.com/Ahngbeom/claude-config",
   "license": "MIT",
-  "keywords": ["frontend","react","vue","nuxt","ui","ux","mobidoc"]
+  "keywords": ["frontend", "vue", "nuxt", "ui", "ux", "mobidoc"]
 }

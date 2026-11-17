@@ -1,12 +1,12 @@
 {
   "name": "productivity-agents",
-  "version": "1.3.0",
-  "description": "Productivity agents for testing, retrospectives, and workflow automation",
+  "version": "2.0.0",
+  "description": "Jira/Git retrospective agents and slash commands for retrospectives, test writing, and ~/.claude cleanup",
   "author": {
     "name": "ahngbeom",
     "email": "ahngbeom@github.com"
   },
   "homepage": "https://github.com/Ahngbeom/claude-config",
   "license": "MIT",
-  "keywords": ["productivity","testing","retrospective","automation"]
+  "keywords": ["productivity", "testing", "retrospective", "automation"]
 }

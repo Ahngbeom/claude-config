@@ -31,7 +31,8 @@ def plural(count, noun):
 
 
 def counts_text(agents, commands):
-    return plural(agents, "agent") + (f" + {plural(commands, 'command')}" if commands else "")
+    parts = [plural(n, noun) for n, noun in ((agents, "agent"), (commands, "command")) if n]
+    return " + ".join(parts)
 
 
 total = re.search(r"^## Plugins & Agents \((\d+) total\)", readme, re.M)
@@ -60,7 +61,7 @@ for name, plugin in plugins.items():
     for agent in rows.keys() - plugin["agents"].keys():
         errors.append(f"{name}: table lists '{agent}' but no such agent file")
 
-    tree = re.search(rf"^│   [├└]── {name}/ +# (\d+ agents?(?: \(.*?\))?(?: \+ \d+ commands?)?)$", readme, re.M)
+    tree = re.search(rf"^│   [├└]── {name}/ +# (\d+ (?:agent|command)s?(?: \(.*?\))?(?: \+ \d+ commands?)?)$", readme, re.M)
     tree_counts = re.sub(r" \(.*?\)", "", tree.group(1)) if tree else None
     if tree_counts != expected:
         errors.append(f"structure tree: '{name}/' should say '# {expected}'")

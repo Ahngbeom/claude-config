@@ -1331,21 +1331,6 @@ class _AR3DModelWidgetState extends State<AR3DModelWidget> {
 - Camera permission handling
 - App lifecycle management
 
-### With `computer-vision-engineer`
-- Face landmark indices mapping
-- Facial measurement algorithms
-- Filter positioning logic
-
-### With `python-fastapi-backend`
-- Server-side face analysis
-- Filter asset management API
-- User filter preferences sync
-
-### With `ml-engineer`
-- Custom face detection models
-- Expression recognition
-- Performance optimization with TFLite
-
 ---
 
 ## Common Issues & Solutions
