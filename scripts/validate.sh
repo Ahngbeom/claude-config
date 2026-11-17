@@ -109,6 +109,9 @@ done
 for f in $(find plugins -path '*/commands/*.md' 2>/dev/null); do
   fm_exists "$f" description || err "command no description: $f"
   grep -qE '^(name|context):' "$f" && err "command has non-standard field: $f"
+  for ref in $(grep -oE '\$\{CLAUDE_PLUGIN_ROOT\}/[A-Za-z0-9._/-]+' "$f" | sort -u); do
+    [ -e "${f%%/commands/*}/${ref#\$\{CLAUDE_PLUGIN_ROOT\}/}" ] || err "command ref missing ($ref): $f"
+  done
 done
 
 # 6. skill frontmatter + name/dir + referenced files (codex + global + any plugin skills)

@@ -76,9 +76,9 @@ Generate a structured Markdown report including:
 ### [프로젝트명] (KEY) - N개 이슈
 
 #### 완료된 작업
-| 이슈 키 | 제목 | 유형 | 우선순위 |
-|---------|------|------|----------|
-| [KEY-123](link) | 제목 | 유형 | 우선순위 |
+| 이슈 | 제목 | 유형 | 우선순위 |
+|------|------|------|----------|
+| 이슈 #1 | 제목 | 유형 | 우선순위 |
 
 #### 진행 중인 작업
 ...
@@ -126,7 +126,7 @@ Use `mcp__plugin_atlassian_atlassian__searchJiraIssuesUsingJql`:
 
 ### Step 5: Generate Report
 - Create structured Markdown
-- Include links to Jira issues (using provided Jira URL)
+- Refer to issues as `이슈 #N`; leave out issue keys and Jira links (Best Practices 5, 3단계)
 - Add statistics and insights
 
 ### Step 6: Save or Output
@@ -236,10 +236,7 @@ Agent(
 
 ## Best Practices
 
-1. **Issue Link Format**: Always use clickable links with user's Jira URL
-   ```
-   [KEY-123](https://{JIRA_URL}/browse/KEY-123)
-   ```
+1. **Issue References**: `이슈 #N`으로만 적는다. 이슈 키와 Jira 링크는 `retrospective-validator`가 민감정보로 검출한다
 
 2. **Status Mapping** (Korean):
    - 완료 = Done
