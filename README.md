@@ -109,7 +109,7 @@ ahngbeom-claude-config/
 
 ---
 
-## Plugins & Agents (27 total)
+## Plugins & Agents (26 total)
 
 ### backend-agents (5 agents)
 
@@ -120,7 +120,7 @@ Backend development agents for API architecture and server-side implementation.
 | `backend-api-architect` | API design principles, RESTful/GraphQL patterns, authentication | purple |
 | `nodejs-backend` | Node.js/Express, TypeScript, middleware patterns | green |
 | `spring-boot-backend` | Spring Boot, Java, Spring Security | orange |
-| `python-fastapi-backend` | FastAPI, Pydantic, async Python, uvicorn | blue |
+| `python-fastapi-backend` | FastAPI, Pydantic, async Python, uvicorn | green |
 | `database-expert` | PostgreSQL/MySQL schema design, query optimization, migration | orange |
 
 ### frontend-agents (2 agents)
@@ -142,7 +142,7 @@ Data science and machine learning agents.
 | `data-engineer` | Data pipelines, ETL/ELT, Spark, Airflow, data warehouse | blue |
 | `ml-engineer` | PyTorch, TensorFlow, model training, MLOps, LLM | pink |
 | `computer-vision-engineer` | MediaPipe, OpenCV, face recognition, AR filters | purple |
-| `jupyter-expert` | Jupyter Notebooks, JupyterLab, IPython, Voila dashboards, widgets | green |
+| `jupyter-expert` | Jupyter Notebooks, JupyterLab, IPython, Voila dashboards, widgets | orange |
 
 ### devops-agents (4 agents + 2 commands)
 
@@ -188,7 +188,7 @@ Testing, retrospective, and workflow automation agents. Slash commands live in `
 | `test-automation-engineer` | Jest/Vitest, React Testing Library, Playwright, pytest | yellow |
 | `commit-retrospective` | Git commit history-based retrospective generation | cyan |
 | `jira-retrospective` | Jira issue-based retrospective generation | blue |
-| `retrospective-validator` | Auto-detection and validation of retrospective files | green |
+| `retrospective-validator` | Sensitive-information scan of generated retrospectives (called by the two retrospective agents) | red |
 
 Slash commands: `/git-retro`, `/jira-retro`, `/write-tests`, `/cleanup` (defined in `commands/`)
 
@@ -321,17 +321,17 @@ The Mobidoc UI/UX beta Codex skill source lives in `codex/skills/mobidoc-ui-ux-b
 
 ### Sequential Workflow
 ```
-1. database-expert: Schema design
-2. backend-api-architect: API design
-3. nodejs-backend (or spring-boot-backend): Implementation
-4. frontend-engineer: UI development
-5. test-automation-engineer: Test writing
+1. backend-agents:database-expert: Schema design
+2. backend-agents:backend-api-architect: API design
+3. backend-agents:nodejs-backend (or backend-agents:spring-boot-backend): Implementation
+4. frontend-agents:frontend-engineer: UI development
+5. productivity-agents:test-automation-engineer: Test writing
 6. /commit or /commit-push-pr: Commit and push changes
 ```
 
 ### Parallel Execution
 ```
-"database-expert와 backend-api-architect와 frontend-engineer,
+"backend-agents:database-expert와 backend-agents:backend-api-architect와 frontend-agents:frontend-engineer,
 각자 영역에서 성능을 최적화해줘"
 ```
 
@@ -350,6 +350,7 @@ The Mobidoc UI/UX beta Codex skill source lives in `codex/skills/mobidoc-ui-ux-b
    ---
    ```
 3. Write agent prompt (expertise, core knowledge, working principles)
+4. Add the agent to its plugin table above and update the counts; `scripts/validate.sh` fails while the README and the files disagree
 
 ---
 

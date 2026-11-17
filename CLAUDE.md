@@ -28,7 +28,7 @@ Respond in Korean (한국어) unless explicitly requested otherwise.
 
 ## Verification
 
-- `scripts/validate.sh` runs the same checks as CI: JSON validity, plugin/marketplace consistency, frontmatter rules, shared-asset drift, script syntax.
+- `scripts/validate.sh` runs the same checks as CI: JSON validity, plugin/marketplace consistency, frontmatter rules, shared-asset drift, README catalog drift (`scripts/check-readme.py`: counts, agent rows and colors, command rows, `plugin:agent` references), script syntax.
 - `scripts/sync-global.sh check` reports drift between `global/` and `~/.claude`. Local only; CI has no `~/.claude`.
 - `scripts/sync-shared.sh --check` after editing anything under `shared/`.
 

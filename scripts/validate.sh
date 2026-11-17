@@ -109,16 +109,19 @@ done
 # 7. shared sync drift
 scripts/sync-shared.sh --check || err "shared references drift"
 
-# 8. script syntax (global/ + scripts/)
-for f in global/cleanup.sh global/hooks/*.sh scripts/*.sh; do bash -n "$f" 2>/dev/null || err "bash syntax: $f"; done
-for f in global/hooks/*.py; do python3 -c 'import ast,sys; ast.parse(open(sys.argv[1]).read())' "$f" 2>/dev/null || err "python syntax: $f"; done
+# 8. README catalog vs plugins/
+python3 scripts/check-readme.py || err "README catalog drift"
 
-# 9. hook tests (global/hooks/tests)
+# 9. script syntax (global/ + scripts/)
+for f in global/cleanup.sh global/hooks/*.sh scripts/*.sh; do bash -n "$f" 2>/dev/null || err "bash syntax: $f"; done
+for f in global/hooks/*.py scripts/*.py; do python3 -c 'import ast,sys; ast.parse(open(sys.argv[1]).read())' "$f" 2>/dev/null || err "python syntax: $f"; done
+
+# 10. hook tests (global/hooks/tests)
 for t in global/hooks/tests/*_test.py; do
   out=$(PYTHONDONTWRITEBYTECODE=1 python3 "$t" 2>&1) || { echo "$out" >&2; err "hook tests: $t"; }
 done
 
-# 10. sync-global behavior against a throwaway CLAUDE_DIR
+# 11. sync-global behavior against a throwaway CLAUDE_DIR
 bash scripts/test-sync-global.sh >/dev/null || err "sync-global regression tests"
 
 [ "$fail" = 0 ] && echo "VALIDATION PASSED" || echo "VALIDATION FAILED"
