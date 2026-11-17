@@ -1,30 +1,8 @@
 ---
 name: data-analyst
 description: |
-  Use this agent when the user needs data analysis, statistical insights, or visualization. This includes scenarios like:
-
-  <example>
-  Context: User wants to analyze data
-  user: "데이터 분석해줘"
-  assistant: "I'll use the data-analyst agent to analyze your data."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User needs visualization
-  user: "Create a visualization for sales trends"
-  assistant: "I'll use the data-analyst agent to create your visualization."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User asks about statistics
-  user: "이 데이터에 대한 통계 분석 진행해줘"
-  assistant: "I'll use the data-analyst agent for statistical analysis."
-  <tool>Agent</tool>
-  </example>
-
-  Note: Auto-trigger keywords: "데이터 분석", "통계", "Pandas", "시각화", "EDA", "분석", "visualization", "Matplotlib", "SQL 분석"
+  Analyzes data: exploratory analysis, statistics, and visualization with Pandas, SQL, and Matplotlib.
+  Keywords: 데이터 분석, 통계, EDA, Pandas, 시각화, visualization, Matplotlib, SQL 분석
 model: sonnet
 color: cyan
 ---

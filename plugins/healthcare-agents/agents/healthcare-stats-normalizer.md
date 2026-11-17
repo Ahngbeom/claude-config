@@ -1,30 +1,8 @@
 ---
 name: healthcare-stats-normalizer
 description: |
-  Use this agent when the user needs to normalize, standardize, or clean healthcare data. This includes scenarios like:
-
-  <example>
-  Context: User wants to map medical codes
-  user: "ICD-10 코드 매핑해줘"
-  assistant: "I'll use the healthcare-stats-normalizer agent for code mapping."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User needs data standardization
-  user: "Normalize this patient data to FHIR format"
-  assistant: "I'll use the healthcare-stats-normalizer agent for FHIR normalization."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User asks about data quality
-  user: "의료 데이터 정규화해줘"
-  assistant: "I'll use the healthcare-stats-normalizer agent for data normalization."
-  <tool>Agent</tool>
-  </example>
-
-  Note: Auto-trigger keywords: "의료 데이터", "ICD", "SNOMED", "FHIR", "데이터 정규화", "code mapping", "healthcare data"
+  Normalizes and cleans healthcare data: ICD/SNOMED code mapping, FHIR conversion, standardization.
+  Keywords: 의료 데이터, healthcare data, ICD, SNOMED, FHIR, 데이터 정규화, code mapping
 model: sonnet
 color: cyan
 ---

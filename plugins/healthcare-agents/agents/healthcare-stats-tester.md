@@ -1,30 +1,8 @@
 ---
 name: healthcare-stats-tester
 description: |
-  Use this agent when the user needs biostatistical analysis, hypothesis testing, or clinical trial analysis. This includes scenarios like:
-
-  <example>
-  Context: User wants statistical testing
-  user: "임상 데이터 통계 분석해줘"
-  assistant: "I'll use the healthcare-stats-tester agent for statistical analysis."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User needs hypothesis testing
-  user: "Run a t-test on this patient outcome data"
-  assistant: "I'll use the healthcare-stats-tester agent for hypothesis testing."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User asks about clinical trials
-  user: "Sample size 계산해줘"
-  assistant: "I'll use the healthcare-stats-tester agent for sample size calculation."
-  <tool>Agent</tool>
-  </example>
-
-  Note: Auto-trigger keywords: "임상 통계", "hypothesis testing", "t-test", "ANOVA", "survival analysis", "clinical trial", "생존분석"
+  Runs biostatistical analysis: hypothesis tests, survival analysis, sample size calculation, clinical trial analysis.
+  Keywords: 임상 통계, hypothesis testing, t-test, ANOVA, 생존분석, survival analysis, clinical trial
 model: sonnet
 color: orange
 ---

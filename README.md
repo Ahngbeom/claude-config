@@ -344,7 +344,9 @@ The Mobidoc UI/UX beta Codex skill source lives in `codex/skills/mobidoc-ui-ux-b
    ```yaml
    ---
    name: my-agent
-   description: Agent description with use cases
+   description: |
+     One or two sentences on when to delegate to this agent.
+     Keywords: trigger, 키워드
    model: sonnet
    color: red
    ---

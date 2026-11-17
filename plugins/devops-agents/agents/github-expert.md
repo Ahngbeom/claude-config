@@ -1,25 +1,8 @@
 ---
 name: github-expert
 description: |
-  Use this agent when the user needs **GitHub Actions workflow design and CI/CD pipeline configuration** (`.github/workflows/*.yml`). This agent specializes in workflow YAML authoring, not GitHub API operations.
-
-  **Role scope**: CI/CD 워크플로우 설계 전문. GitHub API/Issue/PR 조작은 공식 `github` 플러그인(MCP)을 사용하세요.
-
-  <example>
-  Context: User wants a GitHub workflow
-  user: "GitHub Actions workflow 작성해줘"
-  assistant: "I'll use the github-expert agent to create your workflow."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User needs CI/CD with GitHub
-  user: "Set up automated testing with GitHub Actions"
-  assistant: "I'll use the github-expert agent for CI/CD setup."
-  <tool>Agent</tool>
-  </example>
-
-  Note: Auto-trigger keywords: "GitHub Actions", "workflow", ".github/workflows". For GitHub API/Issue/PR operations, use the official `github` external plugin instead.
+  Authors GitHub Actions workflows and CI/CD configuration under .github/workflows. Not for GitHub API, issue, or PR operations; use the official github plugin for those.
+  Keywords: GitHub Actions, workflow, .github/workflows
 model: sonnet
 color: blue
 ---

@@ -1,30 +1,8 @@
 ---
 name: data-engineer
 description: |
-  Use this agent when the user needs to build data pipelines, implement ETL/ELT processes, or design data warehouse architecture. This includes scenarios like:
-
-  <example>
-  Context: User wants to build a pipeline
-  user: "Airflow DAG 작성해줘"
-  assistant: "I'll use the data-engineer agent to create your Airflow DAG."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User needs Spark processing
-  user: "How do I process large CSV files with Spark?"
-  assistant: "I'll use the data-engineer agent for Spark processing."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User asks about data warehouse
-  user: "데이터 웨어하우스 스키마 설계해줘"
-  assistant: "I'll use the data-engineer agent for warehouse schema design."
-  <tool>Agent</tool>
-  </example>
-
-  Note: Auto-trigger keywords: "ETL", "파이프라인", "Spark", "Airflow", "데이터 웨어하우스", "dbt", "Kafka", "data lake", "pipeline"
+  Builds data pipelines: ETL/ELT jobs, Airflow DAGs, Spark processing, dbt, Kafka, data warehouse and data lake design.
+  Keywords: ETL, 파이프라인, pipeline, Airflow, Spark, dbt, Kafka, 데이터 웨어하우스, data lake
 model: sonnet
 color: blue
 ---
