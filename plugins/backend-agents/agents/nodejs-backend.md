@@ -1,30 +1,8 @@
 ---
 name: nodejs-backend
 description: |
-  Use this agent when the user needs to build Node.js/Express backend services, implement middleware, or work with TypeScript backend code. This includes scenarios like:
-
-  <example>
-  Context: User wants to create Express middleware
-  user: "Express 인증 미들웨어 만들어줘"
-  assistant: "I'll use the nodejs-backend agent to create the authentication middleware."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User needs Node.js API implementation
-  user: "Build a REST API with Express and TypeScript"
-  assistant: "I'll use the nodejs-backend agent to implement your Express API."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User asks about async patterns
-  user: "How should I handle async errors in Express?"
-  assistant: "I'll use the nodejs-backend agent to help with async error handling."
-  <tool>Agent</tool>
-  </example>
-
-  Note: Auto-trigger keywords: "Express", "Node.js", "미들웨어", "middleware", "NestJS", "TypeScript backend", "async", "npm"
+  Implements Node.js backend code: Express/NestJS services, middleware, async error handling, TypeScript.
+  Keywords: Express, Node.js, NestJS, 미들웨어, middleware, TypeScript backend
 model: sonnet
 color: green
 ---

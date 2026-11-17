@@ -1,30 +1,8 @@
 ---
 name: ml-engineer
 description: |
-  Use this agent when the user needs to develop ML models, implement training pipelines, or deploy AI services. This includes scenarios like:
-
-  <example>
-  Context: User wants to train a model
-  user: "모델 학습 코드 작성해줘"
-  assistant: "I'll use the ml-engineer agent for model training."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User needs fine-tuning help
-  user: "How do I fine-tune LLaMA with LoRA?"
-  assistant: "I'll use the ml-engineer agent for LoRA fine-tuning."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User asks about MLOps
-  user: "MLflow로 실험 관리 어떻게 해?"
-  assistant: "I'll use the ml-engineer agent for MLflow setup."
-  <tool>Agent</tool>
-  </example>
-
-  Note: Auto-trigger keywords: "모델 학습", "PyTorch", "TensorFlow", "MLOps", "LLM", "fine-tuning", "RAG", "training", "inference", "딥러닝"
+  Develops ML models: training pipelines, fine-tuning, RAG, experiment tracking, and deployment of AI services.
+  Keywords: 모델 학습, PyTorch, TensorFlow, MLOps, LLM, fine-tuning, RAG, training, inference, 딥러닝
 model: opus
 color: pink
 ---

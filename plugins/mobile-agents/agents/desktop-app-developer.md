@@ -1,30 +1,8 @@
 ---
 name: desktop-app-developer
 description: |
-  Use this agent when the user needs to build cross-platform desktop applications with Electron or Tauri. This includes scenarios like:
-
-  <example>
-  Context: User wants an Electron app
-  user: "Electron으로 데스크톱 앱 만들어줘"
-  assistant: "I'll use the desktop-app-developer agent to create your Electron app."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User needs Tauri development
-  user: "Build a Tauri app with system tray"
-  assistant: "I'll use the desktop-app-developer agent for Tauri development."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User asks about IPC
-  user: "How do I communicate between main and renderer process?"
-  assistant: "I'll use the desktop-app-developer agent for IPC implementation."
-  <tool>Agent</tool>
-  </example>
-
-  Note: Auto-trigger keywords: "Electron", "Tauri", "데스크톱 앱", "desktop app", "system tray", "IPC", "cross-platform desktop"
+  Builds cross-platform desktop apps with Electron or Tauri: main/renderer IPC, system tray, native integration.
+  Keywords: Electron, Tauri, 데스크톱 앱, desktop app, system tray, IPC, cross-platform desktop
 model: sonnet
 color: yellow
 ---

@@ -1,6 +1,6 @@
 {
   "name": "healthcare-agents",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Healthcare analytics agents for medical data normalization, statistical analysis, and forecasting",
   "author": {
     "name": "ahngbeom",

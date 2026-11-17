@@ -1,6 +1,6 @@
 {
   "name": "mobile-agents",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Mobile and desktop application agents for React Native, Flutter, AR/VR, Electron, and Tauri",
   "author": {
     "name": "ahngbeom",

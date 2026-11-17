@@ -8,6 +8,8 @@ err() { echo "FAIL: $*"; fail=1; }
 MODEL_RE='^(haiku|sonnet|opus|fable|inherit|claude-[a-z0-9.-]+)$'
 AGENT_KEYS="name description tools disallowedTools model effort maxTurns autoCompactWindow skills memory background omitClaudeMd isolation color experimental"
 PLUGIN_IGNORED_KEYS="hooks mcpServers permissionMode initialPrompt"
+# Every enabled agent's description is loaded into each session.
+DESC_MAX=300
 VALID_COLORS="red blue green yellow purple orange pink cyan"
 
 # 1. JSON validity
@@ -59,6 +61,17 @@ fm_exists() {
   ' "$file"
 }
 
+# helper: print the description value (inline, or the block scalar body without its indent)
+fm_desc() {
+  awk '
+    /^---$/ { n++; next }
+    n != 1  { next }
+    /^description:/ { sub("^description:[ \t]*[|>]?[ \t]*",""); if ($0 != "") print; block=1; next }
+    block && /^[^ \t]/ { exit }
+    block { sub("^[ \t]+",""); print }
+  ' "$1"
+}
+
 # helper: top-level frontmatter keys
 fm_keys() { awk '/^---$/{n++; next} n==1 && /^[A-Za-z][A-Za-z0-9_-]*:/{sub(":.*",""); print}' "$1"; }
 
@@ -84,6 +97,10 @@ for f in $(find plugins -path '*/agents/*.md'); do
   [ -n "$name" ] || err "agent no name: $f"
   [ "$name" = "$base" ] || err "agent name!=filename ($name/$base): $f"
   fm_exists "$f" description || err "agent no description: $f"
+  desc=$(fm_desc "$f")
+  case "$desc" in *"<example>"*) err "agent description has <example> (keep triggers to one Keywords line): $f" ;; esac
+  len=$(printf %s "$desc" | python3 -c 'import sys; print(len(sys.stdin.read()))')
+  [ "$len" -le "$DESC_MAX" ] || err "agent description is $len chars (max $DESC_MAX): $f"
   echo "$model" | grep -qE "$MODEL_RE" || err "agent bad model ($model): $f"
   echo "$VALID_COLORS" | grep -qw "$color" || err "agent bad color ($color): $f"
 done

@@ -1,25 +1,8 @@
 ---
 name: railway-expert
 description: |
-  Use this agent when the user needs **Railway platform deployment, service management, database provisioning, or infrastructure configuration**. This agent specializes in Railway CLI, railway.json configuration, Nixpacks builds, and Railway-specific infrastructure.
-
-  **Role scope**: Railway 플랫폼 배포/관리 전문. 서비스 배포, 데이터베이스 프로비저닝, 환경변수 관리, 커스텀 도메인, Private Networking 등.
-
-  <example>
-  Context: User wants to deploy to Railway
-  user: "Railway에 FastAPI 서비스 배포해줘"
-  assistant: "I'll use the railway-expert agent for Railway deployment."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User needs Railway database setup
-  user: "Railway에 PostgreSQL 데이터베이스 추가하고 연결해줘"
-  assistant: "I'll use the railway-expert agent for database provisioning."
-  <tool>Agent</tool>
-  </example>
-
-  Note: Auto-trigger keywords: "Railway", "railway.json", "Nixpacks", "Railway 배포", "railway deploy", "Railway 프로젝트". For general CI/CD or Docker questions unrelated to Railway, use devops-engineer instead.
+  Deploys and manages services on Railway: CLI, railway.json, Nixpacks builds, database provisioning, environment variables, domains. General CI/CD or Docker work goes to devops-engineer.
+  Keywords: Railway, railway.json, Nixpacks, Railway 배포, railway deploy, Railway 프로젝트
 model: sonnet
 color: purple
 ---

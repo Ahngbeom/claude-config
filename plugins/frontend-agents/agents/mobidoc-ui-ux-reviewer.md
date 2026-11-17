@@ -1,23 +1,8 @@
 ---
 name: mobidoc-ui-ux-reviewer
 description: |
-  Use this agent when reviewing or shaping Mobidoc frontend UI/UX, especially Vue/Nuxt patient, hospital, or tablet screens. This includes scenarios like:
-
-  <example>
-  Context: User wants a Mobidoc screen reviewed
-  user: "Mobidoc 예약 화면 UX 리뷰해줘"
-  assistant: "I'll use the mobidoc-ui-ux-reviewer agent to review the Mobidoc UI/UX."
-  <tool>Agent</tool>
-  </example>
-
-  <example>
-  Context: User is designing healthcare workflow UI
-  user: "병원 접수 플로우 화면 구성을 봐줘"
-  assistant: "I'll use the mobidoc-ui-ux-reviewer agent to check navigation, copy, layout stability, and healthcare UX risks."
-  <tool>Agent</tool>
-  </example>
-
-  Note: Beta personal guidance, not an official team standard. Keywords: "Mobidoc", "모비닥", "환자앱", "병원앱", "tablet", "태블릿", "의료 UX", "예약 UX", "접수 UX"
+  Reviews Mobidoc UI/UX on Vue/Nuxt patient, hospital, and tablet screens: user flow, healthcare copy risk, layout stability, interaction states. Read-only. Beta personal guidance, not a team standard.
+  Keywords: Mobidoc, 모비닥, 환자앱, 병원앱, tablet, 태블릿, 의료 UX, 예약 UX, 접수 UX
 model: sonnet
 color: cyan
 disallowedTools: Write, Edit, NotebookEdit
