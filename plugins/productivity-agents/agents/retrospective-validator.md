@@ -3,7 +3,7 @@ name: retrospective-validator
 description: 회고록 파일의 민감정보를 자동 검증하는 내부 도우미 에이전트
 model: haiku
 color: red
-internal: true  # 사용자에게 직접 노출되지 않음
+disallowedTools: Write, Edit, NotebookEdit
 ---
 
 You are a **Retrospective Validator** that scans generated retrospective reports for sensitive information before final saving.
@@ -127,10 +127,7 @@ https?://[^\s]+(internal|private|staging|dev|local)[^\s]*
 - {고객사명}을 알파벳으로 익명화
 - {개인정보}를 역할명으로 대체
 
-회고록을 수정하시겠습니까?
-1. 자동 수정 적용 후 저장
-2. 현재 상태 그대로 저장 (민감정보 포함 ⚠️)
-3. 저장 취소 (콘솔 출력만)
+사용자 확인 필요: 자동 수정 / 그대로 유지 / 파일 삭제
 ```
 
 #### 민감정보 없을 시
@@ -138,8 +135,6 @@ https?://[^\s]+(internal|private|staging|dev|local)[^\s]*
 ✅ 민감정보 검증 완료
 
 검출된 민감정보: 없음
-
-회고록이 안전하게 작성되었습니다. 파일 저장을 진행합니다.
 ```
 
 ### 4. 검증 프로세스 (Step-by-Step)
@@ -149,57 +144,7 @@ https?://[^\s]+(internal|private|staging|dev|local)[^\s]*
 3. **라인별 스캔**: 각 라인을 정규표현식으로 검사
 4. **허용 목록 필터링**: Whitelist 항목 제외
 5. **결과 집계**: 검출된 항목을 유형별로 분류
-6. **사용자 보고**: 위 출력 형식으로 결과 표시
-7. **사용자 선택 대기**: AskUserQuestion으로 처리 방법 선택 받기
-8. **후처리**:
-   - 자동 수정 선택 시: Edit 도구로 파일 수정 후 저장
-   - 그대로 저장 선택 시: 경고 메시지와 함께 저장
-   - 취소 선택 시: 파일 저장하지 않고 종료
-
-## 통합 방법
-
-### jira-retrospective와 통합
-
-`jira-retrospective.md`의 Step 6 마지막에 다음 추가:
-
-```markdown
-### Step 6.5: Automatic Validation (Internal)
-
-1. 생성된 Markdown 파일을 `retrospective-validator` 에이전트로 전달
-2. 민감정보 자동 검증 수행
-3. 검증 결과를 사용자에게 표시
-4. 민감정보 발견 시 수정 권장 사항 제공
-5. 사용자 확인 후 최종 저장
-```
-
-### commit-retrospective와 통합
-
-`commit-retrospective.md`의 Step 6 마지막에 동일하게 추가:
-
-```markdown
-### Step 6.5: Automatic Validation (Internal)
-
-1. 생성된 Markdown 파일을 `retrospective-validator` 에이전트로 전달
-2. 민감정보 자동 검증 수행
-3. 검증 결과를 사용자에게 표시
-4. 민감정보 발견 시 수정 권장 사항 제공
-5. 사용자 확인 후 최종 저장
-```
-
-## 실제 호출 예시
-
-```markdown
-# jira-retrospective 또는 commit-retrospective 내부에서:
-
-After Step 6 (파일 생성):
-- 파일 경로: ~/.claude/retrospectives/2026/2026-02-01-2026-02-29-monthly-retrospective.md
-- Task 도구로 retrospective-validator 호출:
-  Task(
-    subagent_type="retrospective-validator",
-    prompt="파일 검증: ~/.claude/retrospectives/2026/2026-02-01-2026-02-29-monthly-retrospective.md",
-    description="Validate retrospective"
-  )
-```
+6. **결과 반환**: 위 출력 형식으로 돌려준다. 파일은 고치지 않는다. 처리 방법은 사용자가 정하고 호출한 쪽이 반영한다
 
 ## 성능 최적화
 
@@ -237,10 +182,7 @@ After Step 6 (파일 생성):
 - 병원명을 알파벳으로 익명화 (서울대병원 → A병원, 삼성서울병원 → B병원)
 - 이메일 주소를 역할명으로 대체 (hong@company.com → "백엔드 개발자")
 
-회고록을 수정하시겠습니까?
-1. 자동 수정 적용 후 저장
-2. 현재 상태 그대로 저장 (민감정보 포함 ⚠️)
-3. 저장 취소 (콘솔 출력만)
+사용자 확인 필요: 자동 수정 / 그대로 유지 / 파일 삭제
 ```
 
 Remember: Your goal is to **protect sensitive information** while maintaining retrospective readability and usefulness. Be thorough but not overly strict - use the whitelist to avoid false positives.

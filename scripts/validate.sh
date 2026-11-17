@@ -5,7 +5,9 @@ cd "$(dirname "$0")/.."
 fail=0
 err() { echo "FAIL: $*"; fail=1; }
 
-VALID_MODELS="haiku sonnet opus"
+MODEL_RE='^(haiku|sonnet|opus|fable|inherit|claude-[a-z0-9.-]+)$'
+AGENT_KEYS="name description tools disallowedTools model effort maxTurns autoCompactWindow skills memory background omitClaudeMd isolation color experimental"
+PLUGIN_IGNORED_KEYS="hooks mcpServers permissionMode initialPrompt"
 VALID_COLORS="red blue green yellow purple orange pink cyan"
 
 # 1. JSON validity
@@ -57,14 +59,32 @@ fm_exists() {
   ' "$file"
 }
 
+# helper: top-level frontmatter keys
+fm_keys() { awk '/^---$/{n++; next} n==1 && /^[A-Za-z][A-Za-z0-9_-]*:/{sub(":.*",""); print}' "$1"; }
+
 # 4. agent frontmatter
 for f in $(find plugins -path '*/agents/*.md'); do
   base=$(basename "$f" .md)
+  plugin_dir=${f%%/agents/*}
+  for k in $(fm_keys "$f"); do
+    if echo "$PLUGIN_IGNORED_KEYS" | grep -qw "$k"; then err "agent field ignored for plugin agents ($k): $f"
+    elif ! echo "$AGENT_KEYS" | grep -qw "$k"; then err "agent unknown field ($k): $f"; fi
+  done
+  grep -qE '`\.\./' "$f" && err "agent relative ../ path (use \${CLAUDE_PLUGIN_ROOT}): $f"
+  for ref in $(grep -oE '\$\{CLAUDE_PLUGIN_ROOT\}/[A-Za-z0-9._/-]+' "$f" | sort -u); do
+    [ -e "$plugin_dir/${ref#\$\{CLAUDE_PLUGIN_ROOT\}/}" ] || err "agent ref missing ($ref): $f"
+  done
+  for st in $(grep -oE 'subagent_type="[^"]+"' "$f" | cut -d'"' -f2 | sort -u); do
+    case "$st" in
+      *:*) [ -f "plugins/${st%%:*}/agents/${st#*:}.md" ] || err "subagent_type not found ($st): $f" ;;
+      *) err "subagent_type needs plugin scope (<plugin>:$st): $f" ;;
+    esac
+  done
   name=$(fm "$f" name); model=$(fm "$f" model); color=$(fm "$f" color)
   [ -n "$name" ] || err "agent no name: $f"
   [ "$name" = "$base" ] || err "agent name!=filename ($name/$base): $f"
   fm_exists "$f" description || err "agent no description: $f"
-  echo "$VALID_MODELS" | grep -qw "$model" || err "agent bad model ($model): $f"
+  echo "$model" | grep -qE "$MODEL_RE" || err "agent bad model ($model): $f"
   echo "$VALID_COLORS" | grep -qw "$color" || err "agent bad color ($color): $f"
 done
 
