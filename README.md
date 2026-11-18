@@ -109,9 +109,9 @@ Retrospective agents. Slash commands live in `commands/`.
 
 Slash commands: `/git-retro`, `/jira-retro`, `/write-tests`, `/cleanup` (defined in `commands/`)
 
-### claude-hookify (7 hooks)
+### claude-hookify (3 hooks)
 
-Agent preference hooks that recommend specialized agents based on file and command patterns. Maintained in a **separate repository**: https://github.com/Ahngbeom/claude-hookify
+Preference hooks that recommend the retrospective agents and the official commit commands based on prompt and command patterns. Maintained in a **separate repository**: https://github.com/Ahngbeom/claude-hookify
 
 ```bash
 claude plugin install https://github.com/Ahngbeom/claude-hookify
@@ -119,15 +119,9 @@ claude plugin install https://github.com/Ahngbeom/claude-hookify
 
 | Hook | Trigger | Recommended Agent |
 |------|---------|-------------------|
-| `prefer-backend-agent` | API endpoint files (controller, route, service) | backend-api-architect, nodejs-backend, spring-boot-backend |
-| `prefer-database-expert` | DB schema/migration files | database-expert |
-| `prefer-frontend-engineer` | Frontend component files (.tsx, .vue, .jsx) | frontend-engineer |
 | `prefer-commit-commands` | `git commit/push` commands | /commit, /commit-push-pr |
-| `prefer-test-automation` | Test files (.test.ts, .spec.js) | test-automation-engineer |
 | `prefer-jira-retrospective` | Retrospective keywords | jira-retrospective |
 | `prefer-commit-retrospective` | Commit retrospective keywords | commit-retrospective |
-
-> `prefer-backend-agent`, `prefer-database-expert`, `prefer-frontend-engineer`, and `prefer-test-automation` recommend agents this marketplace no longer ships.
 
 ---
 
