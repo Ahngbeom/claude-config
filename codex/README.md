@@ -55,17 +55,11 @@ description: Mobidoc 프런트엔드 UI/UX 베타 리뷰 가이드. 공식 팀 �
 
 ---
 
-## Claude Plugin과의 관계
+## 가이드라인 파일
 
-Claude Code 쪽 동등 기능은 다음에 위치합니다:
-
-- **Claude Agent**: `plugins/frontend-agents/agents/mobidoc-ui-ux-reviewer.md`
-
-두 소비자(Claude plugin 및 Codex skill)가 공유하는 UI/UX 가이드라인 파일
-(`mobidoc-ui-ux-guidelines.md`)은 **직접 편집하지 마세요.**
-
-해당 파일들은 `shared/references/`의 canonical 원본에서
-`scripts/sync-shared.sh`로 자동 생성되는 **생성물(auto-generated copy)**입니다.
+UI/UX 가이드라인 파일(`mobidoc-ui-ux-guidelines.md`)은 **직접 편집하지 마세요.**
+`shared/references/`의 canonical 원본에서 `scripts/sync-shared.sh`로 자동 생성되는
+**생성물(auto-generated copy)**입니다.
 
 가이드라인을 수정하려면:
 

@@ -1,6 +1,6 @@
 # Claude Code Configuration
 
-Custom Claude Code plugin marketplace with specialized development agents.
+Custom Claude Code plugin marketplace: retrospective agents and slash commands, plus the tracked global `~/.claude` files.
 
 > Mobidoc UI/UX beta guidance in this repository is a personal experiment for consistent local work. It is not an official team standard and should not contain sensitive patient data, private screenshots, credentials, or unreleased business details.
 
@@ -15,17 +15,8 @@ claude plugin install https://github.com/ahngbeom/claude-config
 
 Or install individual plugins by category:
 ```bash
-# Node.js backend
-claude plugin install backend-agents@ahngbeom-claude-config
-
-# Mobidoc UI/UX review
-claude plugin install frontend-agents@ahngbeom-claude-config
-
 # Railway commands
 claude plugin install devops-agents@ahngbeom-claude-config
-
-# Mobile & AR apps
-claude plugin install mobile-agents@ahngbeom-claude-config
 
 # Retrospectives, test writing, cleanup
 claude plugin install productivity-agents@ahngbeom-claude-config
@@ -84,10 +75,7 @@ ahngbeom-claude-config/
 │   ├── hooks/                    # guard-k8s.py, guard-work-checkout.py, canonical_pin.py + installer and tests
 │   └── skills/korean-docs/       # Global Korean writing skill
 ├── plugins/
-│   ├── backend-agents/           # 1 agent
-│   ├── frontend-agents/          # 1 agent
 │   ├── devops-agents/            # 2 commands
-│   ├── mobile-agents/            # 2 agents
 │   └── productivity-agents/      # 3 agents + 4 commands
 ├── scripts/
 │   ├── notify.sh
@@ -101,36 +89,13 @@ ahngbeom-claude-config/
 
 ---
 
-## Plugins & Agents (7 total)
-
-### backend-agents (1 agent)
-
-| Agent | Description | Color |
-|-------|-------------|-------|
-| `nodejs-backend` | Node.js/Express, TypeScript, middleware patterns | green |
-
-### frontend-agents (1 agent)
-
-Personal Mobidoc UI/UX beta review.
-
-| Agent | Description | Color |
-|-------|-------------|-------|
-| `mobidoc-ui-ux-reviewer` | Mobidoc patient, hospital, and tablet UI/UX review beta guidance | cyan |
+## Plugins & Agents (3 total)
 
 ### devops-agents (2 commands)
 
 Slash commands: `/railway-deploy`, `/railway-setup` (defined in `commands/`)
 
 > **Note**: Git 커밋/푸시 작업은 공식 `commit-commands` 플러그인의 `/commit`, `/commit-push-pr` 명령을 사용하세요.
-
-### mobile-agents (2 agents)
-
-Mobile application development agents.
-
-| Agent | Description | Color |
-|-------|-------------|-------|
-| `mobile-app-developer` | React Native, Flutter, Swift, Kotlin for iOS/Android | cyan |
-| `ar-mobile-developer` | ARCore, ARKit, AR filters, Face Mesh, augmented reality | green |
 
 ### productivity-agents (3 agents + 4 commands)
 
@@ -162,7 +127,7 @@ claude plugin install https://github.com/Ahngbeom/claude-hookify
 | `prefer-jira-retrospective` | Retrospective keywords | jira-retrospective |
 | `prefer-commit-retrospective` | Commit retrospective keywords | commit-retrospective |
 
-> `prefer-database-expert`, `prefer-frontend-engineer`, and `prefer-test-automation` recommend agents this marketplace no longer ships; `prefer-backend-agent` still applies only to `nodejs-backend`.
+> `prefer-backend-agent`, `prefer-database-expert`, `prefer-frontend-engineer`, and `prefer-test-automation` recommend agents this marketplace no longer ships.
 
 ---
 
@@ -185,15 +150,6 @@ This same script is used by `.github/workflows/validate.yml` for CI checks.
 After installing a plugin, use the namespace prefix:
 
 ```bash
-# Backend agents
-"backend-agents:nodejs-backend, Express 미들웨어를 구현해줘"
-
-# Mobile agents
-"mobile-agents:ar-mobile-developer, ARKit 얼굴 필터를 구현해줘"
-
-# Mobidoc UI/UX beta review
-"frontend-agents:mobidoc-ui-ux-reviewer, Mobidoc 예약 화면 UX 리뷰해줘"
-
 # Productivity agents
 "productivity-agents:jira-retrospective, 지난 주 회고록 작성해줘"
 ```
@@ -218,10 +174,6 @@ Applies only where the plugin is installed and enabled (`~/.claude/plugins/insta
 
 | Task Type | Plugin:Agent | Trigger Keywords |
 |-----------|--------------|------------------|
-| Mobidoc UI/UX | `frontend-agents:mobidoc-ui-ux-reviewer` | "Mobidoc", "모비닥", "의료 UX", "환자앱", "병원앱", "태블릿" |
-| Node.js Backend | `backend-agents:nodejs-backend` | "Express", "Node.js", "미들웨어" |
-| Mobile App | `mobile-agents:mobile-app-developer` | "React Native", "Flutter", "iOS", "Android", "모바일 앱" |
-| AR Mobile | `mobile-agents:ar-mobile-developer` | "ARCore", "ARKit", "AR 필터", "얼굴 필터", "증강현실", "Face Mesh" |
 | Jira Retrospective | `productivity-agents:jira-retrospective` | "회고록", "회고", "retrospective", "주간 정리", "Jira 이슈 정리" |
 | Commit Retrospective | `productivity-agents:commit-retrospective` | "커밋 회고", "Git 회고", "GitHub 회고", "GitLab 회고", "작업 이력 정리" |
 | Retrospective Validation | `productivity-agents:retrospective-validator` | "회고 검증", "retrospective 감지", "회고 자동화" |
@@ -236,7 +188,6 @@ Applies only where the plugin is installed and enabled (`~/.claude/plugins/insta
 | GitHub API / issues / PRs | `github` (MCP) | - |
 | GitLab API | `gitlab` (MCP) | - |
 | Frontend design aesthetics | `frontend-design` | - |
-| Mobidoc UI/UX review | - | `frontend-agents:mobidoc-ui-ux-reviewer` |
 | Playwright browser automation | `playwright` (MCP) | - |
 | Test writing | - | `/write-tests` |
 | Railway deploy/setup | - | `/railway-deploy`, `/railway-setup` |

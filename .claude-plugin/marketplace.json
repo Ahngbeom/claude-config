@@ -1,32 +1,12 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "ahngbeom-claude-config",
-  "description": "Custom Claude Code plugins: Node.js backend, Mobidoc UI/UX review, mobile and AR development agents, Jira/Git retrospectives, and Railway commands",
+  "description": "Custom Claude Code plugins: Jira/Git retrospective agents and commands, test-writing and cleanup commands, and Railway commands",
   "owner": {
     "name": "ahngbeom",
     "email": "ahngbeom@github.com"
   },
   "plugins": [
-    {
-      "name": "backend-agents",
-      "description": "Node.js backend agent for Express/NestJS services and TypeScript APIs",
-      "author": {
-        "name": "ahngbeom"
-      },
-      "source": "./plugins/backend-agents",
-      "category": "development",
-      "homepage": "https://github.com/Ahngbeom/claude-config"
-    },
-    {
-      "name": "frontend-agents",
-      "description": "Mobidoc UI/UX beta review agent for Vue/Nuxt patient, hospital, and tablet screens",
-      "author": {
-        "name": "ahngbeom"
-      },
-      "source": "./plugins/frontend-agents",
-      "category": "development",
-      "homepage": "https://github.com/Ahngbeom/claude-config"
-    },
     {
       "name": "devops-agents",
       "description": "Railway slash commands for project setup and deployment configuration",
@@ -35,16 +15,6 @@
       },
       "source": "./plugins/devops-agents",
       "category": "productivity",
-      "homepage": "https://github.com/Ahngbeom/claude-config"
-    },
-    {
-      "name": "mobile-agents",
-      "description": "Mobile application agents for React Native, Flutter, native iOS/Android, and AR (ARKit/ARCore)",
-      "author": {
-        "name": "ahngbeom"
-      },
-      "source": "./plugins/mobile-agents",
-      "category": "development",
       "homepage": "https://github.com/Ahngbeom/claude-config"
     },
     {
