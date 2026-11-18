@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Sync shared/references canonical files into plugin/codex consumers.
+# Sync shared/references canonical files into their consumers.
 # Usage: scripts/sync-shared.sh           # write copies
 #        scripts/sync-shared.sh --check    # verify in sync (CI), nonzero on drift
 set -euo pipefail
@@ -7,7 +7,6 @@ cd "$(dirname "$0")/.."
 
 SRC="shared/references/mobidoc-ui-ux-guidelines.md"
 DESTS=(
-  "plugins/frontend-agents/references/mobidoc-ui-ux-guidelines.md"
   "codex/skills/mobidoc-ui-ux-beta/references/mobidoc-ui-ux-guidelines.md"
 )
 HEADER="<!-- AUTO-GENERATED from ${SRC}. DO NOT EDIT. Run scripts/sync-shared.sh. -->"
