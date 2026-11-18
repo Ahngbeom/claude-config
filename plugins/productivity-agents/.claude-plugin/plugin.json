@@ -1,6 +1,6 @@
 {
   "name": "productivity-agents",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Jira/Git retrospective agents and slash commands for retrospectives, test writing, and ~/.claude cleanup",
   "author": {
     "name": "ahngbeom",
