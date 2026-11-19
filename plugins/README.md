@@ -22,4 +22,4 @@ claude mcp add anthropic-agent-skills -- npx -y @anthropic-ai/claude-code-mcp
 - `algorithmic-art` - Generative art with p5.js
 - `mcp-builder` - MCP server development guide
 - `skill-creator` - Custom skill creation guide (공식 `skill-creator` 플러그인과 동일)
-- `webapp-testing` - Playwright web testing (공식 `playwright` 외부 플러그인과 보완 관계, 테스트 코드 작성은 로컬 `/write-tests`)
+- `webapp-testing` - Playwright web testing (공식 `playwright` 외부 플러그인과 보완 관계)

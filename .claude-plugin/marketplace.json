@@ -1,25 +1,15 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "ahngbeom-claude-config",
-  "description": "Custom Claude Code plugins: Jira/Git retrospective agents and commands, test-writing and cleanup commands, and Railway commands",
+  "description": "Custom Claude Code plugin: Jira/Git retrospective agents and commands",
   "owner": {
     "name": "ahngbeom",
     "email": "ahngbeom@github.com"
   },
   "plugins": [
     {
-      "name": "devops-agents",
-      "description": "Railway slash commands for project setup and deployment configuration",
-      "author": {
-        "name": "ahngbeom"
-      },
-      "source": "./plugins/devops-agents",
-      "category": "productivity",
-      "homepage": "https://github.com/Ahngbeom/claude-config"
-    },
-    {
       "name": "productivity-agents",
-      "description": "Jira/Git retrospective agents and slash commands for retrospectives, test writing, and ~/.claude cleanup",
+      "description": "Jira/Git retrospective agents and the /jira-retro and /git-retro commands",
       "author": {
         "name": "ahngbeom"
       },
