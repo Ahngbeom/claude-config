@@ -114,6 +114,13 @@ for f in $(find plugins -path '*/commands/*.md' 2>/dev/null); do
   done
 done
 
+# 5b. subagent_type in commands and references names an existing plugin agent
+for f in $(find plugins -path '*/commands/*.md' -o -path '*/references/*.md' 2>/dev/null); do
+  for st in $(grep -oE 'subagent_type="[^"]+"' "$f" | cut -d'"' -f2 | sort -u); do
+    [ -f "plugins/${st%%:*}/agents/${st#*:}.md" ] || err "subagent_type not found ($st): $f"
+  done
+done
+
 # 6. skill frontmatter + name/dir + referenced files (codex + global + any plugin skills)
 for f in $(find . -name SKILL.md -not -path './.git/*'); do
   dir=$(dirname "$f")
