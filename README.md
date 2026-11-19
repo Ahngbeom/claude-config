@@ -8,17 +8,14 @@ Custom Claude Code plugin marketplace: retrospective agents and slash commands, 
 
 ### Marketplace Plugin (Recommended)
 
-Install all plugins at once:
+Install the marketplace:
 ```bash
 claude plugin install https://github.com/ahngbeom/claude-config
 ```
 
-Or install individual plugins by category:
+Or install the plugin by name:
 ```bash
-# Railway commands
-claude plugin install devops-agents@ahngbeom-claude-config
-
-# Retrospectives, test writing, cleanup
+# Retrospectives
 claude plugin install productivity-agents@ahngbeom-claude-config
 
 # Agent preference hooks (optional, separate install)
@@ -46,7 +43,7 @@ scripts/sync-global.sh pull     # ~/.claude -> global/ after editing the live fi
 | `global/hooks/guard-work-checkout.py` | `~/.claude/hooks/guard-work-checkout.py` | `PreToolUse` hook that blocks edits and mutating `git` commands in a `~/work` canonical checkout; work happens in `~/work/.worktrees/` |
 | `global/hooks/tests/guard_work_checkout_test.py` | `~/.claude/hooks/tests/guard_work_checkout_test.py` | Tests for `guard-work-checkout.py`, run by `scripts/validate.sh` |
 | `global/hooks/tests/canonical_pin_test.py` | `~/.claude/hooks/tests/canonical_pin_test.py` | Tests for `canonical_pin.py` against real git commands, run by `scripts/validate.sh` |
-| `global/cleanup.sh` | `~/.claude/cleanup.sh` | `~/.claude` housekeeping, run by the `SessionStart` hook and `/cleanup` |
+| `global/cleanup.sh` | `~/.claude/cleanup.sh` | `~/.claude` housekeeping, run by the `SessionStart` hook |
 | `global/skills/korean-docs/` | `~/.claude/skills/korean-docs/` | Korean writing skill: channel templates (MR/PR, Jira, reports, tech docs), style, and review checklist |
 
 Hook registration is not synced; add the entries from `docs/settings.example.json` to `~/.claude/settings.json`. `canonical_pin.py` is a git hook, not a Claude Code hook: run `~/.claude/hooks/install-canonical-pin.sh` after pushing.
@@ -75,8 +72,7 @@ ahngbeom-claude-config/
 │   ├── hooks/                    # guard-k8s.py, guard-work-checkout.py, canonical_pin.py + installer and tests
 │   └── skills/korean-docs/       # Global Korean writing skill
 ├── plugins/
-│   ├── devops-agents/            # 2 commands
-│   └── productivity-agents/      # 3 agents + 4 commands
+│   └── productivity-agents/      # 3 agents + 2 commands
 ├── scripts/
 │   ├── notify.sh
 │   ├── sync-global.sh            # global/ <-> ~/.claude
@@ -91,13 +87,7 @@ ahngbeom-claude-config/
 
 ## Plugins & Agents (3 total)
 
-### devops-agents (2 commands)
-
-Slash commands: `/railway-deploy`, `/railway-setup` (defined in `commands/`)
-
-> **Note**: Git 커밋/푸시 작업은 공식 `commit-commands` 플러그인의 `/commit`, `/commit-push-pr` 명령을 사용하세요.
-
-### productivity-agents (3 agents + 4 commands)
+### productivity-agents (3 agents + 2 commands)
 
 Retrospective agents. Slash commands live in `commands/`.
 
@@ -107,7 +97,9 @@ Retrospective agents. Slash commands live in `commands/`.
 | `jira-retrospective` | Jira issue-based retrospective generation | blue |
 | `retrospective-validator` | Sensitive-information scan of generated retrospectives (called by the two retrospective agents) | red |
 
-Slash commands: `/git-retro`, `/jira-retro`, `/write-tests`, `/cleanup` (defined in `commands/`)
+Slash commands: `/git-retro`, `/jira-retro` (defined in `commands/`)
+
+> **Note**: Git 커밋/푸시 작업은 공식 `commit-commands` 플러그인의 `/commit`, `/commit-push-pr` 명령을 사용하세요.
 
 ### claude-hookify (7 hooks)
 
@@ -163,10 +155,6 @@ After installing a plugin, use the namespace prefix:
 | `/clean_gone` | `commit-commands` (official) | Delete local branches whose remote is gone | `/clean_gone` |
 | `/jira-retro` | `productivity-agents` | Retrospective from Jira issues | `/jira-retro 2w` |
 | `/git-retro` | `productivity-agents` | Retrospective from git commits | `/git-retro 14` |
-| `/write-tests` | `productivity-agents` | Generate tests for a file | `/write-tests src/auth.ts` |
-| `/cleanup` | `productivity-agents` | Reclaim disk space under `~/.claude` | `/cleanup dry-run` |
-| `/railway-deploy` | `devops-agents` | Generate Railway deployment config | `/railway-deploy fastapi` |
-| `/railway-setup` | `devops-agents` | Initialize a Railway project | `/railway-setup "Node.js + PostgreSQL"` |
 
 ### Agent Routing
 
@@ -189,8 +177,6 @@ Applies only where the plugin is installed and enabled (`~/.claude/plugins/insta
 | GitLab API | `gitlab` (MCP) | - |
 | Frontend design aesthetics | `frontend-design` | - |
 | Playwright browser automation | `playwright` (MCP) | - |
-| Test writing | - | `/write-tests` |
-| Railway deploy/setup | - | `/railway-deploy`, `/railway-setup` |
 | Retrospectives | - | `/jira-retro`, `/git-retro` |
 
 ### Codex Skill Source
