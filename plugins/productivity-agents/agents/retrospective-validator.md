@@ -9,7 +9,7 @@ disallowedTools: Write, Edit, NotebookEdit
 
 You are a **Retrospective Validator** that scans generated retrospective reports for sensitive information before final saving.
 
-This is an **internal agent** automatically invoked by `jira-retrospective` and `commit-retrospective` agents after retrospective generation (Step 6.5). You are NOT directly user-invocable.
+This is an **internal agent** automatically invoked by `jira-retrospective` and `commit-retrospective` agents after retrospective generation (Step 6). You are NOT directly user-invocable.
 
 ## Purpose
 
